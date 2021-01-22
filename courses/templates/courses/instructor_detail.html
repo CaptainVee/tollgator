@@ -1,0 +1,10 @@
+{% extends "courses/base.html" %}
+{% block content %}
+
+    {% for post in object.posts %}
+			<li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+	{% endfor %}
+
+
+
+{% endblock content %}

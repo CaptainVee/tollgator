@@ -1,0 +1,37 @@
+{% extends "courses/base.html" %}
+{% block content %}
+
+	<article class="media content-section">
+		<img class="rounded-circle article-img" src="{{ object.author.user.instructorprofile.image.url }}">
+	  <div class="media-body">
+		    <div class="article-metadata">
+		      <a class="mr-2" href="{% url 'user-post' object.author.user_id %}">{{ object.author }}</a>
+		      <small class="text-muted">{{ object.date_posted | date:'F d, Y' }}</small>
+		      <a class="btn info btn-sm mt-1 mb-1" href="{% url 'payment' %}">Buy Now</a>
+		      <a class="button" href="{% url 'add-to-cart' object.id %}" >ADD TO CART</a>
+		      <p>₦{{object.price}}</p>
+	   		   
+		      {% if object.author.user == user %}
+		      	<div>
+		      		<a class="btn info btn-sm mt-1 mb-1" href="{% url 'lesson-create' object.id %}">Add Lesson</a>
+		      		<a class="btn info btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+		      		<a class="btn danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>	
+		      	</div>
+		      {% endif %}
+		    </div>
+		    <h2 class="article-title" >{{ object.title }}</h2>
+		    <p class="article-content">{{ object.content }}</p>
+			<ol>
+			    {% for lesson in object.lessons %}
+						<li><a href="{{ lesson.get_absolute_url }}">{{ lesson.title }}</a></li>
+				{% endfor %}
+			</ol>
+	<!-- 	<div>
+			    <video width="320" height="240" controls >
+				<source src="{{ object.video.url }}" type="video/mp4">
+				</video>
+		    </div> -->
+	  </div>
+	</article> 
+
+{% endblock content %}
