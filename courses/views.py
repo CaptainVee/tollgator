@@ -6,6 +6,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from user.models import InstructorProfile
+from pypaystack import Transaction, Customer, Plan
+from django.http import JsonResponse
 
 import datetime
 import os
@@ -44,7 +46,7 @@ class PostDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'price']
+    fields = ['title', 'content', 'image', 'price']
 
     def form_valid(self, form):
         form.instance.author = get_object_or_404(InstructorProfile, user=self.request.user)
@@ -134,6 +136,20 @@ class OrderSummaryView(LoginRequiredMixin, View):
             messages.warning(self.request, "You do not have an active order")
             return redirect("/")
 
+def PaymentView(request):
+    if request.user.is_authenticated:
+        order, created = Order.objects.get_or_create(user=request.user, ordered=False)
+        # items = order.orderitem_set.all()
+        # cartItems = order.get_cart_items
+        order = Order.objects.get(user=request.user, ordered=False)
+        context = {
+                    'order':order,
+                    'pk_public' : settings.PAYSTACK_PUBLIC_KEY
+
+                }
+    return render(request, 'courses/checkout.html', context)
+
+
 @login_required
 def add_to_cart(request, pk):
     item = get_object_or_404(Post, pk=pk)
@@ -222,9 +238,41 @@ def remove_single_item_from_cart(request, pk):
         messages.info(request, "You do not have an active order")
         return redirect("post-detail", pk=pk)
 
-def PaymentView(request):
-    return render(request, 'courses/checkout.html', {'title': 'About'})
+
+class VerifyView(View):
+    def get(self, request, id, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        transaction = Transaction(authorization_key= settings.PAYSTACK_SECRET_KEY )
+        response = transaction.verify(id)
+        data = JsonResponse(response, safe=False)
+        # assign the payment to the order
+
+        order_items = order.items.all()
+        order_items.update(ordered=True)
+        for item in order_items:
+            item.save()
+
+        order.ordered = True
+        order.ref_code = create_ref_code()
+        order.save()
+
+        return render(request, 'courses/verify.html', {'title': 'verify'})
 
 
+def start(request):
+    return render(request, 'courses/start.html', {'title': 'About'})
 
+class StartDetailView(LoginRequiredMixin, View):
 
+    def get(self, request, *args, **kwargs):
+        order = Order.objects.filter(user=self.request.user, ordered=True)
+        # order_items = order.first().items.all()
+        for order_item in order:
+            order_items = order_item.items.all()
+            context = {
+                'object': order_items
+            }
+            return render(self.request, 'courses/start.html', context)
+        # lesson_qs = course.lessons.filter(pk=lesson_pk)
+        # if lesson_qs.exists():
+        #     lesson = lesson_qs.first()            

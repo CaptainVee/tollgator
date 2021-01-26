@@ -1,0 +1,14 @@
+{% extends "courses/base.html" %}
+{% block content %}
+	{% for order_item in object.all %}
+    <h2 class="article-title" >{{ order_item.item }}</h2>
+    <p>{{ order_item.item.content }}</p>
+
+	<ol>
+	{% for lesson in order_item.item.lessons %}
+			<li><a href="{{ lesson.get_absolute_url }}">{{ lesson.title }}</a></li>
+	{% endfor %}
+	</ol>
+
+    {% endfor %}
+{% endblock content %}

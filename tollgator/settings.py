@@ -131,3 +131,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'courses-home'
 LOGIN_URL = 'courses-home'
+
+PAYSTACK_SECRET_KEY = 'sk_test_13dc5a1a1f7f39ca061a714c59616870f4f310ee'
+PAYSTACK_PUBLIC_KEY = 'pk_test_5a23f8c86937437af3d7d8ab2f2286b6bdb1ce21'
