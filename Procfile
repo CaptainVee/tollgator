@@ -1,1 +1,1 @@
-web: gunicorn tollgatorapp.wsgi
+web: gunicorn tollgator.wsgi
