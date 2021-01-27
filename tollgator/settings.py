@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,8 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ')=lq-8v(m_kz704_b4-@i&!ic%98%ug0(ih71snm!btxu_4=bp'
-
+SECRET_KEY = os.environ.get('SECRET_KEY2')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'courses.apps.CoursesConfig',
     'crispy_forms',
+    'storages',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -132,5 +134,24 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'courses-home'
 LOGIN_URL = 'courses-home'
 
-PAYSTACK_SECRET_KEY = 'sk_test_13dc5a1a1f7f39ca061a714c59616870f4f310ee'
-PAYSTACK_PUBLIC_KEY = 'pk_test_5a23f8c86937437af3d7d8ab2f2286b6bdb1ce21'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID2')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY2')
+AWS_STORAGE_BUCKET_NAME = 'tollgator'
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+django_heroku.settings(locals())
+
+
+
+PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
+PAYSTACK_PUBLIC_KEY =  os.environ.get('PAYSTACK_PUBLIC_KEY')

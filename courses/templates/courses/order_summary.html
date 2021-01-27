@@ -29,12 +29,12 @@
             </td>
             <td>
             {% if order_item.item.discount_price %}
-                ${{ order_item.get_total_discount_item_price }}
+                ₦{{ order_item.get_total_discount_item_price }}
                 <span class="badge badge-primary">Saving ${{ order_item.get_amount_saved }}</span>
             {% else %}
-                ${{ order_item.get_total_item_price }}
+                ₦{{ order_item.get_total_item_price }}
             {% endif %}
-            <a style='color: red;' href="{% url 'remove-from-cart' order_item.item.id %}">
+            <a style='color: red; float: right;' href="{% url 'remove-from-cart' order_item.item.id %}">remove item
                 <i class="fas fa-trash float-right"></i>
             </a>
             </td>
@@ -52,13 +52,13 @@
         {% if object.coupon %}
         <tr>
             <td colspan="4"><b>Coupon</b></td>
-            <td><b>-${{ object.coupon.amount }}</b></td>
+            <td><b>-₦{{ object.coupon.amount }}</b></td>
         </tr>
         {% endif %}
         {% if object.get_total %}
         <tr>
             <td colspan="4"><b>Order Total</b></td>
-            <td><b>${{ object.get_total }}</b></td>
+            <td><b>₦{{ object.get_total }}</b></td>
         </tr>
         <tr>
             <td colspan="5">

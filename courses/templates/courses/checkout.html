@@ -63,12 +63,12 @@
 							<div style="flex:2"><img class="row-image" src="{{order_item.item.image.url}}"
 								width="300"height="200"></div>
 							<div style="flex:2"><p>{{order_item.item.title}}</p></div>
-							<div style="flex:1"><p>${{order_item.item.price|floatformat:2}}</p></div>
+							<div style="flex:1"><p>₦{{order_item.item.price|floatformat:2}}</p></div>
 							<div style="flex:1"><p>x{{order_item.quantity}}</p></div>
 						</div>
 					{% endfor %}
 					<h5>Items:   {{order.get_cart_items}}</h5>
-					<h5>Total:   ${{order.get_total|floatformat:2}}</h5>
+					<h5>Total:  ₦{{order.get_total|floatformat:2}}</h5>
 				</div>
 			</div>
 	</div>

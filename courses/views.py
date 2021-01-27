@@ -182,7 +182,7 @@ def add_to_cart(request, pk):
 
 @login_required
 def remove_from_cart(request, pk):
-    item = get_object_or_404(Item, pk=pk)
+    item = get_object_or_404(Post, pk=pk)
     order_qs = Order.objects.filter(
         user=request.user,
         ordered=False
@@ -257,10 +257,6 @@ class VerifyView(View):
         order.save()
 
         return render(request, 'courses/verify.html', {'title': 'verify'})
-
-
-def start(request):
-    return render(request, 'courses/start.html', {'title': 'About'})
 
 class StartDetailView(LoginRequiredMixin, View):
 

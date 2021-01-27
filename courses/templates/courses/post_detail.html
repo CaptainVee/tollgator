@@ -7,7 +7,6 @@
 		    <div class="article-metadata">
 		      <a class="mr-2" href="{% url 'user-post' object.author.user_id %}">{{ object.author }}</a>
 		      <small class="text-muted">{{ object.date_posted | date:'F d, Y' }}</small>
-		      <a class="btn info btn-sm mt-1 mb-1" href="{% url 'payment' %}">Buy Now</a>
 		      <a class="button" href="{% url 'add-to-cart' object.id %}" >ADD TO CART</a>
 		      <p>₦{{object.price}}</p>
 	   		   
@@ -19,6 +18,8 @@
 		      	</div>
 		      {% endif %}
 		    </div>
+		    <br>
+		    <br>
 		    <h2 class="article-title" >{{ object.title }}</h2>
 		    <p class="article-content">{{ object.content }}</p>
 			<ol>

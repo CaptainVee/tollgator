@@ -2,7 +2,21 @@
 {% block content %}
 
 	{% for posts in post %}
-		<article class="media content-section">
+
+	<div class="row">
+	  <div class="column">
+	    <div class="card"><a href="{% url 'post-detail' posts.id %}" >
+	      <img src="#" alt="img" style="width:100%">
+	      <div class="container">
+	        <h2><a class="article-title" href="{% url 'post-detail' posts.id %}" >{{ posts.title }}</a></h2>
+	        <a class="mr-2" href="{% url 'user-post' posts.author.user_id %}">{{ posts.author }}</a>
+	        <p class="article-content">{{ posts.content }}</p>
+	        <p>₦{{posts.price}}</p>
+	      </div>
+	    </a></div>
+	  </div>
+	</div>
+<!-- 		<article class="media content-section">
 		  <img class="article-img" src="{{ posts.author.user.instructorprofile.image.url }}" alt="Avatar">
 		  <div class="media-body">
 		    <div class="article-metadata">
@@ -10,11 +24,12 @@
 		      <small class="text-muted">{{ posts.date_posted | date:'F d, Y' }}</small>
 		    </div>
 		    <h2><a class="article-title" href="{% url 'post-detail' posts.id %}" >{{ posts.title }}</a></h2>
+		    <img class="content-img" src="{{ posts.image.url }}" alt="Avatar">
 		    <p class="article-content">{{ posts.content }}</p>
 		    <p>₦{{posts.price}}</p>
 	        <a class="button" href="{% url 'add-to-cart' posts.id %}" >ADD TO CART</a>
 		  </div>
-		</article> 
+		</article> --> 
 	{% endfor %}
 
 
