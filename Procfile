@@ -1,1 +1,1 @@
-web: gunicorn django_tollgatorapp.wsgi
+web: gunicorn tollgatorapp.wsgi
