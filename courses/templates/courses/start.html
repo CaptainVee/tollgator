@@ -1,5 +1,6 @@
 {% extends "courses/base.html" %}
 {% block content %}
+{% if object is not None %}
 	{% for order_item in object.all %}
     <h2 class="article-title" >{{ order_item.item }}</h2>
     <p>{{ order_item.item.content }}</p>
@@ -11,4 +12,5 @@
 	</ol>
 
     {% endfor %}
+{% endif %}
 {% endblock content %}
