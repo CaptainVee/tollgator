@@ -3,8 +3,6 @@
 import django.contrib.auth.models
 from django.db import migrations, models
 import django.db.models.deletion
-from django.conf import settings
-
 
 
 class Migration(migrations.Migration):
@@ -12,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('auth', '0012_alter_user_first_name_max_length'),
     ]
 
     operations = [
