@@ -6,8 +6,12 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from user.models import InstructorProfile
-from pypaystack import Transaction, Customer, Plan
+# from pypaystack import Transaction, Customer, Plan
 from django.http import JsonResponse
+from paystackapi.transaction import Transaction
+from paystackapi.paystack import Paystack
+
+
 
 import datetime
 import os
@@ -242,8 +246,13 @@ def remove_single_item_from_cart(request, pk):
 class VerifyView(View):
     def get(self, request, id, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
-        transaction = Transaction(authorization_key= settings.PAYSTACK_SECRET_KEY )
-        response = transaction.verify(id)
+        paystack = Paystack(secret_key='sk_test_13dc5a1a1f7f39ca061a714c59616870f4f310ee')
+
+        # transaction = Transaction(authorization_key= settings.PAYSTACK_SECRET_KEY )
+        # response = transaction.verify(id)
+        transaction = paystack.transaction.initialize(reference=id,
+                                  amount='amount', email='email')
+        response = paystack.transaction.verify(reference=id)
         data = JsonResponse(response, safe=False)
         # assign the payment to the order
 
