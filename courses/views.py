@@ -272,7 +272,7 @@ class StartDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         order = Order.objects.filter(user=self.request.user, ordered=True)
         # order_items = order.first().items.all()
-        if order.exists()
+        if order.exists():
             for order_item in order:
                 order_items = order_item.items.all()
                 context = {
