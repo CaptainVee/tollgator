@@ -246,7 +246,7 @@ def remove_single_item_from_cart(request, pk):
 class VerifyView(View):
     def get(self, request, id, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
-        paystack = Paystack(secret_key='sk_test_13dc5a1a1f7f39ca061a714c59616870f4f310ee')
+        paystack = Paystack(secret_key=settings.PAYSTACK_SECRET_KEY)
 
         # transaction = Transaction(authorization_key= settings.PAYSTACK_SECRET_KEY )
         # response = transaction.verify(id)
