@@ -272,12 +272,15 @@ class StartDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         order = Order.objects.filter(user=self.request.user, ordered=True)
         # order_items = order.first().items.all()
-        for order_item in order:
-            order_items = order_item.items.all()
-            context = {
-                'object': order_items
-            }
-            return render(self.request, 'courses/start.html', context)
+        if order.exists()
+            for order_item in order:
+                order_items = order_item.items.all()
+                context = {
+                    'object': order_items
+                }
+                return render(self.request, 'courses/start.html', context)
+        else:
+            return render(self.request, 'courses/start.html', {'object' : None})
         # lesson_qs = course.lessons.filter(pk=lesson_pk)
         # if lesson_qs.exists():
         #     lesson = lesson_qs.first()            
