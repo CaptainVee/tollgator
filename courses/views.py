@@ -22,6 +22,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 class PostListView(ListView):
 	model = Post
@@ -57,6 +58,31 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.save()
         return super().form_valid(form)
 
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ['title', 'content', 'image', 'price']
+
+    def form_valid(self, form):
+        form.instance.author = get_object_or_404(InstructorProfile, user=self.request.user)
+        form.save()
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    success_url = '/'
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
 class LessonCreateView(LoginRequiredMixin, CreateView):
     model = Lesson
     fields = ['title', 'description', 'video', 'position']
@@ -69,30 +95,6 @@ class LessonCreateView(LoginRequiredMixin, CreateView):
 
 class LessonDetailView(DetailView):
     model = Lesson
-
-class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-	model = Post
-	fields = ['title', 'content', 'video']
-
-	def form_valid(self, form):
-		form.instance.author = self.request.user
-		return super().form_valid(form)
-
-	def test_func(self):
-		post = self.get_object()
-		if self.request.user == post.author:
-			return True
-		return False
-
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-	model = Post
-	success_url = '/'
-
-	def test_func(self):
-		post = self.get_object()
-		if self.request.user == post.author:
-			return True
-		return False
 
 
 class LessonDetailView(LoginRequiredMixin, View):
