@@ -7,7 +7,14 @@
 		    <div class="article-metadata">
 		      <a class="mr-2" href="{% url 'user-post' object.author.user_id %}">{{ object.author }}</a>
 		      <small class="text-muted">{{ object.date_posted | date:'F d, Y' }}</small>
-		      <a class="button" href="{% url 'add-to-cart' object.id %}" >ADD TO CART</a>
+		      {% if object.free == True %}
+		      	<a class="button" href="{% url 'enroll' object.id %}" >Enroll</a>
+		      {% else %}
+		      	<a class="button" href="{% url 'add-to-cart' object.id %}" >ADD TO CART</a>
+		      {% endif %}
+		      
+		      	
+
 		      <p>₦{{object.price}}</p>
 	   		   
 		      {% if object.author.user == user %}

@@ -33,6 +33,7 @@ class Post(models.Model):
 	content = models.TextField()
 	date_posted = models.DateTimeField(default=timezone.now)
 	author = models.ForeignKey(InstructorProfile, on_delete= models.CASCADE)
+	free = models.BooleanField(default=False)
 	price = models.FloatField()
 	discount_price = models.FloatField(blank=True, null=True)
 	image = models.ImageField(default='default.jpg', null=True, blank=True)
@@ -104,7 +105,6 @@ class OrderItem(models.Model):
     	if self.item.discount_price:
     		return self.get_total_discount_item_price()
     	return self.get_total_item_price()
-
 
 class Order(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)

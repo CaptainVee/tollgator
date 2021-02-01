@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, UserPostDetailView, PaymentView, VerifyView
+from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, UserPostDetailView, PaymentView, VerifyView, Enroll
 from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, LessonCreateView, LessonDetailView, StartDetailView
 
 
@@ -14,7 +14,7 @@ path('post/<int:pk>/delete', PostDeleteView.as_view(), name='post-delete'),
 path('about/', views.about, name='courses-about'), 
 
 
-# path('course/<int:pk>/', CourseDetailView.as_view(), name='detail'),
+path('enroll/<int:pk>/', Enroll, name='enroll'),
 path('lesson/<int:course_pk>/new/', LessonCreateView.as_view(), name='lesson-create'),
 path('lesson/<int:course_pk>/<int:lesson_pk>',LessonDetailView.as_view(), name='lesson-detail'),
 path('order-summary/', OrderSummaryView.as_view(), name='order-summary'),

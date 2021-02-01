@@ -142,9 +142,25 @@ class OrderSummaryView(LoginRequiredMixin, View):
             messages.warning(self.request, "You do not have an active order")
             return redirect("/")
 
+def Enroll(request, pk):
+    item = get_object_or_404(Post, pk=pk)
+    try:
+        order_item = OrderItem.objects.get(
+        item=item,
+        user=request.user)
+
+        if order_item.ordered == True:
+            messages.info(request, "you have already enrolled for this course.")
+            return redirect("order-summary")
+    except AttributeError:
+        order_item = OrderItem.objects.create(user=request.user, item=item, ordered=True)
+        messages.info(request, "You have successfully enrolled for this course.")
+        return redirect("order-summary")
+
+
+
 def PaymentView(request):
     if request.user.is_authenticated:
-        order, created = Order.objects.get_or_create(user=request.user, ordered=False)
         # items = order.orderitem_set.all()
         # cartItems = order.get_cart_items
         order = Order.objects.get(user=request.user, ordered=False)
@@ -272,15 +288,12 @@ class VerifyView(View):
 class StartDetailView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
-        order = Order.objects.filter(user=self.request.user, ordered=True)
-        # order_items = order.first().items.all()
+        order = OrderItem.objects.filter(user=self.request.user, ordered=True)
         if order.exists():
-            for order_item in order:
-                order_items = order_item.items.all()
-                context = {
-                    'object': order_items
-                }
-                return render(self.request, 'courses/start.html', context)
+            context = {
+                'object': order
+            }
+            return render(self.request, 'courses/start.html', context)
         else:
             return render(self.request, 'courses/start.html', {'object' : None})
         # lesson_qs = course.lessons.filter(pk=lesson_pk)
