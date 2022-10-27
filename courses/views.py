@@ -8,8 +8,8 @@ from django.urls import reverse
 from user.models import InstructorProfile
 # from pypaystack import Transaction, Customer, Plan
 from django.http import JsonResponse
-from paystackapi.transaction import Transaction
-from paystackapi.paystack import Paystack
+# from paystackapi.transaction import Transaction
+# from paystackapi.paystack import Paystack
 
 
 
