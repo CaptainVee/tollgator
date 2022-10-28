@@ -1,0 +1,57 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% block content %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg">
+			<form method="POST">
+				<div class=" text-center my-4">
+                    
+                    <p class="" style="color: red;">
+                        <strong style="color: red;">
+                            {{form.errors.email}}
+                        {{form.errors.password1}}
+                        {{form.errors.password2}}
+                        </strong>
+                        
+                    
+                    </p>
+                   
+                </div>
+				{% csrf_token %}
+				<h2>Sign Up</h2>
+
+				<div class="form-group">
+				<label for="id_username">Username</label>
+				<input name="username" type="text" class="form-control" id="id_username" placeholder="be creative :)" required>
+				</div>
+				<div class="form-group">
+				<label for="id_email">Email address</label>
+				<input name="email" type="email" class="form-control" required="" id="id_email" aria-describedby="emailHelp" placeholder="you@example.com" required>
+				</div>
+				<div class="form-group">
+				<label for="id_password1">Password</label>
+				<input name="password1" type="password" class="form-control" id="id_password1" placeholder="Enter 8 characters or more" required>
+				</div>
+				<div class="form-group">
+				<label for="id_password2">Confirm Password</label>
+				<input name="password2" type="password" class="form-control" id="id_password2" placeholder="Re-enter your password" required>
+				</div>
+				{% if redirect_field_value %}
+				<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+				{% endif %}
+				<button type="submit" class="btn btn-custom1 btn-primary">Sign Up</button>
+				<span>Have an account already? <a href="{% url 'account_login' %}" class="forgot-password">  Log In</a></span>
+			</form>
+		</div>
+		<div class="col-md">
+		<img class="sign-up-image" src="/static/images/sign-up-illustration.png" alt="illustration">
+		</div>
+	</div>
+</div>
+
+
+{% endblock content %}
