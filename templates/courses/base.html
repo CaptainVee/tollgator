@@ -34,20 +34,19 @@
 	      <div class="" id="navbarToggle">
 	        <div>
 	          <a class="title" href="{% url 'courses-home' %}">Home</a>
-	          <a class="" href="{% url 'courses-about' %}">About</a>
+	          <a class="" href="{% url 'courses-home' %}">About</a>
 
 	        </div>
 	        <!-- Navbar Right Side -->
 	        <div class="" style="float: right;" >
 	        	{% if user.is_authenticated %}
 		          <a class="" href="{% url 'account_logout' %}">Logout</a>
-		          <a class="" href="{% url 'order-summary' %}">Cart</a>
+		          <a class="" href="{% url 'courses-home' %}">Cart</a>
 		          <a class="" href="{% url 'profile' %}">Profile</a>
-		          <a class="" href="{% url 'start' %}">On Going</a>
+		          <a class="" href="{% url 'courses-home' %}">On Going</a>
 	        	{% else %}
 		          <a class="nav-item nav-link" href="{% url 'account_login' %}">Login</a>
-		          <a class="nav-item nav-link" href="{% url 'instructor-register' %}">Instructor</a>
-		          <a class="nav-item nav-link" href="{% url 'student-register' %}">Student</a>
+		          <a class="nav-item nav-link" href="{% url 'courses-home' %}">Explore</a>
 		        {% endif %}
 
 	        </div>
@@ -77,7 +76,7 @@
             <ul class="list-inline">
                 <li class="list-inline-item"><a href="{% url 'courses-home' %}">Home</a></li>
                 <li class="list-inline-item"><a href="#">Services</a></li>
-                <li class="list-inline-item"><a href="{% url 'courses-about' %}">About</a></li>
+                <li class="list-inline-item"><a href="{% url 'courses-home' %}">About</a></li>
                 <li class="list-inline-item"><a href="#">Terms</a></li>
                 <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
             </ul>

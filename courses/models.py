@@ -1,133 +1,159 @@
+import black
+from autoslug import AutoSlugField
 from django.db import models
-from django.utils import timezone
 from django.urls import reverse
-from user.models import InstructorProfile
-from django.db.models.signals import post_save
-from django.db.models import Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import ArrayField
+from django.utils.translation import gettext_lazy as _
+
+from common.models import BaseModel
+from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES
 
 User = get_user_model()
 
 
-CATEGORY_CHOICES = (("S", "Shirt"), ("SW", "Sport wear"), ("OW", "Outwear"))
-
-LABEL_CHOICES = (("P", "primary"), ("S", "secondary"), ("D", "danger"))
-
-ADDRESS_CHOICES = (
-    ("B", "Billing"),
-    ("S", "Shipping"),
-)
-
-
-class Post(models.Model):
+class Course(BaseModel):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
-    label = models.CharField(choices=LABEL_CHOICES, max_length=1)
+    brief_description = models.CharField(max_length=500, blank=True, null=True)
     content = models.TextField()
-    date_posted = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(InstructorProfile, on_delete=models.CASCADE)
-    free = models.BooleanField(default=False)
-    price = models.FloatField()
-    discount_price = models.FloatField(blank=True, null=True)
-    image = models.ImageField(default="default.jpg", null=True, blank=True)
+    category = models.CharField(
+        choices=CATEGORY_CHOICES, max_length=2, blank=True, null=True
+    )
+    slug = AutoSlugField(populate_from="title", always_update=False, unique=True)
+    # tags = ArrayField(
+    #     models.CharField(max_length=200, default="", blank=True),
+    #     blank=True,
+    #     default=list,
+    # ) #Can be used only on postgress database
+    thumbnail = models.ImageField(default="default.jpg", null=True, blank=True)
 
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        return reverse("post-detail", kwargs={"pk": self.pk})  # also known as product
+    # def get_absolute_url(self):
+    #     return reverse("post-detail", kwargs={"pk": self.pk})  # also known as product
 
-    def get_add_to_cart_url(self):
-        return reverse("add-to-cart", kwargs={"pk": self.pk})
+    # def get_add_to_cart_url(self):
+    #     return reverse("add-to-cart", kwargs={"pk": self.pk})
 
-    def get_remove_from_cart_url(self):
-        return reverse("remove-from-cart", kwargs={"pk": self.pk})
+    # def get_remove_from_cart_url(self):
+    #     return reverse("remove-from-cart", kwargs={"pk": self.pk})
 
     @property
     def lessons(self):
         return self.lesson_set.all().order_by("position")
 
 
-class Lesson(models.Model):
+class CourseRating(BaseModel):
+
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        related_name="course_rating",
+    )
+    rated_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        related_name="user_who_rated",
+    )
+    value = models.IntegerField(
+        verbose_name=_("rating value"),
+        choices=RATING,
+        default=0,
+        help_text="1=Poor, 2=Fair, 3=Good, 4=Very Good, 5=Excellent",
+    )
+    review = models.TextField()
+
+    def __str__(self):
+        return self.course
+
+
+class Lesson(BaseModel):
     title = models.CharField(max_length=120)
-    course = models.ForeignKey(Post, on_delete=models.CASCADE)
-    video = models.FileField(default="default.mp4", upload_to="videos/")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    video_url = models.URLField(max_length=300, null=False, blank=True)
+    embedded_video_link = models.CharField(max_length=1000, blank=False, null=False)
     position = models.IntegerField()
-    description = models.TextField()
+    description = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-
         return reverse(
-            "lesson-detail", kwargs={"course_pk": self.course.pk, "lesson_pk": self.pk}
+            "lesson-detail",
+            kwargs={"course_slug": self.course.slug, "lesson_slug": self.id},
         )
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    one_click_purchasing = models.BooleanField(default=False)
+# class UserProfile(BaseModel):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     one_click_purchasing = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.user.username
-
-
-class OrderItem(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ordered = models.BooleanField(default=False)
-    item = models.ForeignKey(Post, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.quantity} of {self.item.title}"
-
-    def get_total_item_price(self):
-        return self.quantity * self.item.price
-
-    def get_total_discount_item_price(self):
-        return self.quantity * self.item.discount_price
-
-    def get_amount_saved(self):
-        return self.get_total_item_price() - self.get_total_discount_item_price()
-
-    def get_final_price(self):
-        if self.item.discount_price:
-            return self.get_total_discount_item_price()
-        return self.get_total_item_price()
+#     def __str__(self):
+#         return self.user.username
 
 
-class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ref_code = models.CharField(max_length=20, blank=True, null=True)
-    items = models.ManyToManyField(OrderItem)
-    start_date = models.DateTimeField(auto_now_add=True)
-    ordered_date = models.DateTimeField()
-    ordered = models.BooleanField(default=False)
-    being_delivered = models.BooleanField(default=False)
-    received = models.BooleanField(default=False)
-    refund_requested = models.BooleanField(default=False)
-    refund_granted = models.BooleanField(default=False)
+# class OrderItem(BaseModel):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     ordered = models.BooleanField(default=False)
+#     item = models.ForeignKey(Course, on_delete=models.CASCADE)
+#     quantity = models.IntegerField(default=1)
 
-    # 1. Item added to cart
-    # 2. Adding a billing address
-    # (Failed checkout)
-    # 3. Payment
-    # (Preprocessing, processing, packaging etc.)
-    # 4. Being delivered
-    # 5. Received
-    # 6. Refunds
+#     def __str__(self):
+#         return f"{self.quantity} of {self.item.title}"
 
-    def __str__(self):
-        return self.user.username
+#     def get_total_item_price(self):
+#         return self.quantity * self.item.price
 
-    def get_total(self):
-        total = 0
-        for order_item in self.items.all():
-            total += order_item.get_final_price()
-        return total
+#     def get_total_discount_item_price(self):
+#         return self.quantity * self.item.discount_price
+
+#     def get_amount_saved(self):
+#         return self.get_total_item_price() - self.get_total_discount_item_price()
+
+#     def get_final_price(self):
+#         if self.item.discount_price:
+#             return self.get_total_discount_item_price()
+#         return self.get_total_item_price()
+
+
+# class Order(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     ref_code = models.CharField(max_length=20, blank=True, null=True)
+#     items = models.ManyToManyField(OrderItem)
+#     start_date = models.DateTimeField(auto_now_add=True)
+#     ordered_date = models.DateTimeField()
+#     ordered = models.BooleanField(default=False)
+#     being_delivered = models.BooleanField(default=False)
+#     received = models.BooleanField(default=False)
+#     refund_requested = models.BooleanField(default=False)
+#     refund_granted = models.BooleanField(default=False)
+
+#     # 1. Item added to cart
+#     # 2. Adding a billing address
+#     # (Failed checkout)
+#     # 3. Payment
+#     # (Preprocessing, processing, packaging etc.)
+#     # 4. Being delivered
+#     # 5. Received
+#     # 6. Refunds
+
+#     def __str__(self):
+#         return self.user.username
+
+#     def get_total(self):
+#         total = 0
+#         for order_item in self.items.all():
+#             total += order_item.get_final_price()
+#         return total
 
 
 class Address(models.Model):
@@ -144,11 +170,3 @@ class Address(models.Model):
 
     class Meta:
         verbose_name_plural = "Addresses"
-
-
-def userprofile_receiver(sender, instance, created, *args, **kwargs):
-    if created:
-        userprofile = UserProfile.objects.create(user=instance)
-
-
-post_save.connect(userprofile_receiver, sender=User)
