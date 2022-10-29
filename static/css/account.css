@@ -1,6 +1,6 @@
 .errorlist
     {
-        color: red;
+        color: #ba0000;
     }
 
 body{
@@ -25,8 +25,8 @@ body{
 
 }
 
-.login h2 {
-    font-family: Arial, Helvetica, sans-serif;
+form h2{
+    font-family: 'Mulish', sans-serif;
     font-weight: 700;
     font-size: 28px;
 }
@@ -43,4 +43,77 @@ body{
     align-items: baseline;
 }
 
+.small {
+    font-size: 15px;
+    font-weight: 400;
+    color: #757575;
+}
 
+.wrap1 {
+    padding-bottom: 22px;
+}
+
+.wrap2 {
+    width: 100%;
+    font-size: 18px;
+}
+
+.form-group {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.placehold {
+    display: flex;
+    position: relative;
+}
+
+.placehold input {
+    border: 1px solid #cbcbcb;
+    border-radius: 10px;
+    padding: 16px 20px;
+    width: 100%;
+}
+
+.form-group label {
+    cursor: text;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 0 3px;
+    /* border-radius: 3px; */
+    /* position: absolute; */
+}
+
+.btn-pry {
+    margin: 24px 0;
+    font-weight: 400;
+    font-size: 16px;
+    padding: 10px 22px; 
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+    border-radius: 8px;
+    justify-content: center;
+}
+
+.btn-pry:hover{
+    background-color: #545454;
+    border-color: #545454;
+}
+
+.wrap3 {
+    align-items: center;
+    margin: auto;
+}
+
+.wrap3 button {
+    display: block;
+}
+
+.forgot-password {
+    margin-top: 2em;
+}
