@@ -39,7 +39,9 @@ class UserProfile(models.Model):
     profile_pic = models.ImageField(
         blank=True, null=True, default="default.jpg", upload_to="profile_pics/"
     )
-    cover_image = models.ImageField(default="default.jpg", upload_to="profile_pics/")
+    cover_image = models.ImageField(
+        default="default.jpg", upload_to="profile_pics/", blank=True, null=True
+    )
 
     followers_count = models.IntegerField(blank=True, null=True, default=0)
     following = models.ManyToManyField(
@@ -55,6 +57,10 @@ class UserProfile(models.Model):
     @property
     def posts(self):
         return self.post_set.all().order_by("-date_posted")
+
+    class Meta:
+        verbose_name = _("user profile")
+        verbose_name_plural = _("user profiles")
 
 
 class StudentProfile(models.Model):
