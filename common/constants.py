@@ -20,3 +20,9 @@ RATING = (
     (4, _("very good")),
     (5, _("excellent")),
 )
+
+COURSE_TYPE = (
+    ("Free", "Free"),
+    ("Certificate", "Certificate"),
+    ("Paid", "Paid"),
+)

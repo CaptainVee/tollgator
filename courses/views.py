@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-from .models import Course, Address, Lesson
+from .models import Course, Lesson, LessonVideo
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -56,8 +56,14 @@ class UserPostDetailView(DetailView):
     template_name = "courses/instructor_detail.html"
 
 
-class PostDetailView(DetailView):
-    model = Course
+class PostDetailView(View):
+    def get(self, request, pk, course_slug, *args, **kwargs):
+        course = Course.objects.get(slug=course_slug)
+        lesson_queryset = Lesson.objects.filter(course=course)
+
+        context = {"course": course, "lessons": lesson_queryset}
+
+        return render(request, "courses/course_detail.html", context)
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -114,6 +120,14 @@ class LessonCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+class LessonListView(ListView):
+    model = Lesson
+    template_name = "courses/lesson_list.html"
+    context_object_name = "lessons"
+    ordering = ["-updated_at"]
+    paginate_by = 5
+
+
 class LessonDetailView(LoginRequiredMixin, View):
     template = ""
 
@@ -129,6 +143,14 @@ class LessonDetailView(LoginRequiredMixin, View):
         context = {"object": lesson}
 
         return render(request, "courses/lesson_detail.html", context)
+
+
+def lesson_video(request, lesson_slug, *args, **kwargs):
+    lesson = Lesson.objects.get(pk=lesson_slug)
+    lesson_video_queryset = LessonVideo.objects.filter(lesson=lesson)
+
+    context = {"lesson": lesson, "lesson_video_queryset": lesson_video_queryset}
+    return render(request, "courses/lesson_video.html", context)
 
 
 # def about(request):

@@ -1,3 +1,6 @@
+from email.policy import default
+from random import choices
+from turtle import position
 import black
 from autoslug import AutoSlugField
 from django.db import models
@@ -9,7 +12,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel
-from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES
+from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES, COURSE_TYPE
 
 User = get_user_model()
 
@@ -29,6 +32,9 @@ class Course(BaseModel):
     #     default=list,
     # ) #Can be used only on postgress database
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True)
+    course_type = models.CharField(
+        choices=COURSE_TYPE, max_length=50, null=False, blank=False, default="Free"
+    )
 
     def __str__(self):
         return self.title
@@ -45,6 +51,66 @@ class Course(BaseModel):
     @property
     def lessons(self):
         return self.lesson_set.all().order_by("position")
+
+
+class Lesson(BaseModel):
+    title = models.CharField(max_length=200)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    position = models.IntegerField()
+    description = models.CharField(max_length=250, null=True, blank=True)
+    total_video_length = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+
+    def get_course(self):
+        return self.course.title
+
+    def get_absolute_url(self):
+        return reverse(
+            "lesson-detail",
+            kwargs={"course_slug": self.course.slug, "lesson_slug": self.id},
+        )
+
+    def get_videos(self):
+        videos_queryset = LessonVideo.objects.filter(lesson=self)
+        return videos_queryset
+
+
+class LessonVideo(BaseModel):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, blank=False, null=False)
+    video_url = models.URLField(max_length=300, null=True, blank=True)
+    embedded_link = models.TextField(blank=False, null=False)
+    position = models.IntegerField()
+    video_length = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(
+            "lesson-video-detail",
+            kwargs={
+                "course_slug": self.lesson.course.slug,
+                "lesson_slug": self.lesson.pk,
+                "video_slug": self.id,
+            },
+        )
+
+
+class Order(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.SET_NULL,
+        blank=False,
+        null=True,
+        related_name="course_order",
+    )
+
+    def __str__(self):
+        return f"{self.course} order by {self.user}"
 
 
 class CourseRating(BaseModel):
@@ -75,30 +141,20 @@ class CourseRating(BaseModel):
         return self.course
 
 
-class Lesson(BaseModel):
-    title = models.CharField(max_length=120)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    video_url = models.URLField(max_length=300, null=False, blank=True)
-    embedded_video_link = models.CharField(max_length=1000, blank=False, null=False)
-    position = models.IntegerField()
-    description = models.CharField(max_length=250, null=True, blank=True)
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    street_address = models.CharField(max_length=100)
+    apartment_address = models.CharField(max_length=100)
+    country = CountryField(multiple=False)
+    zip = models.CharField(max_length=100)
+    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
+    default = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return self.user.username
 
-    def get_absolute_url(self):
-        return reverse(
-            "lesson-detail",
-            kwargs={"course_slug": self.course.slug, "lesson_slug": self.id},
-        )
-
-
-# class UserProfile(BaseModel):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     one_click_purchasing = models.BooleanField(default=False)
-
-#     def __str__(self):
-#         return self.user.username
+    class Meta:
+        verbose_name_plural = "Addresses"
 
 
 # class OrderItem(BaseModel):
@@ -123,50 +179,3 @@ class Lesson(BaseModel):
 #         if self.item.discount_price:
 #             return self.get_total_discount_item_price()
 #         return self.get_total_item_price()
-
-
-# class Order(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     ref_code = models.CharField(max_length=20, blank=True, null=True)
-#     items = models.ManyToManyField(OrderItem)
-#     start_date = models.DateTimeField(auto_now_add=True)
-#     ordered_date = models.DateTimeField()
-#     ordered = models.BooleanField(default=False)
-#     being_delivered = models.BooleanField(default=False)
-#     received = models.BooleanField(default=False)
-#     refund_requested = models.BooleanField(default=False)
-#     refund_granted = models.BooleanField(default=False)
-
-#     # 1. Item added to cart
-#     # 2. Adding a billing address
-#     # (Failed checkout)
-#     # 3. Payment
-#     # (Preprocessing, processing, packaging etc.)
-#     # 4. Being delivered
-#     # 5. Received
-#     # 6. Refunds
-
-#     def __str__(self):
-#         return self.user.username
-
-#     def get_total(self):
-#         total = 0
-#         for order_item in self.items.all():
-#             total += order_item.get_final_price()
-#         return total
-
-
-class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    street_address = models.CharField(max_length=100)
-    apartment_address = models.CharField(max_length=100)
-    country = CountryField(multiple=False)
-    zip = models.CharField(max_length=100)
-    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
-    default = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.user.username
-
-    class Meta:
-        verbose_name_plural = "Addresses"

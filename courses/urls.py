@@ -8,6 +8,8 @@ from .views import (
     PostDeleteView,
     UserPostDetailView,
     LessonCreateView,
+    LessonListView,
+    lesson_video,
     LessonDetailView,
 )  # , VerifyView, Enroll
 
@@ -18,7 +20,16 @@ urlpatterns = [
     path("", PostListView.as_view(), name="courses-home"),
     path("user/<int:pk>/", UserPostDetailView.as_view(), name="user-post"),
     path("post/new/", PostCreateView.as_view(), name="post-create"),
-    path("post/<slug:pk>/<slug:slug>/", PostDetailView.as_view(), name="post-detail"),
+    path(
+        "post/<slug:pk>/<slug:course_slug>/",
+        PostDetailView.as_view(),
+        name="post-detail",
+    ),
+    path(
+        "<slug:course_slug>/lesson/<int:lesson_slug>/",
+        LessonListView.as_view(),
+        name="lesson-list",
+    ),
     path("post/<int:pk>/update", PostUpdateView.as_view(), name="post-update"),
     path("post/<int:pk>/delete", PostDeleteView.as_view(), name="post-delete"),
     # path("about/", views.about, name="courses-about"),
@@ -27,9 +38,14 @@ urlpatterns = [
         "lesson/<int:course_pk>/new/", LessonCreateView.as_view(), name="lesson-create"
     ),
     path(
-        "<slug:course_slug>/lesson/<slug:lesson_slug>",
+        "<slug:course_slug>/lesson/<slug:lesson_slug>/",
         LessonDetailView.as_view(),
         name="lesson-detail",
+    ),
+    path(
+        "<slug:course_slug>/lesson/<slug:lesson_slug>/<slug:video_slug>",
+        lesson_video,
+        name="lesson-video-detail",
     ),
     # path('order-summary/', OrderSummaryView.as_view(), name='order-summary'),
     # path('add-to-cart/<int:pk>/', add_to_cart, name='add-to-cart'),

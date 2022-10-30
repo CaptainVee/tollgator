@@ -2,12 +2,12 @@
 {% block content %}
 
 	<article class="media content-section">
-		<img class="rounded-circle article-img" src="{{ object.author }}">
+		<img class="rounded-circle article-img" src="{{ course.author }}">
 	  <div class="media-body">
 		    <div class="article-metadata">
-		      <a class="mr-2" href="">{{ object.author }}</a>
-		      <small class="text-muted">{{ object.date_posted | date:'F d, Y' }}</small>
-		      {% if object.free == True %}
+		      <a class="mr-2" href="">{{ course.author }}</a>
+		      <small class="text-muted">{{ course.date_posted | date:'F d, Y' }}</small>
+		      {% if course.course_type == "Free" %}
 		      	<a class="button" href="" >Enroll</a>
 		      {% else %}
 		      	<a class="button" href="" >ADD TO CART</a>
@@ -15,34 +15,29 @@
 		      
 		      	
 
-		      <p>₦{{object.price}}</p>
-		      {% if object.author == user %}
-
+		      <p>₦{{course.price}}</p>
+		      {% if course.author == user %}
 		      	<div>
 		      		<a class="btn info btn-sm mt-1 mb-1" href="">Add Lesson</a>
 		      		<a class="btn info btn-sm mt-1 mb-1" href="">Update</a>
 		      		<a class="btn danger btn-sm mt-1 mb-1" href="">Delete</a>
-					   <!-- url 'lesson-create' object.id 	
-					   url 'post-update' object.id 
-					   url 'post-delete' object.id  -->
 		      	</div>
 		      {% endif %}
 		    </div>
 		    <br>
 		    <br>
-		    <h2 class="article-title" >{{ object.title }}</h2>
-		    <p class="article-content">{{ object.content }}</p>
-			{{object}}
+		    <h2 class="article-title" >{{ course.title }}</h2>
+		    <p class="article-content">{{ course.content }}</p>
+			{{course}}
 			<ol>
-			    {% for lesson in object.lessons %}
-						<li><a href="{{ lesson.get_absolute_url }}">{{ lesson.title }}</a></li>
+			    {% for lesson in lessons %}
+						<li><a href="{% url 'lesson-list' course_slug=course.slug lesson_slug=lesson.pk %}">{{ lesson.title }}</a></li>
+						{% for video_lesson in lesson.get_videos %}
+						<p>{{ video_lesson }}</p>
+						{% endfor %}
 				{% endfor %}
 			</ol>
-	<!-- 	<div>
-			    <video width="320" height="240" controls >
-				<source src="{{ object.video.url }}" type="video/mp4">
-				</video>
-		    </div> -->
+		    </div>
 	  </div>
 	</article> 
 
