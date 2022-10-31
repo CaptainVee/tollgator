@@ -62,11 +62,13 @@
 		<div class="row">
 			<div class="col-md-8">
 				{% if messages %}
-					{% for message in messages %}
-						<div class="alert alert-{{ message.tags }}">
-							{{ message }}
-						</div>
-					{% endfor %}
+					<div class="messages" hx-get="{% url 'clear' %}" hx-triger="load delay: 3s">
+						{% for message in messages %}
+							<div class="alert alert-{{ message.tags }}">
+								{{ message }}
+							</div>
+						{% endfor %}
+					</div>
 				{% endif %}
 				<br>
 	  			{% block content %}{% endblock %}

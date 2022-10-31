@@ -12,6 +12,7 @@ from .views import (
     get_video_url,
     LessonDetailView,
     enroll,
+    clear_messages,
 )
 
 # from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
@@ -55,11 +56,8 @@ urlpatterns = [
 
 
 htmx_urlpatterns = [
-    path(
-        "video/<slug:video_slug>",
-        get_video_url,
-        name="video-url",
-    ),
+    path("video/<slug:video_slug>", get_video_url, name="video-url"),
+    path("clear/", clear_messages, name="clear"),
 ]
 
 urlpatterns += htmx_urlpatterns

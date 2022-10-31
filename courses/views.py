@@ -25,7 +25,7 @@ from django.urls import reverse
 from user.models import InstructorProfile
 
 # from pypaystack import Transaction, Customer, Plan
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 
 # from paystackapi.transaction import Transaction
 # from paystackapi.paystack import Paystack
@@ -158,8 +158,8 @@ def enroll(request, course_slug):
     return redirect("lesson-list", course_slug)
 
 
-# def create_ref_code():
-#     return "".join(random.choices(string.ascii_lowercase + string.digits, k=20))
+def clear_messages(request):
+    return HttpResponse("")
 
 
 # def is_valid_form(values):
