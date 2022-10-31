@@ -20,14 +20,15 @@ Tollgator is a web-applications that allow users to turn their youtube videos to
    (venv)$ pip install -r requirements.txt
    ```
 
-1. make migrations
-
-   ```sh
-   (venv)$ python manage.py makemigrations
    ```
 
-1. migrate to create the tables in the database
+   ```
+
+1. Apply the migrations and run the Django development server:
 
    ```sh
    (venv)$ python manage.py migrate
+   (venv)$ python manage.py runserver
    ```
+
+1. Test at [http://localhost:8000/](http://localhost:8000/)
