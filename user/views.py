@@ -7,7 +7,7 @@ from .forms import (
     StudentRegistrationForm,
 )
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import CreateView
 from django.contrib.auth.models import User
 
 

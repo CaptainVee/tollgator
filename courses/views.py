@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-from .models import Course, Lesson, LessonVideo
+from .models import Course, Lesson, Video, Order
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -39,36 +39,21 @@ class PostListView(ListView):
     paginate_by = 5
 
 
-# class UserPostListView(ListView):
-#     model = Post
-#     template_name = 'courses/course_detail.html'
-#     context_object_name = 'post'
-#     paginate_by = 5
-
-#     def get_queryset(self, request, username, *args, **kwargs):
-#         user = get_object_or_404(InstructorProfile, user=self.kwargs.get('user'))
-#         # user = get_object_or_404(User, username=self.kwargs.get('username'))
-#         return Post.objects.filter(user=user).order_by('-date_posted')
-
-
-class UserPostDetailView(DetailView):
-    model = InstructorProfile
-    template_name = "courses/instructor_detail.html"
-
-
 class PostDetailView(View):
-    def get(self, request, pk, course_slug, *args, **kwargs):
+    def get(self, request, course_slug, *args, **kwargs):
         course = Course.objects.get(slug=course_slug)
-        lesson_queryset = Lesson.objects.filter(course=course)
+        order = get_object_or_404(Order, course=course, user=request.user)
 
-        context = {"course": course, "lessons": lesson_queryset}
-
+        context = {
+            "course": course,
+            "order": order,
+        }
         return render(request, "courses/course_detail.html", context)
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Course
-    fields = ["title", "content", "image", "price"]
+    fields = ["title", "content", "price"]
 
     def form_valid(self, form):
         form.instance.author = get_object_or_404(
@@ -120,17 +105,14 @@ class LessonCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class LessonListView(ListView):
-    model = Lesson
-    template_name = "courses/lesson_list.html"
-    context_object_name = "lessons"
-    ordering = ["-updated_at"]
-    paginate_by = 5
+def lesson_list_view(request, course_slug):
+    lessons = Lesson.objects.filter(course__slug=course_slug).select_related("course")
+
+    context = {"lessons": lessons}
+    return render(request, "courses/lesson_list.html", context)
 
 
 class LessonDetailView(LoginRequiredMixin, View):
-    template = ""
-
     def get(self, request, course_slug, lesson_slug, *args, **kwargs):
         course_qs = Course.objects.filter(slug=course_slug)
         if course_qs.exists():
@@ -141,30 +123,39 @@ class LessonDetailView(LoginRequiredMixin, View):
             lesson = lesson_qs.first()
 
         context = {"object": lesson}
-
+        print("sdsdsdddddd")
         return render(request, "courses/lesson_detail.html", context)
 
 
-def lesson_video(request, lesson_slug, *args, **kwargs):
-    lesson = Lesson.objects.get(pk=lesson_slug)
-    lesson_video_queryset = LessonVideo.objects.filter(lesson=lesson)
+def lesson_video(request, lesson_slug, video_slug, *args, **kwargs):
+    video_queryset = Video.objects.prefetch_related("lesson").filter(lesson=lesson_slug)
+    video = Video.objects.get(id=video_slug)
 
-    context = {"lesson": lesson, "lesson_video_queryset": lesson_video_queryset}
+    context = {"video_queryset": video_queryset, "video": video}
     return render(request, "courses/lesson_video.html", context)
 
 
 def get_video_url(request, video_slug):
-
-    video = LessonVideo.objects.get(id=video_slug)
+    video = Video.objects.get(id=video_slug)
     context = {"video": video}
     return render(request, "courses/partials/video_frame.html", context)
 
 
-# def about(request):
-#     return render(request, "courses/about.html", {"title": "About"})
+def about(request):
+    return render(request, "courses/about.html", {"title": "About"})
 
 
-# # Create your views here.
+def enroll(request, course_slug):
+    course = get_object_or_404(Course, slug=course_slug)
+    order = Order.objects.filter(course=course, user=request.user)
+    if order:
+        messages.info(request, "you have already enrolled for this course.")
+    else:
+        order = Order(user=request.user, course=course)
+        order.save()
+        messages.success(request, "You have successfully enrolled for this course.")
+
+    return redirect("lesson-list", course_slug)
 
 
 # def create_ref_code():
@@ -188,22 +179,6 @@ def get_video_url(request, video_slug):
 #         except ObjectDoesNotExist:
 #             messages.warning(self.request, "You do not have an active order")
 #             return redirect("/")
-
-
-# def Enroll(request, pk):
-#     item = get_object_or_404(Course, pk=pk)
-#     try:
-#         order_item = OrderItem.objects.get(item=item, user=request.user)
-
-#         if order_item.ordered == True:
-#             messages.info(request, "you have already enrolled for this course.")
-#             return redirect("order-summary")
-#     except AttributeError:
-#         order_item = OrderItem.objects.create(
-#             user=request.user, item=item, ordered=True
-#         )
-#         messages.info(request, "You have successfully enrolled for this course.")
-#         return redirect("order-summary")
 
 
 # def PaymentView(request):

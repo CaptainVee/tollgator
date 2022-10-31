@@ -8,10 +8,10 @@
     <div class="card card-body" style="    width: 25rem; margin: 0px 55em; position: fixed;">
         <h5 class="card-title">{{lesson.title}}</h5>
         <ul>
-            {% for lesson_video in lesson_video_queryset %}
-            <li class="list-group-item"><a href="{{ lesson_video.get_absolute_url }}"
-                hx-get="{% url 'video-url' lesson_video.id %}"
-                hx-target="#video-frame">{{lesson_video}}</a></li>
+            {% for video in video_queryset %}
+            <li class="list-group-item"><a href="{{ video.get_absolute_url }}"
+                hx-get="{% url 'video-url' video.id %}"
+                hx-target="#video-frame">{{video}}</a></li>
         {% endfor %}
         </ul>
     </div>

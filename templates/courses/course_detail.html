@@ -8,7 +8,11 @@
 		      <a class="mr-2" href="">{{ course.author }}</a>
 		      <small class="text-muted">{{ course.date_posted | date:'F d, Y' }}</small>
 		      {% if course.course_type == "Free" %}
-		      	<a class="button" href="" >Enroll</a>
+				{% if order.user == request.user %}
+				<a class="btn btn-warning" href="{% url 'lesson-list' course_slug=course.slug %}" >Go to course</a><p>You have already enrolled for this course</p>
+				{% else %}
+				<a class="button" href="{% url 'enroll' course_slug=course.slug %}" >Enroll</a>
+				{% endif %}
 		      {% else %}
 		      	<a class="button" href="" >ADD TO CART</a>
 		      {% endif %}
@@ -28,11 +32,10 @@
 		    <br>
 		    <h2 class="article-title" >{{ course.title }}</h2>
 		    <p class="article-content">{{ course.content }}</p>
-			{{course}}
 			<ol>
-			    {% for lesson in lessons %}
-						<li><a href="{% url 'lesson-list' course_slug=course.slug lesson_slug=lesson.pk %}">{{ lesson.title }}</a></li>
-						{% for video_lesson in lesson.get_videos %}
+			    {% for lesson in course.lessons %}
+						<li><a href="{% url 'lesson-list' course_slug=course.slug %}">{{ lesson.title }}</a></li>
+						{% for video_lesson in lesson.videos %}
 						<p>{{ video_lesson }}</p>
 						{% endfor %}
 				{% endfor %}

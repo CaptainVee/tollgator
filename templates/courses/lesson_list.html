@@ -1,14 +1,15 @@
 {% extends 'courses/base.html' %}
 
 {% block content %}
-<h1 class="title">{{ lessons.first.get_course }}</h1>
-{% for lesson in lessons%}
+<h2 class="card-title">{{ lessons.first.get_course }}</h2>
+{% for lesson in lessons %}
 <div >
     <div class="card card-body">
         <h2 class="card-title">{{lesson.title}}</h2>
+    
         <ol>
-            {% for lesson_video in lesson.get_videos %}
-            <li> <a href="{{ lesson_video.get_absolute_url }}">{{ lesson_video.title }}</a></li>
+            {% for video in lesson.videos %}
+            <li> <a href="{{ video.get_absolute_url }}">{{ video.title }}</a></li>
             {% endfor %}
         </ol>
 

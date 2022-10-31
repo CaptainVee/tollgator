@@ -21,7 +21,7 @@ class User(AbstractUser):
         return reverse("profile")
 
     def __str__(self):
-        return self.email
+        return self.username
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]

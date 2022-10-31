@@ -72,12 +72,12 @@ class Lesson(BaseModel):
             kwargs={"course_slug": self.course.slug, "lesson_slug": self.id},
         )
 
-    def get_videos(self):
-        videos_queryset = LessonVideo.objects.filter(lesson=self)
-        return videos_queryset
+    @property
+    def videos(self):
+        return self.video_set.all().order_by("position")
 
 
-class LessonVideo(BaseModel):
+class Video(BaseModel):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False, null=False)
     video_url = models.URLField(max_length=300, null=True, blank=True)
@@ -97,6 +97,10 @@ class LessonVideo(BaseModel):
                 "video_slug": self.id,
             },
         )
+
+    @property
+    def videos(self):
+        return self.video_set.all().order_by("position")
 
 
 class Order(BaseModel):

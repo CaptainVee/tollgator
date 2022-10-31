@@ -48,6 +48,7 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "django_htmx",
+    "debug_toolbar",
 ]
 
 LOCAL_APPS = [
@@ -66,7 +67,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # extras
     "django_htmx.middleware.HtmxMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "tollgator.urls"
@@ -85,6 +88,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 AUTHENTICATION_BACKENDS = [
