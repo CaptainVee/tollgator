@@ -1,22 +1,22 @@
 {% extends "courses/base.html" %}
 {% block content %}
 
-	{% for posts in post %}
+	{% for post in posts %}
 
 	<div class="row">
 	  <div class="column">
-	    <div class="card"><a href="{% url 'post-detail' pk=posts.pk slug=posts.slug %}" >
-			<p>{{ posts.id }}</p>
-			<p>{{ posts.pkid }}</p>
-			<p>{{ posts.slug }}</p>
-			<p>{{ posts.sluger }}</p>
+	    <div class="card"><a href="{% url 'post-detail' pk=post.pk course_slug=post.slug %}" >
+			<p>{{ post.id }}</p>
+			<p>{{ post.pkid }}</p>
+			<p>{{ post.slug }}</p>
+			<p>{{ post.sluger }}</p>
 
-	      <img src="{{ posts.thumbnail.url }}" alt="img" style="width:100%">
+	      <img src="{{ post.thumbnail.url }}" alt="img" style="width:100%">
 	      <div class="container">
-	        <h2><a class="article-title" href="{% url 'post-detail' pk=posts.pk slug=posts.slug %}" >{{ posts.title }}</a></h2>
-	        <a class="mr-2" href="">{{ posts.author }}</a>
-	        <p class="article-content">{{ posts.content }}</p>
-	        <p>₦{{posts.price}}</p>
+	        <h2><a class="article-title" href="{% url 'post-detail' pk=post.pk course_slug=post.slug %}" >{{ post.title }}</a></h2>
+	        <a class="mr-2" href="">{{ post.author }}</a>
+	        <p class="article-content">{{ post.content }}</p>
+	        <p>₦{{post.price}}</p>
 	      </div>
 	    </a></div>
 	  </div>

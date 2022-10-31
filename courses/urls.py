@@ -10,6 +10,7 @@ from .views import (
     LessonCreateView,
     LessonListView,
     lesson_video,
+    get_video_url,
     LessonDetailView,
 )  # , VerifyView, Enroll
 
@@ -21,7 +22,7 @@ urlpatterns = [
     path("user/<int:pk>/", UserPostDetailView.as_view(), name="user-post"),
     path("post/new/", PostCreateView.as_view(), name="post-create"),
     path(
-        "post/<slug:pk>/<slug:course_slug>/",
+        "post/<int:pk>/<slug:course_slug>/",
         PostDetailView.as_view(),
         name="post-detail",
     ),
@@ -46,6 +47,11 @@ urlpatterns = [
         "<slug:course_slug>/lesson/<slug:lesson_slug>/<slug:video_slug>",
         lesson_video,
         name="lesson-video-detail",
+    ),
+    path(
+        "video/<slug:video_slug>",
+        get_video_url,
+        name="video-url",
     ),
     # path('order-summary/', OrderSummaryView.as_view(), name='order-summary'),
     # path('add-to-cart/<int:pk>/', add_to_cart, name='add-to-cart'),

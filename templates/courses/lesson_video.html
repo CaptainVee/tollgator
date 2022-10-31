@@ -2,18 +2,16 @@
 
 {% block content %}
 <div class="" style="position: relative; display: flex;">
-    <div>
-        <iframe width="870" height="500" src="{{ lesson_video_queryset.first.video_url }}"" 
-            title="YouTube video player" frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-        </iframe>
+    <div id="video-frame">
+        {% include 'courses/partials/video_frame.html' %}
     </div>
     <div class="card card-body" style="    width: 25rem; margin: 0px 55em; position: fixed;">
         <h5 class="card-title">{{lesson.title}}</h5>
         <ul>
             {% for lesson_video in lesson_video_queryset %}
-            <li class="list-group-item">{{lesson_video}}</li>
+            <li class="list-group-item"><a href="{{ lesson_video.get_absolute_url }}"
+                hx-get="{% url 'video-url' lesson_video.id %}"
+                hx-target="#video-frame">{{lesson_video}}</a></li>
         {% endfor %}
         </ul>
     </div>

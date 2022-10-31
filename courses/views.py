@@ -34,7 +34,7 @@ from django.http import JsonResponse
 class PostListView(ListView):
     model = Course
     template_name = "courses/home.html"
-    context_object_name = "post"
+    context_object_name = "posts"
     ordering = ["-updated_at"]
     paginate_by = 5
 
@@ -151,6 +151,13 @@ def lesson_video(request, lesson_slug, *args, **kwargs):
 
     context = {"lesson": lesson, "lesson_video_queryset": lesson_video_queryset}
     return render(request, "courses/lesson_video.html", context)
+
+
+def get_video_url(request, video_slug):
+
+    video = LessonVideo.objects.get(id=video_slug)
+    context = {"video": video}
+    return render(request, "courses/partials/video_frame.html", context)
 
 
 # def about(request):
