@@ -6,6 +6,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from common.models import BaseModel
+from courses.models import Course
+
 
 class User(AbstractUser):
     name = models.CharField(_("Name of user"), blank=False, null=False, max_length=250)
@@ -65,17 +68,22 @@ class UserProfile(models.Model):
         verbose_name_plural = _("user profiles")
 
 
-class StudentProfile(models.Model):
-    pass
+class Dashboard(BaseModel):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="user_dashboard"
+    )
+    courses_taken = models.ManyToManyField(Course, related_name="courses_taken")
+    courses_completed = models.ManyToManyField(Course, related_name="courses_completed")
+
+    def __str__(self):
+        return self.user.username
 
 
 class InstructorProfile(models.Model):
-    # user = models.OneToOneField(User, on_delete= models.CASCADE, primary_key=True)
-    # image = models.ImageField(default='default.jpg', upload_to='profile_pics/')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
 
-    # def __str__(self):
-    # 	return self.user.username
-    pass
+    def __str__(self):
+        return self.user.username
 
     @property
     def posts(self):

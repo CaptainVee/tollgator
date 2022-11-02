@@ -11,6 +11,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -45,9 +46,9 @@
 	        <div class="" style="float: right;" >
 	        	{% if user.is_authenticated %}
 		          <a class="" href="{% url 'account_logout' %}">Logout</a>
-		          <a class="" href="{% url 'courses-home' %}">Cart</a>
+		          <a class="" href="{% url 'course-create' %}">Create Course</a>
 		          <a class="" href="{% url 'profile' %}">Profile</a>
-		          <a class="" href="{% url 'courses-home' %}">On Going</a>
+		          <a class="" href="{% url 'dashboard' %}">On Going</a>
 	        	{% else %}
 		          <a class="nav-item nav-link" href="{% url 'account_login' %}">Login</a>
 		          <a class="nav-item nav-link" href="{% url 'courses-home' %}">Explore</a>
@@ -60,12 +61,11 @@
 	</header> 
 	<main role="main" class="container">
 		<div class="row">
-			<div class="col-md-8">
 				{% if messages %}
-					<div class="messages" hx-get="{% url 'clear' %}" hx-triger="load delay: 3s">
+					<div class="messages" hx-get="{% url 'clear' %}">
 						{% for message in messages %}
-							<div class="alert alert-{{ message.tags }}">
-								{{ message }}
+							<div class="alert alert-{{ message.tags }}" style="display: flex;justify-content: space-between;">
+								{{ message }}<i class="bi bi-x-lg"></i>
 							</div>
 						{% endfor %}
 					</div>
@@ -73,7 +73,6 @@
 				<br>
 	  			{% block content %}{% endblock %}
 				
-			</div>
 		</div>
 	</main>
 	<div class="footer-basic">

@@ -1,17 +1,14 @@
-import datetime
-import os
-import random
-import string
-
+from math import remainder
 from django.conf import settings
 from django.contrib import messages
+from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils import timezone
+from django.urls import reverse
+from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.models import User
-from .models import Course, Lesson, Video, Order
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 from django.views.generic import (
     ListView,
     DetailView,
@@ -20,29 +17,36 @@ from django.views.generic import (
     DeleteView,
     View,
 )
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from user.models import InstructorProfile
+from .models import Course, Lesson, Video, Order
+from common.utils import get_or_none
+
 
 # from pypaystack import Transaction, Customer, Plan
-from django.http import HttpResponse, JsonResponse
-
 # from paystackapi.transaction import Transaction
 # from paystackapi.paystack import Paystack
 
+User = get_user_model()
 
-class PostListView(ListView):
+
+class CourseListView(ListView):
     model = Course
     template_name = "courses/home.html"
-    context_object_name = "posts"
+    context_object_name = "courses"
     ordering = ["-updated_at"]
     paginate_by = 5
 
 
-class PostDetailView(View):
+def user_course_list_view(request):
+    courses = Course.objects.select_related("author").filter(author=request.user)
+
+    context = {"courses": courses}
+    return render(request, "courses/user_course_list.html", context)
+
+
+class CourseDetailView(View):
     def get(self, request, course_slug, *args, **kwargs):
-        course = Course.objects.get(slug=course_slug)
-        order = get_object_or_404(Order, course=course, user=request.user)
+        course = Course.objects.select_related("pricing").get(slug=course_slug)
+        order = get_or_none(Order, course=course, user=request.user)
 
         context = {
             "course": course,
@@ -51,43 +55,39 @@ class PostDetailView(View):
         return render(request, "courses/course_detail.html", context)
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class CourseCreateView(LoginRequiredMixin, CreateView):
     model = Course
-    fields = ["title", "content", "price"]
+    fields = "__all__"
 
     def form_valid(self, form):
-        form.instance.author = get_object_or_404(
-            InstructorProfile, user=self.request.user
-        )
+        form.instance.author = get_object_or_404(User, username=self.request.user)
         form.save()
         return super().form_valid(form)
 
 
-class PostUpdateView(LoginRequiredMixin, UpdateView):
+class CourseUpdateView(LoginRequiredMixin, UpdateView):
     model = Course
     fields = ["title", "content", "image", "price"]
 
     def form_valid(self, form):
-        form.instance.author = get_object_or_404(
-            InstructorProfile, user=self.request.user
-        )
+        form.instance.author = get_object_or_404(User, username=self.request.user)
         form.save()
         return super().form_valid(form)
 
     def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.author:
+        course = self.get_object()
+        if self.request.user == course.author:
             return True
         return False
 
 
-class PostDeleteView(LoginRequiredMixin, DeleteView):
+class CourseDeleteView(LoginRequiredMixin, DeleteView):
     model = Course
     success_url = "/"
 
     def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.author:
+        course = self.get_object()
+        if self.request.user == course.author:
             return True
         return False
 
@@ -123,7 +123,6 @@ class LessonDetailView(LoginRequiredMixin, View):
             lesson = lesson_qs.first()
 
         context = {"object": lesson}
-        print("sdsdsdddddd")
         return render(request, "courses/lesson_detail.html", context)
 
 
@@ -141,10 +140,6 @@ def get_video_url(request, video_slug):
     return render(request, "courses/partials/video_frame.html", context)
 
 
-def about(request):
-    return render(request, "courses/about.html", {"title": "About"})
-
-
 def enroll(request, course_slug):
     course = get_object_or_404(Course, slug=course_slug)
     order = Order.objects.filter(course=course, user=request.user)
@@ -156,6 +151,10 @@ def enroll(request, course_slug):
         messages.success(request, "You have successfully enrolled for this course.")
 
     return redirect("lesson-list", course_slug)
+
+
+def about(request):
+    return render(request, "courses/about.html", {"title": "About"})
 
 
 def clear_messages(request):

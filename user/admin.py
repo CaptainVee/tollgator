@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import InstructorProfile, StudentProfile, User, UserProfile
+from .models import Dashboard, UserProfile
 
 
-admin.site.register(User)
 admin.site.register(UserProfile)
-# admin.site.register(IsUser)
+admin.site.register(Dashboard)
 
 # Register your models here.

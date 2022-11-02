@@ -2,17 +2,17 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-	<div class= 'content-section'>
+	<div class= ''>
 		<form action="" method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
 			<fieldset class='form-group'>
-				<legend class= 'boarder-bottom mb=4'>courses Post</legend>
+				<legend class= 'boarder-bottom mb=4'>Course Overview</legend>
 				
 				{{ form|crispy }}
 
 			</fieldset>
 			<div class='form-group'>
-				<button class= 'btn- btn-outline-info' type="submit">Post</button>
+				<button class= 'btn- btn-outline-info' type="submit">Create Course</button>
 			</div>
 		</form>	
 	</div>

@@ -1,0 +1,19 @@
+{% extends "courses/base.html" %}
+{% block content %}
+<h1>On going Courses</h1>
+<a href="{% url 'user-course-list' %}">My courses</a>
+	{% for order in orders %}
+    <div class="card" style="width: 18rem;">
+        <a href="{% url 'lesson-list' course_slug=order.course.slug %}">
+        <img src="{{ order.course.thumbnail.url }}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ order.course.title }}</h5>
+          <p class="card-text">{{ order.course.brief_description }}</p>
+          <li class="list-group-item">{{ order.course.get_rating }}</li>
+        </div>
+    </a>
+      </div>
+
+	{% endfor %}
+
+{% endblock content %}

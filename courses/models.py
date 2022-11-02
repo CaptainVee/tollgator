@@ -1,6 +1,5 @@
 from email.policy import default
-from random import choices
-from turtle import position
+from enum import unique
 import black
 from autoslug import AutoSlugField
 from django.db import models
@@ -10,21 +9,18 @@ from django_countries.fields import CountryField
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
-
+from django.conf import settings
 from common.models import BaseModel
 from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES, COURSE_TYPE
 
-User = get_user_model()
+User = settings.AUTH_USER_MODEL
 
 
 class Course(BaseModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=150)
+    title = models.CharField(max_length=150, unique=True)
     brief_description = models.CharField(max_length=500, blank=True, null=True)
     content = models.TextField()
-    category = models.CharField(
-        choices=CATEGORY_CHOICES, max_length=2, blank=True, null=True
-    )
     slug = AutoSlugField(populate_from="title", always_update=False, unique=True)
     # tags = ArrayField(
     #     models.CharField(max_length=200, default="", blank=True),
@@ -32,25 +28,31 @@ class Course(BaseModel):
     #     default=list,
     # ) #Can be used only on postgress database
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True)
-    course_type = models.CharField(
-        choices=COURSE_TYPE, max_length=50, null=False, blank=False, default="Free"
+    # category = models.ForeignKey(
+    #     "Category", on_delete=models.SET_NULL, null=True, blank=False
+    # )
+    pricing = models.ForeignKey(
+        "Pricing", on_delete=models.SET_NULL, null=True, blank=False
     )
 
     def __str__(self):
         return self.title
 
-    # def get_absolute_url(self):
-    #     return reverse("post-detail", kwargs={"pk": self.pk})  # also known as product
+    def get_pricing(self):
+        return self.pricing.price
+
+    @property
+    def lessons(self):
+        return self.lesson_set.all().order_by("position")
+
+    def get_absolute_url(self):
+        return reverse("lesson-list", kwargs={"course_slug": self.slug})
 
     # def get_add_to_cart_url(self):
     #     return reverse("add-to-cart", kwargs={"pk": self.pk})
 
     # def get_remove_from_cart_url(self):
     #     return reverse("remove-from-cart", kwargs={"pk": self.pk})
-
-    @property
-    def lessons(self):
-        return self.lesson_set.all().order_by("position")
 
 
 class Lesson(BaseModel):
@@ -143,6 +145,29 @@ class CourseRating(BaseModel):
 
     def __str__(self):
         return self.course
+
+
+class Pricing(BaseModel):
+    name = models.CharField(
+        choices=COURSE_TYPE, max_length=50, null=False, blank=False, default="Free"
+    )
+    description = models.TextField()
+    price = models.FloatField(default=0, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
+
+
+class Category(BaseModel):
+    name = models.CharField(max_length=50, blank=False, null=False)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("category")
+        verbose_name_plural = _("categories")
 
 
 class Address(models.Model):

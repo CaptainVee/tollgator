@@ -5,7 +5,11 @@ YES_NO_EMPTY_OPTION = (
     ("Yes", "Yes"),
     ("No", "No"),
 )
-CATEGORY_CHOICES = (("S", "Shirt"), ("SW", "Sport wear"), ("OW", "Outwear"))
+CATEGORY_CHOICES = (
+    ("IT and Software", "IT and Software"),
+    ("Law", "Law"),
+    ("Entertainment", "Entertainment"),
+)
 
 PAYMENT_METHODS = (("payment_card", "Payment Card"), ("bank_transfer", "Bank Transfer"))
 

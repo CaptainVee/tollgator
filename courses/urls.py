@@ -1,11 +1,12 @@
 from django.urls import path
 from . import views
 from .views import (
-    PostListView,
-    PostDetailView,
-    PostCreateView,
-    PostUpdateView,
-    PostDeleteView,
+    CourseListView,
+    user_course_list_view,
+    CourseDetailView,
+    CourseCreateView,
+    CourseUpdateView,
+    CourseDeleteView,
     LessonCreateView,
     lesson_list_view,
     lesson_video,
@@ -19,15 +20,16 @@ from .views import (
 
 
 urlpatterns = [
-    path("", PostListView.as_view(), name="courses-home"),
-    path("course/new/", PostCreateView.as_view(), name="course-create"),
+    path("", CourseListView.as_view(), name="courses-home"),
+    path("user/", user_course_list_view, name="user-course-list"),
+    path("course/new/", CourseCreateView.as_view(), name="course-create"),
     path(
         "course/<slug:course_slug>/",
-        PostDetailView.as_view(),
+        CourseDetailView.as_view(),
         name="course-detail",
     ),
-    path("course/<int:pk>/update", PostUpdateView.as_view(), name="course-update"),
-    path("course/<int:pk>/delete", PostDeleteView.as_view(), name="course-delete"),
+    path("course/<int:pk>/update", CourseUpdateView.as_view(), name="course-update"),
+    path("course/<int:pk>/delete", CourseDeleteView.as_view(), name="course-delete"),
     # path("about/", views.about, name="courses-about"),
     path(
         "course/<slug:course_slug>/lessons",

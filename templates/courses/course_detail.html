@@ -7,19 +7,17 @@
 		    <div class="article-metadata">
 		      <a class="mr-2" href="">{{ course.author }}</a>
 		      <small class="text-muted">{{ course.date_posted | date:'F d, Y' }}</small>
-		      {% if course.course_type == "Free" %}
+
+		      {% if course.pricing.name == "Free" %}
 				{% if order.user == request.user %}
-				<a class="btn btn-warning" href="{% url 'lesson-list' course_slug=course.slug %}" >Go to course</a><p>You have already enrolled for this course</p>
+					<a class="btn btn-warning" href="{% url 'lesson-list' course_slug=course.slug %}" >Go to course</a><p>You have already enrolled for this course</p>
 				{% else %}
-				<a class="button" href="{% url 'enroll' course_slug=course.slug %}" >Enroll</a>
+					<a class="button" href="{% url 'enroll' course_slug=course.slug %}" >Enroll</a>
 				{% endif %}
 		      {% else %}
 		      	<a class="button" href="" >ADD TO CART</a>
 		      {% endif %}
 		      
-		      	
-
-		      <p>₦{{course.price}}</p>
 		      {% if course.author == user %}
 		      	<div>
 		      		<a class="btn info btn-sm mt-1 mb-1" href="">Add Lesson</a>

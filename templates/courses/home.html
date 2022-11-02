@@ -1,38 +1,21 @@
 {% extends "courses/base.html" %}
 {% block content %}
 
-	{% for post in posts %}
-
-	<div class="row">
-	  <div class="column">
-	    <div class="card"><a href="{% url 'course-detail' course_slug=post.slug %}" >
-			<p>{{ post.id }}</p>
-			<p>{{ post.pkid }}</p>
-			<p>{{ post.slug }}</p>
-			<p>{{ post.sluger }}</p>
-
-	      <img src="{{ post.thumbnail.url }}" alt="img" style="width:100%">
-	      <div class="container">
-	        <h2><a class="article-title" href="{% url 'course-detail' course_slug=post.slug %}" >{{ post.title }}</a></h2>
-	        <a class="mr-2" href="">{{ post.author }}</a>
-	        <p class="article-content">{{ post.content }}</p>
-	        <p>₦{{post.price}}</p>
-	      </div>
-	    </a></div>
-	  </div>
+	{% for course in courses %}
+	<div class="col mb-3">
+		<div class="card" style="width: 18rem;">
+			<a href="{% url 'course-detail' course_slug=course.slug %}">
+			<img src="{{ course.thumbnail.url }}" class="card-img-top" alt="...">
+			<div class="card-body">
+			  <h5 class="card-title">{{ course.title }}</h5>
+			  <p class="card-text">{{ course.brief_description }}</p>
+			  <li class="list-group-item">{{ course.get_rating }}</li>
+			</div>
+			</a>
+		  </div>
 	</div>
 
 	{% endfor %}
-
-
-
-
-
-
-
-
-
-
 
 
 
