@@ -1,8 +1,8 @@
 from math import remainder
+from turtle import position
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
-from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
@@ -19,6 +19,7 @@ from django.views.generic import (
 )
 from .models import Course, Lesson, Video, Order
 from common.utils import get_or_none
+from .forms import LessonForm
 
 
 # from pypaystack import Transaction, Customer, Plan
@@ -92,17 +93,32 @@ class CourseDeleteView(LoginRequiredMixin, DeleteView):
         return False
 
 
-class LessonCreateView(LoginRequiredMixin, CreateView):
-    model = Lesson
-    fields = ["title", "description", "video", "position"]
+@login_required
+def lesson_create_view(request, course_id):
+    course = Course.objects.get(id=course_id)
+    created_lessons = Lesson.objects.filter(course=course)
+    if request.method == "POST":
+        title = request.POST.get("title")
+        position = request.POST.get("position")
+        description = request.POST.get("description")
+        lesson_form = LessonForm(request.POST, instance=request.user)
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.instance.course = get_object_or_404(
-            Course, pk=self.kwargs.get("course_pk")
-        )
-        form.save()
-        return super().form_valid(form)
+        if lesson_form.is_valid():
+            lesson = Lesson(
+                title=title, course=course, position=position, description=description
+            )
+            lesson.save()
+            # lesson_form.save()
+            messages.success(request, f"Your Lesson has been created")
+            return redirect("lesson-create", course_id=course_id)
+    else:
+        lesson_form = LessonForm(instance=request.user)
+    context = {
+        "lesson_form": lesson_form,
+        "course": course,
+        "created_lessons": created_lessons,
+    }
+    return render(request, "courses/lesson_form.html", context)
 
 
 def lesson_list_view(request, course_slug):

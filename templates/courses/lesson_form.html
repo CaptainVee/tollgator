@@ -2,13 +2,21 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-	<div class= 'content-section'>
+	<div class= ''>
+		<h2>{{ course.title }}</h2>
+		<div class="">
+			{% for lesson in created_lessons %}
+				<div class="card mb-3">
+					<a href="">{{lesson.title}}</a>
+				</div>
+			{% endfor %}
+		</div>
 		<form action="" method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
 			<fieldset class='form-group'>
 				<legend class= 'boarder-bottom mb=4'>Lesson Post</legend>
 				
-				{{ form|crispy }}
+				{{ lesson_form|crispy }}
 
 			</fieldset>
 			<div class='form-group'>

@@ -20,7 +20,7 @@
 		      
 		      {% if course.author == user %}
 		      	<div>
-		      		<a class="btn info btn-sm mt-1 mb-1" href="">Add Lesson</a>
+		      		<a class="btn info btn-sm mt-1 mb-1" href="{% url 'lesson-create' course_id=course.id %}">Add Lesson</a>
 		      		<a class="btn info btn-sm mt-1 mb-1" href="">Update</a>
 		      		<a class="btn danger btn-sm mt-1 mb-1" href="">Delete</a>
 		      	</div>

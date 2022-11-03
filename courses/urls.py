@@ -7,7 +7,7 @@ from .views import (
     CourseCreateView,
     CourseUpdateView,
     CourseDeleteView,
-    LessonCreateView,
+    lesson_create_view,
     lesson_list_view,
     lesson_video,
     get_video_url,
@@ -36,9 +36,7 @@ urlpatterns = [
         lesson_list_view,
         name="lesson-list",
     ),
-    path(
-        "lesson/<int:course_pk>/new/", LessonCreateView.as_view(), name="lesson-create"
-    ),
+    path("lesson/<slug:course_id>/new/", lesson_create_view, name="lesson-create"),
     path(
         "<slug:course_slug>/lesson/<slug:lesson_slug>/",
         LessonDetailView.as_view(),
