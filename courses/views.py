@@ -150,6 +150,14 @@ def lesson_video(request, lesson_slug, video_slug, *args, **kwargs):
     return render(request, "courses/lesson_video.html", context)
 
 
+def upload_video(request):
+    pass
+
+
+def upload_document(request):
+    pass
+
+
 def get_video_url(request, video_slug):
     video = Video.objects.get(id=video_slug)
     context = {"video": video}
