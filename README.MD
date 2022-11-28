@@ -2,12 +2,20 @@
 
 # Tollgator
 
-Tollgator is a web-applications that allow users to turn their youtube videos to become an online courses. Students can then take them serialy and receive a certification on completion.
+Tollgator is a web-applications that allow users to turn their youtube videos to become an online courses. Students can then take them serially and receive a certification on completion.
 
-# Want to use this project?
+## Want to use this project?
 
 1. Fork/Clone
 
+   ```sh
+   $ git clone https://github.com/CaptainVee/Tollgator.git
+   ```
+
+1. Cd into Tollgator
+   ```sh
+   $ cd Tollgator
+   ```
 1. Create and activate a virtual environment:
 
    ```sh
@@ -23,6 +31,7 @@ Tollgator is a web-applications that allow users to turn their youtube videos to
 1. Apply the migrations and run the Django development server:
 
    ```sh
+   (venv)$ python manage.py makemigrations
    (venv)$ python manage.py migrate
    (venv)$ python manage.py runserver
    ```
