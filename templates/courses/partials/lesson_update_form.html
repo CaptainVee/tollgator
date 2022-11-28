@@ -1,0 +1,11 @@
+{% load crispy_forms_tags %}
+
+	<div class= ''>
+     <form action="" hx-put="{% url 'lesson-detail' lesson_id=lesson.id course_id=course_id %}" 
+                                   hx-target="#lesson-details">
+            {% csrf_token %}
+            
+            {{ form|crispy }}
+        <input class="btn btn-primary" type="submit">
+     </form>	
+	</div>

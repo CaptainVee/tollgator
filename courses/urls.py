@@ -8,16 +8,19 @@ from .views import (
     CourseUpdateView,
     CourseDeleteView,
     lesson_create_view,
+    lesson_update_view,
     lesson_list_view,
     lesson_video,
     get_video_url,
-    LessonDetailView,
+    lesson_detail_view,
     enroll,
     clear_messages,
+    video_update_view,
 )
 
 # from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
 
+# app_name = "courses"
 
 urlpatterns = [
     path("", CourseListView.as_view(), name="courses-home"),
@@ -28,27 +31,27 @@ urlpatterns = [
         CourseDetailView.as_view(),
         name="course-detail",
     ),
-    path("course/<int:pk>/update", CourseUpdateView.as_view(), name="course-update"),
+    path("course/<int:pk>/update/", CourseUpdateView.as_view(), name="course-update"),
     path("course/<int:pk>/delete", CourseDeleteView.as_view(), name="course-delete"),
     # path("about/", views.about, name="courses-about"),
     path(
-        "course/<slug:course_slug>/lessons",
+        "course/<slug:course_slug>/lessons/",
         lesson_list_view,
         name="lesson-list",
     ),
     path("lesson/<slug:course_id>/new/", lesson_create_view, name="lesson-create"),
     path(
-        "<slug:course_slug>/lesson/<slug:lesson_slug>/",
-        LessonDetailView.as_view(),
+        "<slug:course_id>/lesson/<slug:lesson_id>/",
+        lesson_detail_view,
         name="lesson-detail",
     ),
     path(
-        "<slug:course_slug>/lesson/<slug:lesson_slug>/<slug:video_slug>",
+        "<slug:course_slug>/lesson/<slug:lesson_slug>/<slug:video_slug>/",
         lesson_video,
         name="lesson-video-detail",
     ),
     path(
-        "course/<slug:course_slug>/enroll",
+        "course/<slug:course_slug>/enroll/",
         enroll,
         name="enroll",
     ),
@@ -56,6 +59,21 @@ urlpatterns = [
 
 
 htmx_urlpatterns = [
+    path(
+        "video/update/<slug:lesson_id>/<slug:video_id>/",
+        video_update_view,
+        name="video-update",
+    ),
+    path(
+        "video/new/<slug:lesson_id>/",
+        video_update_view,
+        name="video-create",
+    ),
+    path(
+        "<slug:course_id>/lesson_update/<slug:lesson_id>/",
+        lesson_update_view,
+        name="lesson-update",
+    ),
     path("video/<slug:video_slug>", get_video_url, name="video-url"),
     path("clear/", clear_messages, name="clear"),
 ]

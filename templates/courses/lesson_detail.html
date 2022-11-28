@@ -1,33 +1,25 @@
 {% extends 'courses/base.html' %}
 
-{% block post_detail_link %}
-{% if object is not None %}
-	<li><a href="{{ object.course.get_absolute_url }}">{{ object.course.title }}</a></li>
-	<li>{{ object.title }}</li>
-{% endif %}
-{% endblock %}
 
 {% block content %}
-	<div class='container'>
-		<h1>Lesson Detail View</h1>
-		<div class='row'>
-			<div class='col-sm-6 col-md-6'>
-				{% if object is not None %}
-				<h3>{{ object.title }}</h3>
-				<p>{{ object.description }}</p>
-				<iframe width="560" height="315" src="{{ object.video_url }}"" 
-					title="YouTube video player" frameborder="0" 
-					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-					allowfullscreen>
-				</iframe>
-				{% else %}
-				<h3>Upgrade membership</h3>
-				<p>To view this course you'll need to upgrade your membership</p>
-				<br>
-				<a href="{% url 'memberships:select' %}"><button class="btn btn-warning">Check out memberships</button></a>
-				<hr>
-				{% endif %}
-			</div>
+	
+	<div  class="card">
+		<h1>lesson detail</h1>
+		<div id="lesson-details">
+			{% include 'courses/partials/lesson_update.html' %}
 		</div>
+			<ol>
+				{% for video in lesson.videos %}
+					{% include 'courses/partials/video_list.html' %}
+				{% endfor %}
+			</ol>
+		<div id="video-new" class="">
+		</div>
+		<button hx-get="{% url 'video-create' lesson_id=lesson.id %}"
+			hx-target="#video-new"
+			hx-trigger="click">
+			New</button>
+		
+
 	</div>
 {% endblock content %}

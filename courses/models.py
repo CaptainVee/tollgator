@@ -71,7 +71,7 @@ class Lesson(BaseModel):
     def get_absolute_url(self):
         return reverse(
             "lesson-detail",
-            kwargs={"course_slug": self.course.slug, "lesson_slug": self.id},
+            kwargs={"course_slug": self.course.slug, "lesson_id": self.id},
         )
 
     @property

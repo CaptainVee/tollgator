@@ -2,7 +2,7 @@ from math import remainder
 from turtle import position
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404, QueryDict
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
@@ -19,7 +19,7 @@ from django.views.generic import (
 )
 from .models import Course, Lesson, Video, Order
 from common.utils import get_or_none
-from .forms import LessonForm
+from .forms import LessonForm, VideoForm
 
 
 # from pypaystack import Transaction, Customer, Plan
@@ -97,11 +97,12 @@ class CourseDeleteView(LoginRequiredMixin, DeleteView):
 def lesson_create_view(request, course_id):
     course = Course.objects.get(id=course_id)
     created_lessons = Lesson.objects.filter(course=course)
+    video_form = VideoForm()
     if request.method == "POST":
         title = request.POST.get("title")
         position = request.POST.get("position")
         description = request.POST.get("description")
-        lesson_form = LessonForm(request.POST, instance=request.user)
+        lesson_form = LessonForm(request.POST)
 
         if lesson_form.is_valid():
             lesson = Lesson(
@@ -109,16 +110,72 @@ def lesson_create_view(request, course_id):
             )
             lesson.save()
             # lesson_form.save()
-            messages.success(request, f"Your Lesson has been created")
-            return redirect("lesson-create", course_id=course_id)
+            # context = {
+            #     "lesson_form": lesson_form,
+            #     "course": course,
+            #     "created_lessons": created_lessons,
+            # }
+            # if request.htmx:
+            #     return render(request, "courses/partials/resource_list.html", context)
+            return redirect("lesson-detail", course_id=course_id, lesson_id=lesson.id)
     else:
-        lesson_form = LessonForm(instance=request.user)
+        lesson_form = LessonForm()
     context = {
         "lesson_form": lesson_form,
         "course": course,
         "created_lessons": created_lessons,
+        "video_form": video_form,
     }
     return render(request, "courses/lesson_form.html", context)
+
+
+def video_update_view(request, lesson_id=None, video_id=None):
+    if request.htmx:
+        try:
+            lesson = Lesson.objects.get(id=lesson_id)
+        except:
+            lesson = None
+        if lesson_id == None:
+            return HttpResponse("NOT FOUND")
+
+        video = None
+        if video_id is not None:
+            try:
+                video = Video.objects.get(lesson=lesson, id=video_id)
+            except:
+                video = None
+
+        form = VideoForm(request.POST or None, instance=video)
+
+        form_url = reverse("video-create", kwargs={"lesson_id": lesson.id})
+        if video:
+            print(121111111111111111111, video)
+            form_url = reverse(
+                "video-update",
+                kwargs={"lesson_id": lesson.id, "video_id": video.id},
+            )
+        context = {
+            "form_url": form_url,
+            "form": form,
+            "lesson": lesson,
+            "video": video,
+        }
+        if form.is_valid():
+            new_video = form.save(commit=False)
+            if video is None:
+                new_video.lesson = lesson
+            new_video.save()
+            context["video"] = video
+
+            return render(request, "courses/partials/video_list.html", context)
+
+        return render(request, "courses/partials/video_form.html", context)
+    else:
+        raise Http404
+
+
+def upload_document(request):
+    pass
 
 
 def lesson_list_view(request, course_slug):
@@ -128,18 +185,30 @@ def lesson_list_view(request, course_slug):
     return render(request, "courses/lesson_list.html", context)
 
 
-class LessonDetailView(LoginRequiredMixin, View):
-    def get(self, request, course_slug, lesson_slug, *args, **kwargs):
-        course_qs = Course.objects.filter(slug=course_slug)
-        if course_qs.exists():
-            course = course_qs.first()
+def lesson_detail_view(request, lesson_id, course_id):
 
-        lesson_qs = course.lessons.filter(id=lesson_slug)
-        if lesson_qs.exists():
-            lesson = lesson_qs.first()
+    lesson = get_object_or_404(Lesson, id=lesson_id)
 
-        context = {"object": lesson}
+    context = {"lesson": lesson, "course_id": course_id}
+    if request.method == "GET":
         return render(request, "courses/lesson_detail.html", context)
+    elif request.method == "PUT":
+        data = QueryDict(request.body).dict()
+        form = LessonForm(data, instance=lesson)
+        if form.is_valid():
+            form.save()
+            return render(request, "courses/partials/lesson_update.html", context)
+        context["form"] = form
+
+        render(request, "courses/partials/lesson_update_form.html", context)
+
+
+def lesson_update_view(request, lesson_id, course_id):
+
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    form = LessonForm(instance=lesson)
+    context = {"lesson": lesson, "course_id": course_id, "form": form}
+    return render(request, "courses/partials/lesson_update_form.html", context)
 
 
 def lesson_video(request, lesson_slug, video_slug, *args, **kwargs):
@@ -148,14 +217,6 @@ def lesson_video(request, lesson_slug, video_slug, *args, **kwargs):
 
     context = {"video_queryset": video_queryset, "video": video}
     return render(request, "courses/lesson_video.html", context)
-
-
-def upload_video(request):
-    pass
-
-
-def upload_document(request):
-    pass
 
 
 def get_video_url(request, video_slug):

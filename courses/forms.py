@@ -2,7 +2,7 @@ from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
-from courses.models import Lesson
+from courses.models import Lesson, Video
 
 
 PAYMENT_CHOICES = (("S", "Stripe"), ("P", "PayPal"))
@@ -12,6 +12,12 @@ class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
         exclude = ["is_deleted", "course", "total_video_length"]
+
+
+class VideoForm(forms.ModelForm):
+    class Meta:
+        model = Video
+        fields = ["title", "embedded_link", "position"]
 
 
 class Fform(forms.Form):

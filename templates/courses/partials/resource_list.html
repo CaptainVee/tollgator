@@ -1,0 +1,11 @@
+{% if created_lessons %}
+<div class="">
+    {% for lesson in created_lessons %}
+        <div class="card card-body mb-3">
+            <a href="">{{lesson.title}}</a>
+        </div>
+    {% endfor %}
+</div>
+{% else %}
+ <p>No lesson Found.</p>
+{% endif %}

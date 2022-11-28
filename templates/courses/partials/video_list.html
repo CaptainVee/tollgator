@@ -1,0 +1,9 @@
+<div id="video-{{ video.id }}" class="">
+    <li> 
+        <a href="{{ video.get_absolute_url }}">{{ video.title }}</a> 
+        <button hx-get="{% url 'video-update' lesson_id=lesson.id video_id=video.id %}"
+                hx-target="#video-{{ video.id }}"
+                hx-trigger="click">
+            Edit</button>
+    </li>
+</div>
