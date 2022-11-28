@@ -16,6 +16,7 @@ from .views import (
     enroll,
     clear_messages,
     video_update_view,
+    new,
 )
 
 # from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
@@ -24,6 +25,7 @@ from .views import (
 
 urlpatterns = [
     path("", CourseListView.as_view(), name="courses-home"),
+    path("new/", new, name="new"),
     path("user/", user_course_list_view, name="user-course-list"),
     path("course/new/", CourseCreateView.as_view(), name="course-create"),
     path(

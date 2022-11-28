@@ -236,6 +236,10 @@ def about(request):
     return render(request, "courses/about.html", {"title": "About"})
 
 
+def new(request):
+    return render(request, "courses/new/index.html", {"title": "Tollgator"})
+
+
 def clear_messages(request):
     return HttpResponse("")
 
