@@ -1,7 +1,6 @@
 {% load crispy_forms_tags %}
-
 	<div class= ''>
-		<form action="" method="POST" enctype="multipart/form-data" hx-post="{{ form_url }}" hx-swap="outerHTML">
+		<form action="" enctype="multipart/form-data" hx-post="{{ form_url }}" hx-swap="outerHTML">
 			{% csrf_token %}
 				
 				{{ form|crispy }}

@@ -4,3 +4,59 @@ adams hill django htmx
 courey shafer youtube api video
 learnWebCoding
 
+def video_update_view(request, lesson_id=None, video_id=None):
+    print(request.method)
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    try:
+        video = Video.objects.get(id=video_id, lesson=lesson)
+    except:
+        video = None
+    if request.method == "GET":
+        form = VideoForm(instance=video)
+        context = {"lesson": lesson, "video": video, "form": form}
+        return render(request, "courses/partials/video_form.html", context)
+
+    elif request.method == "PUT":
+        print(21212121212121212, "This os put")
+        data = QueryDict(request.body).dict()
+        print(request.POST)
+        form = VideoForm(data, instance=video)
+        if form.is_valid():
+            print("the form is valid")
+            form.save()
+            form_url = reverse(
+                "video-update", kwargs={"lesson_id": lesson_id, "video_id": video.id}
+            )
+            context = {
+                "lesson": lesson,
+                "video": video,
+                "form": form,
+                "form_url": form_url,
+            }
+            print(1212121212121212, "reached the last")
+            return render(request, "courses/partials/lesson_detail.html", context)
+        else:
+            print(form.errors.as_data)
+
+    elif request.method == "POST":
+        print(121212121212121, "this is post")
+        data = QueryDict(request.body).dict()
+        form = VideoForm(data, instance=lesson)
+        if form.is_valid():
+            new_video = form.save(commit=False)
+            new_video.lesson = lesson
+            new_video.save()
+            context["video"] = video
+            form_url = reverse("video-create", kwargs={"lesson_id": lesson.id})
+            context = {
+                "lesson": lesson,
+                "video": video,
+                "form": form,
+                "form_url": form_url,
+            }
+            return render(request, "courses/partials/video_form.html", context)
+
+    else:
+        context = {"lesson": lesson, "video": video, "form": form}
+        return render(request, "courses/partials/video_form.html", context)
+

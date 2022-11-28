@@ -13,13 +13,14 @@
 					{% include 'courses/partials/video_list.html' %}
 				{% endfor %}
 			</ol>
-		<div id="video-new" class="">
+		<div id="new-video" class="">
 		</div>
-		<button hx-get="{% url 'video-create' lesson_id=lesson.id %}"
-			hx-target="#video-new"
-			hx-trigger="click">
-			New</button>
-		
+		{% if new_url %}
+			<button hx-get="{% url 'video-create' lesson_id=lesson.id %}"
+				hx-target="#new-video"
+				hx-trigger="click">
+				Newer</button>
+		{% endif %}		
 
 	</div>
 {% endblock content %}
