@@ -1,5 +1,3 @@
-from math import remainder
-from turtle import position
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse, Http404, QueryDict
@@ -20,6 +18,7 @@ from django.views.generic import (
 from .models import Course, Lesson, Video, Order
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
+from .utils import youtube_video, youtube_playlist
 
 
 # from pypaystack import Transaction, Customer, Plan
@@ -41,6 +40,7 @@ def user_course_list_view(request):
     courses = Course.objects.select_related("author").filter(author=request.user)
 
     context = {"courses": courses}
+    print(courses)
     return render(request, "courses/user_course_list.html", context)
 
 
@@ -237,7 +237,12 @@ def about(request):
 
 
 def new(request):
-    return render(request, "courses/new/index.html", {"title": "Tollgator"})
+    lister = youtube_playlist(playlist_id="PLOLrQ9Pn6cay_cQkyg-WYYiJ_EKU8KWKh")
+
+    ids = [lister[0], lister[1]]
+    context = {"ids": ids}
+    print(context)
+    return render(request, "courses/new/index.html", context)
 
 
 def clear_messages(request):

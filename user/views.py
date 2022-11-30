@@ -15,6 +15,7 @@ def dashboard(request):
     #     user=request.user
     # )
     context = {"orders": orders}
+    print(orders)
     return render(request, "user/dashboard.html", context)
 
 
