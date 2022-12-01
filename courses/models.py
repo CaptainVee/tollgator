@@ -82,8 +82,8 @@ class Lesson(BaseModel):
 class Video(BaseModel):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False, null=False)
-    video_url = models.URLField(max_length=300, null=True, blank=True)
-    embedded_link = models.TextField(blank=False, null=False)
+    video_url = models.URLField(max_length=300, null=False, blank=False)
+    embedded_link = models.TextField(blank=True, null=True)
     position = models.IntegerField()
     video_length = models.FloatField(null=True, blank=True)
 

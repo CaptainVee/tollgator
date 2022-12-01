@@ -7,6 +7,7 @@ from .views import (
     CourseCreateView,
     CourseUpdateView,
     CourseDeleteView,
+    yt_playlist_create_course,
     lesson_create_view,
     lesson_update_view,
     lesson_list_view,
@@ -27,6 +28,7 @@ urlpatterns = [
     path("", CourseListView.as_view(), name="courses-home"),
     path("new/", new, name="new"),
     path("user/", user_course_list_view, name="user-course-list"),
+    path("yt_course/playlist", yt_playlist_create_course, name="yt_course_create"),
     path("course/new/", CourseCreateView.as_view(), name="course-create"),
     path(
         "course/<slug:course_slug>/",

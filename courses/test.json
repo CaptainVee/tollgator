@@ -1,0 +1,85 @@
+
+{
+    "comment":"// This data is for youtube plalist details 'pl_request = youtube.playlists().list(part='snippet', id=playlist_id)'",
+    "kind": "youtube#playlistListResponse",
+    "etag": "nB0zLZCqgVbyuo7e2fnO9mszM6c",
+    "pageInfo": {"totalResults": 1, "resultsPerPage": 5},
+    "items": [
+        {
+            "kind": "youtube#playlist",
+            "etag": "OCIy2Hag9o8VkdSD5CEyQgnXj1I",
+            "id": "PL1A2CSdiySGIPxpSlgzsZiWDavYTAx61d",
+            "snippet": {
+                "publishedAt": "2015-02-16T13:48:26Z",
+                "channelId": "UCea5cMUa9xNU0kUtbRcTkqA",
+                "title": "Python3 Advanced Tutorials",
+                "description": "This is the Advanced Section of Python3 Tutorial series, Covering many of the less taught topics of python. Some Topics include: Templates, Argparse, Regular Expressions, MultiThreading, Networking, CGI Programming, Database Interaction, C Extensions, PyCrypto and Serialization.",
+                "thumbnails": {
+                    "default": {
+                        "url": "https://i.ytimg.com/vi/CkIrizsP64c/default.jpg",
+                        "width": 120,
+                        "height": 90
+                    },
+                    "medium": {
+                        "url": "https://i.ytimg.com/vi/CkIrizsP64c/mqdefault.jpg",
+                        "width": 320,
+                        "height": 180
+                    },
+                    "high": {
+                        "url": "https://i.ytimg.com/vi/CkIrizsP64c/hqdefault.jpg",
+                        "width": 480,
+                        "height": 360
+                    },
+                    "standard": {
+                        "url": "https://i.ytimg.com/vi/CkIrizsP64c/sddefault.jpg",
+                        "width": 640,
+                        "height": 480
+                    },
+                    "maxres": {
+                        "url": "https://i.ytimg.com/vi/CkIrizsP64c/maxresdefault.jpg",
+                        "width": 1280,
+                        "height": 720
+                    }
+                },
+                "channelTitle": "DrapsTV",
+                "localized": {
+                    "title": "Python3 Advanced Tutorials",
+                    "description": "This is the Advanced Section of Python3 Tutorial series, Covering many of the less taught topics of python. Some Topics include: Templates, Argparse, Regular Expressions, MultiThreading, Networking, CGI Programming, Database Interaction, C Extensions, PyCrypto and Serialization."
+                }
+            }
+        }
+    ]
+}
+
+
+
+{
+    "commnet": "this is video details",
+    "kind": "youtube#playlistItem", 
+    "etag": "mawacWNmgIVb7T63YRzjb9-5ks4", 
+    "id": "UEwxQTJDU2RpeVNHSVB4cFNsZ3pzWmlXRGF2WVRBeDYxZC4wOTA3OTZBNzVEMTUzOTMy", 
+    "snippet": {
+        "publishedAt": "2015-06-14T04:03:33Z", 
+        "channelId": "UCea5cMUa9xNU0kUtbRcTkqA", 
+        "title": "Python3 Advanced Tutorial 5 - MultiThreading", 
+        "description": "This is a tutorial covering the basics of adding threading to your python 3 programs. 
+                        All Links and Slides will be in the description. Subscribe for more cool stuff!
+                        \n\nSlides & files - https://www.mediafire.com/folder/g6hqvd74uzymc/Tutorial_5_-_MultiThreading
+                        \n\nPython - http://python.org/
+                        \n\nUbuntu - http://www.ubuntu.com/
+                        \n\nSteam Group: http://steamcommunity.com/groups/DrapsTV
+                        \n\nTwitter: https://twitter.com/DrapsTV
+                        \n\nEllo: https://ello.co/drapstv
+                        \n\nIf you like what you see be sure to subscribe and thumbs up!", 
+        "thumbnails": {
+            "default": {"url": "https://i.ytimg.com/vi/6eqC1WTlIqc/default.jpg", "width": 120, "height": 90}, 
+            "medium": {"url": "https://i.ytimg.com/vi/6eqC1WTlIqc/mqdefault.jpg", "width": 320, "height": 180}, 
+            "high": {"url": "https://i.ytimg.com/vi/6eqC1WTlIqc/hqdefault.jpg", "width": 480, "height": 360}, 
+            "standard": {"url": "https://i.ytimg.com/vi/6eqC1WTlIqc/sddefault.jpg", "width": 640, "height": 480}, 
+            "maxres": {"url": "https://i.ytimg.com/vi/6eqC1WTlIqc/maxresdefault.jpg", "width": 1280, "height": 720}}, 
+        "channelTitle": "DrapsTV", 
+        "playlistId": "PL1A2CSdiySGIPxpSlgzsZiWDavYTAx61d", 
+        "position": 4, 
+        "resourceId": {"kind": "youtube#video", "videoId": "6eqC1WTlIqc"}, 
+        "videoOwnerChannelTitle": "DrapsTV", "videoOwnerChannelId": "UCea5cMUa9xNU0kUtbRcTkqA"}
+}

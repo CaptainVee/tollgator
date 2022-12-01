@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.db import transaction
 from django.http import HttpResponse, Http404, QueryDict
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -15,10 +16,10 @@ from django.views.generic import (
     DeleteView,
     View,
 )
-from .models import Course, Lesson, Video, Order
+from .models import Course, Lesson, Video, Order, Pricing
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
-from .utils import youtube_video, youtube_playlist
+from .utils import yt_playlist_details, yt_video_details, yt_playlist_videos
 
 
 # from pypaystack import Transaction, Customer, Plan
@@ -237,16 +238,52 @@ def about(request):
 
 
 def new(request):
-    lister = youtube_playlist(playlist_id="PLOLrQ9Pn6cay_cQkyg-WYYiJ_EKU8KWKh")
+    video_list = (yt_playlist_videos(playlist_id="PL1A2CSdiySGIPxpSlgzsZiWDavYTAx61d"),)
 
-    ids = [lister[0], lister[1]]
-    context = {"ids": ids}
-    print(context)
-    return render(request, "courses/new/index.html", context)
+    # print(lister)
+    return render(request, "courses/new/index.html", {"title": "About"})
 
 
 def clear_messages(request):
     return HttpResponse("")
+
+
+@transaction.atomic
+def yt_playlist_create_course(request):
+    playlist_id = "PL5B692fm6--uQRRDTPsJDp4o0xbzkoyf8"
+    playlist_details = yt_playlist_details(playlist_id)
+    video_list = yt_playlist_videos(playlist_id)
+    try:
+
+        course = Course.objects.create(
+            author=request.user,
+            title=playlist_details["title"],
+            brief_description=playlist_details["description"],
+            pricing=Pricing.objects.get(name="Free"),
+        )
+        try:
+            lesson = Lesson.objects.create(
+                course=course,
+                title="Lesson 1",
+                position=1,
+            )
+            try:
+                for video in video_list:
+                    Video.objects.create(
+                        lesson=lesson,
+                        title=video["title"],
+                        position=video["position"],
+                        video_url=video["video_id"],
+                    )
+                return redirect("courses-home")
+            except:
+                return HttpResponse(" Sorry o video fault")
+
+        except:
+            return HttpResponse(" Sorry o lesson fault")
+
+    except:
+        return HttpResponse(" Sorry o course fault")
 
 
 # def is_valid_form(values):
