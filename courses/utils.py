@@ -23,18 +23,31 @@ def yt_playlist_videos(playlist_id):
     returns the details of a youtube video in a list with the video title,
     position and video id respectively. example ['title', 0, 'CkIrizsP64c'],
     """
-
-    request = youtube.playlistItems().list(part="snippet", playlistId=playlist_id)
-    response = request.execute()
-
+    next_page_token = None
     video_details = []
-    for item in response["items"]:
-        new_dict = {}
-        new_dict["title"] = item["snippet"]["title"]
-        new_dict["position"] = item["snippet"]["position"]
-        new_dict["video_id"] = item["snippet"]["resourceId"]["videoId"]
-        video_details.append(new_dict)
-        # video_details["thumbnail"] = item["snippet"]["thumbnail"]
+
+    while True:
+        request = youtube.playlistItems().list(
+            part="snippet",
+            playlistId=playlist_id,
+            maxResults=50,
+            pageToken=next_page_token,
+        )
+
+        response = request.execute()
+
+        for item in response["items"]:
+            new_dict = {}
+            new_dict["title"] = item["snippet"]["title"]
+            new_dict["position"] = item["snippet"]["position"]
+            new_dict["video_id"] = item["snippet"]["resourceId"]["videoId"]
+            video_details.append(new_dict)
+            # video_details["thumbnail"] = item["snippet"]["thumbnail"]
+
+        next_page_token = response.get("nextPageToken")
+        if not next_page_token:
+            break
+
     return video_details
 
 
