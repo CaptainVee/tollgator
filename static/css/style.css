@@ -16,7 +16,7 @@
     --red-light: hsl(0, 84%, 80%);
     --orange-light: hsl(22, 85%, 80%);
     --select-box-bg-color: hsl(0, 0%, 100%);
-    --border-color-1: hsl(0, 05, 90%);
+    --border-color-1: hsl(0, 5%, 90%);
 }
 
 /* 03 ---------------------------- Customised Bootstrap Classes--------------  */
@@ -64,6 +64,42 @@
         transform: rotate(360deg);
     }
 }
+
+
+/* --------------Forms --------------------- */
+
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.form-control {
+    height: 48px;
+    border-color: var(--border-color-1);
+    color: var(--black-90);
+    background-color: transparent;
+}
+
+.form-control:focus {
+    background-color: transparent;
+    border-color: var(--border-color-1);
+    color: var(--black-90);
+    box-shadow: none;
+}
+
+.select-icon {
+    position: absolute;
+    left: 360px;
+    top: 108%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    pointer-events: none;
+}
+
+/* select.form-control:focus option {
+    background-color: red;
+} */
+
 
 /* 04 ------------------------ base --------------------*/
 
@@ -130,6 +166,10 @@ h3 {
 
 .btn-theme:focus {
     box-shadow: 0 0 8px var(--main-color);
+}
+
+.btn-block {
+    width: 100%;
 }
 
 /* 19 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ header -----------------------------------------~~ */
@@ -631,6 +671,189 @@ h3 {
 
 .course-instructor ul li:not(:last-child) {
     margin-bottom: 5px;
+}
+
+
+/* course reviews */
+
+.rating-summary .average-rating {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--black-90);
+}
+
+.rating-summary .average-stars i {
+    color: var(--orange);
+}
+
+.rating-summary .rating-bars-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.rating-summary .progress {
+    height: 8px;
+    background-color: var(--border-color-2);
+    width: calc(100% - 120px);
+    margin-right: 8px;
+}
+
+.rating-summary .progress-bar {
+    background-color: var(--main-color);
+}
+
+.rating-summary .star-text {
+    min-width: 60px;
+    color: var(--orange);
+}
+
+.reviews-filter {
+    margin: 0 0 35px;
+    width: 200px;
+}
+
+
+.reviews-item {
+    position: relative;
+    margin-bottom: 30px;
+    padding-left: 65px;
+}
+
+.reviews-item .img-box {
+    max-width: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.reviews-item h4 {
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: capitalize;
+    margin: 0 0 5px;
+    color: var(--black-90);
+}
+
+.reviews-item .stars-rating i {
+    color: var(--orange);
+    font-size: 14px;
+}
+
+.reviews-item .stars-rating .date {
+    margin-left: 5px;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.reviews-item p {
+    margin: 5px 0 0;
+}
+
+
+/* ---------- Course Sidebar ------------- */
+
+.course-sidebar .img-box {
+    margin-bottom: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.course-sidebar .img-box::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--black-alpha-40);
+}
+
+.course-sidebar .play-icon {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    top: 50%;
+    left: 50%;
+    background-color: var(--main-color);
+    transform: translate(-50% -50%);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--WHITE);
+}
+
+.course-sidebar .img-box p {
+    position: absolute;
+    color: var(--WHITE);
+    top: calc(50% + 56px);
+    left: 26px;
+    font-weight: 500;
+    width: 100%;
+}
+
+.course-sidebar .price span {
+    margin-right: 8px;
+}
+
+.course-sidebar .price-old {}
+
+.course-sidebar .price-new {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--black-90);
+}
+
+.course-sidebar .price-discount {
+    color: var(--main-color);
+}
+
+.course-sidebar .features-list {
+    margin: 0 0 20px;
+}
+
+.course-sidebar .features-list li {
+    position: relative;
+    padding-left: 21px;
+    margin-bottom: 8px;
+}
+
+.course-sidebar .features-list li::before {
+    content: '';
+    height: 6px;
+    width: 6px;
+    background-color: var(--main-color);
+    position: absolute;
+    left: 0;
+    top: 9px;
+    border-radius: 50%;
+}
+
+
+/* --------- video modal ---------- */
+
+.video-modal .btn-close {
+    height: 35px;
+    width: 35px;
+    background-image: none;
+    border-radius: 50%;
+    opacity: 1;
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: -35px;
+    color: var(--WHITE);
+    font-size: 16px;
+    padding: 0;
+}
+
+.video-modal .modal-content {
+    border: 0;
 }
 
 /* ------------------ Breadcrumbs---------  */

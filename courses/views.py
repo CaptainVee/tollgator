@@ -241,7 +241,7 @@ def new(request):
     # video_list = yt_playlist_videos(playlist_id="PL1A2CSdiySGIPxpSlgzsZiWDavYTAx61d")
 
     # print(lister)
-    return render(request, "courses/new/course-detail.html", {"title": "About"})
+    return render(request, "courses/new/index.html", {"title": "About"})
 
 
 def clear_messages(request):
