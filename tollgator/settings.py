@@ -49,6 +49,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "django_htmx",
     "debug_toolbar",
+    "bootstrap5",
 ]
 
 LOCAL_APPS = [
@@ -164,7 +165,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+# CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 LOGIN_REDIRECT_URL = "courses-home"
 LOGIN_URL = "dashboard"

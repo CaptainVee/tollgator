@@ -354,7 +354,8 @@ h3 {
 }
 
 .courses-item .img-box img {
-    width: 100%;
+    width: 250px;
+    /* width: 100%; */
     border-radius: 5px;
 }
 

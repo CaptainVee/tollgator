@@ -29,9 +29,18 @@ from .utils import yt_playlist_details, yt_video_details, yt_playlist_videos
 User = get_user_model()
 
 
-class CourseListView(ListView):
+class Home(ListView):
     model = Course
     template_name = "courses/home.html"
+    context_object_name = "courses"
+
+    def get_queryset(self):
+        return Course.objects.all()[:4]
+
+
+class CourseListView(ListView):
+    model = Course
+    template_name = "courses/course_list.html"
     context_object_name = "courses"
     ordering = ["-updated_at"]
     paginate_by = 5
@@ -253,7 +262,7 @@ def new(request):
     # video_list = yt_playlist_videos(playlist_id="PL1A2CSdiySGIPxpSlgzsZiWDavYTAx61d")
 
     # print(lister)
-    return render(request, "courses/new/course-detail.html", {"title": "About"})
+    return render(request, "courses/new/index.html", {"title": "About"})
 
 
 def clear_messages(request):

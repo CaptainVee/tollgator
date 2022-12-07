@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import (
+    Home,
     CourseListView,
     user_course_list_view,
     CourseDetailView,
@@ -26,7 +27,8 @@ from .views import (
 # app_name = "courses"
 
 urlpatterns = [
-    path("", CourseListView.as_view(), name="courses-home"),
+    path("", Home.as_view(), name="course-home"),
+    path("courses/", CourseListView.as_view(), name="courses-list"),
     path("new/", new, name="new"),
     path("user/", user_course_list_view, name="user-course-list"),
     path("yt_course/playlist", yt_playlist_create_course, name="yt_course_create"),

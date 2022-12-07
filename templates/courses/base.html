@@ -1,106 +1,165 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <!-- required meta tags -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	 <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <!-- bootstrap css and font awesome  -->
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <!-- main css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" class="js-color-style" href="{% static 'css/colors/color-1.css' %}">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/
-    font-awesome.min.css">
-
-	<!-- Htmx -->
+    <!-- Htmx Js -->
 	<script src="{% static 'js/htmx/htmx.min.js' %}" defer></script>
 	<script src="{% static 'js/htmx/debug.js' %}" defer></script>
 
-    <link rel="stylesheet" type="text/css" href="{% static 'courses/main.css' %}">
-
-	{% if title %}
-		<title>Tollgator - {{title}}</title>
-	{% else %}
-		<title>Tollgator</title>
-	{% endif %}
-	
+    <title>Tollgator</title>
 </head>
 <body>
-	<header class="site-header">
-	  <nav>
-	    <div class="header" id="myTopnav">
-	      <a class="logo" href="{% url 'courses-home' %}">Tollgator</a>
-	      <div class="" id="navbarToggle">
-	        <div>
-	          <a class="title" href="{% url 'courses-home' %}">Home</a>
-	          <a class="" href="{% url 'courses-home' %}">About</a>
 
-	        </div>
-	        <!-- Navbar Right Side -->
-	        <div class="" style="float: right;" >
-	        	{% if user.is_authenticated %}
-		          <a class="" href="{% url 'account_logout' %}">Logout</a>
-		          <a class="" href="{% url 'course-create' %}">Create Course</a>
-				  <a class="" href="{% url 'playlist-create' %}">Playlist Create</a>
-		          <a class="" href="{% url 'profile' %}">Profile</a>
-		          <a class="" href="{% url 'dashboard' %}">On Going</a>
-	        	{% else %}
-		          <a class="nav-item nav-link" href="{% url 'account_login' %}">Login</a>
-		          <a class="nav-item nav-link" href="{% url 'courses-home' %}">Explore</a>
-		        {% endif %}
+<!-- main wrapper start -->
+<div class="main-wrapper">
 
-	        </div>
-	      </div>
-	    </div>
-	  </nav>
-	</header> 
-	<main role="main" class="container">
-		<div class="row">
-				{% if messages %}
-					<div class="messages" hx-get="{% url 'clear' %}">
-						{% for message in messages %}
-							<div class="alert alert-{{ message.tags }}" style="display: flex;justify-content: space-between;">
-								{{ message }}<i class="bi bi-x-lg"></i>
-							</div>
-						{% endfor %}
-					</div>
-				{% endif %}
-				<br>
-	  			{% block content %}{% endblock %}
-				
-		</div>
-	</main>
-	<div class="footer-basic">
-        <footer>
-            <div class="social"><a href="https://www.instagram.com/tollgatorapp"><i class="icon ion-social-instagram"></i></a><a href="https://twitter.com/tollgator"><i class="icon ion-social-twitter"></i></a><a href="https://web.facebook.com/Tollgator-102626081740548"><i class="icon ion-social-facebook"></i></a></div>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="{% url 'courses-home' %}">Home</a></li>
-                <li class="list-inline-item"><a href="#">Services</a></li>
-                <li class="list-inline-item"><a href="{% url 'courses-home' %}">About</a></li>
-                <li class="list-inline-item"><a href="#">Terms</a></li>
-                <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-            </ul>
-            <p class="copyright">Tollgator -captainVee © 2021</p>
-        </footer>
+    <!-- header start -->
+      <header class="header">
+        <div class="container">
+          <div class="header-main d-flex justify-content-between align-items-center">
+            <div class="header-logo">
+              <a href="{% url 'course-home' %}"><span>Toll</span>gator</a>
+            </div>
+            <button type="button" class="header-hamburger-btn js-header-menu-toggler"><span></span></button>
+            <div class="header-backdrop js-header-backdrop"></div>
+            <nav class="header-menu js-header-menu">
+              <button type="button" class="header-close-btn js-header-menu-toggler">
+                <i class="fas fa-times"></i>
+              </button>
+              <ul class="menu">
+                <li class="menu-item"><a href="{% url 'course-home' %}">Home</a></li>
+                <li class="menu-item menu-item-has-children"><a href="#" class="js-toggle-sub-menu">Courses
+                  <i class="fas fa-chevron-down"></i></a>
+                  <ul class="sub-menu js-sub-menu">
+                    <li class="sub-menu-item"><a href="{% url 'new' %}">Courses</a></li>
+                    <li class="sub-menu-item"><a href="{% url 'new' %}">Course-detail</a></li>
+                  </ul>
+                </li>
+                <li class="menu-item menu-item-has-children">
+                  <a class="js-toggle-sub-menu" href="#">Pages<i class="fas fa-chevron-down"></i></a>
+                  <ul class="sub-menu js-sub-menu">
+                    <li class="sub-menu-item"><a href="{% url 'new' %}">Login</a></li>
+                    <li class="sub-menu-item"><a href="{% url 'new' %}">Signup</a></li>
+                  </ul>
+                </li>
+                <li class="menu-item"><a href="{% url 'new' %}">Contact</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+    <!-- header end -->
+  
+        {% if messages %}
+        <div class="messages" hx-get="{% url 'clear' %}">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="display: flex;justify-content: space-between;">
+                    {{ message }}<i class="bi bi-x-lg"></i>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <br>
+    {% block content %}{% endblock %}
+  
+  <!-- footer start -->
+   <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+  
+          <div class="col-sm-6 col-lg-3">
+            <div class="footer-item">
+              <h3 class="footer-logo"><span>toll</span>gator</h3>
+              <ul>
+                <li><a href="#">about</a></li>
+                <li><a href="#">what we offer</a></li>
+                <li><a href="#">careers</a></li>
+                <li><a href="#">certificates</a></li>
+                <li><a href="#">blog</a></li>
+              </ul>
+            </div>
+          </div>
+  
+          <div class="col-sm-6 col-lg-3">
+            <div class="footer-item">
+              <h3>Learning</h3>
+              <ul>
+                <li><a href="#">get the app</a></li>
+                <li><a href="#">testimonials</a></li>
+                <li><a href="#">pricing</a></li>
+                <li><a href="#">faq</a></li>
+              </ul>
+            </div>
+          </div>
+  
+          <div class="col-sm-6 col-lg-3">
+            <div class="footer-item">
+              <h3>More</h3>
+              <ul>
+                <li><a href="#">affiliates</a></li>
+                <li><a href="#">become a course creator</a></li>
+                <li><a href="#">training webnairs</a></li>
+                <li><a href="#">free personality test</a></li>
+                <li><a href="#">help and support</a></li>
+              </ul>
+            </div>
+          </div>
+  
+          <div class="col-sm-6 col-lg-3">
+            <div class="footer-item">
+              <h3>Get in Touch</h3>
+              <ul>
+                <li><a href="#"><i class="fab fa-facebook-f social-icon"></i>Facebook</a></li>
+                <li><a href="#"><i class="fab fa-twitter social-icon"></i>twitter</a></li>
+                <li><a href="#"><i class="fab fa-instagram social-icon"></i>instagram</a></li>
+                <li><a href="#"><i class="fab fa-linkedin-in social-icon"></i>linkedin</a></li>
+                <li><a href="#"><i class="fab fa-youtube social-icon"></i>youtube</a></li>
+              </ul>
+            </div>
+          </div>
+          
+        </div>
+      </div>
     </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p class="m-0 py-4 text-center">copyright &copy; 2022 captainvee</p>
+      </div>
+    </div>
+   </footer>
+  <!-- footer end -->
+  
+  
+  </div>
+  <!-- main wrapper end -->
 
-  <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script>
-	document.body.addEventListener('htmx:configRequest', (event) => {
-  event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-})
+
+
+
+
+  <script>
+
 </script>
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-
+  <!-- javascript -->
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> 
+<script src="{% static 'js/htmx/csrf_token.js' %}"></script> 
+<script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
