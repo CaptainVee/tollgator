@@ -67,6 +67,18 @@ class CourseCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+def playlist_create(request):
+
+    if request.method == "POST":
+        playlist_id = request.POST.get("playlist_id")
+        yt_playlist_create_course(user=request.user, playlist_id=playlist_id)
+        return redirect("courses-home")
+
+    context = {"title": "About"}
+
+    return render(request, "courses/playlist_form.html", context)
+
+
 class CourseUpdateView(LoginRequiredMixin, UpdateView):
     model = Course
     fields = ["title", "content", "image", "price"]
@@ -241,7 +253,7 @@ def new(request):
     # video_list = yt_playlist_videos(playlist_id="PL1A2CSdiySGIPxpSlgzsZiWDavYTAx61d")
 
     # print(lister)
-    return render(request, "courses/new/index.html", {"title": "About"})
+    return render(request, "courses/new/course-detail.html", {"title": "About"})
 
 
 def clear_messages(request):
@@ -249,14 +261,13 @@ def clear_messages(request):
 
 
 @transaction.atomic
-def yt_playlist_create_course(request):
-    playlist_id = "PL5B692fm6--uQRRDTPsJDp4o0xbzkoyf8"
+def yt_playlist_create_course(user, playlist_id):
     playlist_details = yt_playlist_details(playlist_id)
     video_list = yt_playlist_videos(playlist_id)
     try:
 
         course = Course.objects.create(
-            author=request.user,
+            author=user,
             title=playlist_details["title"],
             brief_description=playlist_details["description"],
             pricing=Pricing.objects.get(name="Free"),
@@ -284,6 +295,21 @@ def yt_playlist_create_course(request):
 
     except:
         return HttpResponse(" Sorry o course fault")
+
+
+def bulk_created(big_list, lesson, video):
+    bulk_list = []
+
+    for a in big_list:
+        bulk_list.append(
+            Video(
+                lesson=lesson,
+                title=video["title"],
+                position=video["position"],
+                video_url=video["video_id"],
+            )
+        )
+    Video.objects.bulk_create(bulk_list, batch_size=999)
 
 
 # def is_valid_form(values):

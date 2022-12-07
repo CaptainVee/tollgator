@@ -18,6 +18,7 @@ from .views import (
     clear_messages,
     video_update_view,
     new,
+    playlist_create,
 )
 
 # from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
@@ -30,6 +31,7 @@ urlpatterns = [
     path("user/", user_course_list_view, name="user-course-list"),
     path("yt_course/playlist", yt_playlist_create_course, name="yt_course_create"),
     path("course/new/", CourseCreateView.as_view(), name="course-create"),
+    path("course/new/playlist", playlist_create, name="playlist-create"),
     path(
         "course/<slug:course_slug>/",
         CourseDetailView.as_view(),

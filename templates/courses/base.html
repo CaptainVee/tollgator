@@ -47,6 +47,7 @@
 	        	{% if user.is_authenticated %}
 		          <a class="" href="{% url 'account_logout' %}">Logout</a>
 		          <a class="" href="{% url 'course-create' %}">Create Course</a>
+				  <a class="" href="{% url 'playlist-create' %}">Playlist Create</a>
 		          <a class="" href="{% url 'profile' %}">Profile</a>
 		          <a class="" href="{% url 'dashboard' %}">On Going</a>
 	        	{% else %}

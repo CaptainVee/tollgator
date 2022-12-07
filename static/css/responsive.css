@@ -76,13 +76,19 @@
         width: 300px;
         height: 100vh;
         top: 0;
-        right: 0;
+        right: -300px;
         z-index: 1000;
         padding: 70px 0 50px;
         transition: all 0.5s ease;
         background-color: var(--white);
         box-shadow: var(--shadow);
         overflow-y: auto;
+        visibility: hidden;
+    }
+
+    .header-menu.open {
+        right: 0;
+        visibility: visible;
     }
 
     .header .menu-item {
@@ -100,6 +106,10 @@
 
     .header .menu-item:first-child > a {
         border-top: 1px solid var(--border-color-1);
+    }
+
+    .header .menu-item.active > a i {
+        transform: rotate(-180deg);
     }
 
     .header .sub-menu {
@@ -134,12 +144,99 @@
         background-color: var(--white);
     }
 
+    .header-backdrop.active {
+        visibility: visible;
+        opacity: 0.8;
+    }
+
+    .circular-img {
+        max-width: 280px;
+    }
+
+    .circular-img img {
+        max-width: 240px;
+    }
+
+    .circular-img-circle{
+        height: 280px;
+        width: 280px;
+    }
+
+    .banner-text h1 {
+        font-size: 35px;
+    }
+
+    .section-title .sub-title {
+        font-size: 30px;
+    }
+
+    .course-sidebar {
+        margin-top: 30px;
+    }
+
+    .course-instructor .img-box img {
+        width: 100px;
+    }
+
 }
 
 @media(max-width: 767px) {
-    
+    .container {
+        --bs-gutter-x: 15px
+    }
+
+    .box {
+        padding: 20px 15px;
+    }
+
+    .course-header h2,
+    .banner-text h1 {
+        font-size: 24px;
+    }
+
+    .section-title .title,
+    h3,
+    .banner-text h2 {
+        font-size: 18px;
+    }
+
+    .section-title .sub-title {
+        font-size: 22px;
+    }
+
+    .bai-section {
+        text-align: center;
+    }
+
+    .course-curriculum ul li span {
+        font-size: 12px;
+        position: relative;
+        display: block;
+        margin-top: 5px;
+
+    }
+
+    .course-curriculum ul li {
+        padding: 0 0 0 20px;
+    }
+
+    .rating-summary,
+    .rating-box {
+        margin-bottom: 15px;
+    }
+
 }
 
 @media(max-width: 575px) {
-    
+    .footer-item {
+        text-align: center;
+    }
+
+    .header-logo a {
+        font-size: 22px;
+    }
+
+    .modal-dialog {
+        margin: 8px 15px;
+    }
 }
