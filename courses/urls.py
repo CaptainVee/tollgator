@@ -54,7 +54,7 @@ urlpatterns = [
         name="lesson-detail",
     ),
     path(
-        "<slug:course_slug>/lesson/<slug:lesson_slug>/<slug:video_slug>/",
+        "<slug:course_id>/video/<slug:video_id>/",
         lesson_video,
         name="lesson-video-detail",
     ),

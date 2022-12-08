@@ -1,20 +1,114 @@
 {% extends 'courses/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="" style="position: relative; display: flex;">
-    <div id="video-frame">
-        {% include 'courses/partials/video_frame.html' %}
-    </div>
-    <div class="card card-body" style="    width: 25rem; margin: 0px 55em; position: fixed;">
-        <h5 class="card-title">{{lesson.title}}</h5>
-        <ul>
-            {% for video in video_queryset %}
-            <li class="list-group-item"><a href="{{ video.get_absolute_url }}"
-                hx-get="{% url 'video-url' video.id %}"
-                hx-target="#video-frame">{{video}}</a></li>
-        {% endfor %}
-        </ul>
-    </div>
-</div>
+  
+  <!-- course details section start -->
+   <section class="course-details section-padding">
+	<div class="container-lg">
+	  <div class="row">
+		<div class="col-lg-8 scroll">
+		  <!-- course header start -->
+          <div id="video-frame">
+            {% include 'courses/partials/video_frame.html' %}
+        </div>
+		  <!-- course header end -->
+		  <!-- tab start -->
+		  <nav class="course-tabs">
+			<div class="nav nav-tabs" id="nav-tab" role="tablist">
+			  <button class="nav-link active" id="course-curriculum-tab" data-bs-toggle="tab" data-bs-target="#course-curriculum" 
+			  type="button" role="tab" aria-controls="course-curriculum" aria-selected="true">curriculum</button>
+  
+			  <button class="nav-link" id="course-description-tab" data-bs-toggle="tab" data-bs-target="#course-description" 
+			  type="button" role="tab" aria-controls="course-description" aria-selected="false">description</button>
+  
+			  <button class="nav-link" id="course-instructor-tab" data-bs-toggle="tab" data-bs-target="#course-instructor" 
+			  type="button" role="tab" aria-controls="course-instructor" aria-selected="false">instructor</button>
+  
+			  <button class="nav-link" id="course-reviews-tab" data-bs-toggle="tab" data-bs-target="#course-reviews" 
+			  type="button" role="tab" aria-controls="course-reviews" aria-selected="false">reviews</button>
+			</div>
+		  </nav>
+		  <!-- tab end -->
+  
+		  <!-- tab panes start -->
+		  <div class="tab-content" id="nav-tabContent">
+			<!-- course description start -->
+			<div class="tab-pane fade show active " id="course-description" role="tabpanel" aria-labelledby="course-description-tab">
+			  <div class="course-description box">
+				<h3 class="text-capitalize mb-4">Description</h3>
+				<p>{{ course.content }}</p>
+				<h4>who is this course designed for</h4>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse repellat eligendi eos, amet neque magni ipsa ratione 
+				  beatae velit necessitatibus quas assumenda obcaecati suscipit quae, placeat excepturi dolor quod asperiores?</p>
+				<h4>why should you take this course</h4>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos accusamus sequi odit incidunt, nobis quasi sunt, 
+				  enim quibusdam nihil saepe fugiat itaque architecto, blanditiis alias nam soluta aut ipsum pariatur.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium deleniti quas veniam officiis vitae odio repudiandae 
+                quo repellendus, iusto, nobis accusantium soluta excepturi. Atque modi iusto excepturi placeat, reiciendis qui harum labori
+                osam. Cumque iusto odit sit fugit, blanditiis architecto facere rem laudantium ipsa itaque officiis, totam magnam tempora pr
+                ovident perferendis.</p>
+			  </div>
+			</div>
+			<!-- course description end -->
+			
+		  </div>
+		  <!-- tab panes end -->
+  
+  
+		</div>
+		<div class="col-lg-4 scroll">
+		  <!-- course sidebar start -->
+            <!-- course curriculum start -->
+			<div class="tab-pane fade show active" id="course-curriculum" role="tabpanel" aria-labelledby="course-curriculum-tab">
+                <div class="course-curriculum box">
+                  <h3 class="text-capitalize mb-4">Course curriculum</h3>
+                  <!-- accordion start -->
+                  <div class="accordion" id="accordion">
+                    <!-- accordion item start -->
+                    {% for lesson in lesson_queryset %}	
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="heading-1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ lesson.pk }}" 
+                        aria-expanded="true" aria-controls="collapse-{{ lesson.pk }}">
+                        {{ lesson.title }} <span> 2 lessons | 20 min</span>
+                        </button>
+                      </h2>
+                      <div id="collapse-{{ lesson.pk }}" class="accordion-collapse collapse" aria-labelledby="heading-1" 
+                      data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          <ul>
+                          {% for video in lesson.videos %}
+                            <li class="mb-4">
+                                <a href="{{ video.get_absolute_url }}"
+                                hx-get="{% url 'video-url' video.id %}"
+                                hx-target="#video-frame">
+                                    <i class="fas fa-play-circle"></i>
+                                    {{ video }}
+                                    <span>06:00</span>
+                                </a>
+                            </li>
+                          {% endfor %}
+                          </ul>
+                        </div>
+                      </div>		
+                    </div>
+                    {% endfor %}
+                    <!-- accordion item end -->
+                    
+                  </div>
+                  <!-- accordion end -->
+                </div>
+              </div>
+              <!-- course curriculum end -->
+	
+		  <!-- course sidebar end -->
+  
+		</div>
+	  </div>
+	</div>
+   </section>
+  <!-- course details section end -->
+	
 
 {% endblock content %}

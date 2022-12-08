@@ -1,5 +1,4 @@
 
-
 // ------------------- Testimonial Slider 
 
 function testimonialSlider(){
@@ -25,8 +24,10 @@ function coursePreviewVideo(){
             this.querySelector('.js-course-preview-video').currentTime = 0
         })
         
-        coursePreviewModal.addEventListener('hide.bs.modal', function(){
-            this.querySelector('.js-course-preview-video').pause() 
+        coursePreviewModal.addEventListener('hide.bs.modal', function(e){
+            console.log(this.querySelector("#video-modal iframe").attr())
+            this.querySelector("#video-modal iframe").attr("src", this.querySelector("#video-modal iframe").attr("src"));
+            
         })
     }
 

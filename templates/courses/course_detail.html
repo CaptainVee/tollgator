@@ -2,19 +2,6 @@
 {% load static %}
 
 {% block content %}
-
-<!-- breadcrumb start -->
-<div class="breadcrumb-nav">
-	<div class="container">
-	  <nav aria-label="breadcrumb">
-		<ol class="breadcrumb mb-0">
-		  <li class="breadcrumb-item"><a href="{% url 'course-home' %}">Home</a></li>
-		  <li class="breadcrumb-item active" aria-current="page">course details</li>
-		</ol>
-	  </nav>
-	</div>
-   </div>
-  <!-- breadcrumb start -->
   
   <!-- course details section start -->
    <section class="course-details section-padding">
@@ -69,134 +56,32 @@
 				<!-- accordion start -->
 				<div class="accordion" id="accordion">
 				  <!-- accordion item start -->
+				  {% for lesson in course.lessons %}	
 				  <div class="accordion-item">
 					<h2 class="accordion-header" id="heading-1">
-					  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" 
-					  aria-expanded="true" aria-controls="collapse-1">
-						Language basics <span> 2 lessons | 20 min</span>
+					  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ lesson.pk }}" 
+					  aria-expanded="true" aria-controls="collapse-{{ lesson.pk }}">
+					  {{ lesson.title }} <span> 2 lessons | 20 min</span>
 					  </button>
 					</h2>
-					<div id="collapse-1" class="accordion-collapse collapse show" aria-labelledby="heading-1" 
+					<div id="collapse-{{ lesson.pk }}" class="accordion-collapse collapse" aria-labelledby="heading-1" 
 					data-bs-parent="#accordionExample">
 					  <div class="accordion-body">
 						<ul>
+						{% for video_lesson in lesson.videos %}
 						  <li>
 							<i class="fas fa-play-circle"></i>
-							Lexical structures
+							{{ video_lesson }}
 							<span>06:00</span>
 						  </li>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							Types
-							<span>06:00</span>
-						  </li>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							Values
-							<span>06:00</span>
-						  </li>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							Variables
-							<span>06:00</span>
-						  </li>
+						{% endfor %}
 						</ul>
 					  </div>
-					</div>
+					</div>		
 				  </div>
+				  {% endfor %}
 				  <!-- accordion item end -->
-				  <!-- accordion item start -->
-				  <div class="accordion-item">
-					<h2 class="accordion-header" id="heading-2">
-					  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-					  data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
-						Types <span> 2 lessons | 20 min</span>
-					  </button>
-					</h2>
-					<div id="collapse-2" class="accordion-collapse collapse" aria-labelledby="heading-2" 
-					data-bs-parent="#accordionExample">
-					  <div class="accordion-body">
-						<ul>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							Strings
-							<span>06:00</span>
-						  </li>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							Booleans
-							<span>06:00</span>
-						  </li>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							Null and Undefined
-							<span>06:00</span>
-						  </li>
-						</ul>
-					  </div>
-					</div>
-				  </div>
-				  <!-- accordion item end -->
-				  <!-- accordion item start -->
-				  <div class="accordion-item">
-					<h2 class="accordion-header" id="heading-3">
-					  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-					  data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-						Control structure <span> 2 lessons | 20 min</span>
-					  </button>
-					</h2>
-					<div id="collapse-3" class="accordion-collapse collapse" aria-labelledby="heading-3" 
-					data-bs-parent="#accordionExample">
-					  <div class="accordion-body">
-						<ul>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							If/else
-							<span>06:00</span>
-						  </li>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-						   Switch
-							<span>06:00</span>
-						  </li>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							Loops
-							<span>06:00</span>
-						  </li>
-						</ul>
-					  </div>
-					</div>
-				  </div>
-				  <!-- accordion item end -->
-				  <!-- accordion item start -->
-				  <div class="accordion-item">
-					<h2 class="accordion-header" id="heading-4">
-					  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-					  data-bs-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-						Function <span> 2 lessons | 20 min</span>
-					  </button>
-					</h2>
-					<div id="collapse-4" class="accordion-collapse collapse" aria-labelledby="heading-4" 
-					data-bs-parent="#accordionExample">
-					  <div class="accordion-body">
-						<ul>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							cow
-							<span>06:00</span>
-						  </li>
-						  <li>
-							<i class="fas fa-play-circle"></i>
-							goat
-							<span>06:00</span>
-						  </li>
-						  <li>
-						</ul>
-					  </div>
-					</div>
-				  </div>
-				  <!-- accordion item end -->
+				  
 				</div>
 				<!-- accordion end -->
 			  </div>
@@ -439,8 +324,20 @@
 			  <li>Other features</li>
 			  <li>Other features</li>
 			</ul>
+
 			<div class="btn-wrap">
-			  <button class="btn btn-theme btn-block" type="button">enroll now</button>
+				{% if course.pricing.name == "Free" %}
+					{% if order.user == request.user %}
+					<a class="btn btn-secondary btn-block mb-3" href="{% url 'lesson-video-detail' course_id=course.id video_id=course.lessons.first.videos.first.id %}" >
+						Go to course</a>
+						<p>You have already enrolled for this course</p>
+					{% else %}
+					<a class="btn btn-theme btn-block" href="{% url 'enroll' course_slug=course.slug %}" >
+						enroll now</a>
+					{% endif %}
+				{% else %}
+					<a class="btn-block btn btn-dark" href="" >ADD TO CART</a>
+			{% endif %}			
 			</div>
 		  </div>
 		  <!-- course sidebar end -->
@@ -450,45 +347,31 @@
 	</div>
    </section>
   <!-- course details section end -->
-	<article class="media content-section">
-		<img class="rounded-circle article-img" src="{{ course.author }}">
-	  <div class="media-body">
-		    <div class="article-metadata">
-		      <a class="mr-2" href="">{{ course.author }}</a>
-		      <small class="text-muted">{{ course.date_posted | date:'F d, Y' }}</small>
 
-		      {% if course.pricing.name == "Free" %}
-				{% if order.user == request.user %}
-					<a class="btn btn-warning" href="{% url 'lesson-list' course_slug=course.slug %}" >Go to course</a><p>You have already enrolled for this course</p>
-				{% else %}
-					<a class="button" href="{% url 'enroll' course_slug=course.slug %}" >Enroll</a>
-				{% endif %}
-		      {% else %}
-		      	<a class="button" href="" >ADD TO CART</a>
-		      {% endif %}
-		      
-		      {% if course.author == user %}
-		      	<div>
-		      		<a class="btn info btn-sm mt-1 mb-1" href="{% url 'lesson-create' course_id=course.id %}">Add Lesson</a>
-		      		<a class="btn info btn-sm mt-1 mb-1" href="">Update</a>
-		      		<a class="btn danger btn-sm mt-1 mb-1" href="">Delete</a>
-		      	</div>
-		      {% endif %}
-		    </div>
-		    <br>
-		    <br>
-		    <h2 class="article-title" >{{ course.title }}</h2>
-		    <p class="article-content">{{ course.content }}</p>
-			<ol>
-			    {% for lesson in course.lessons %}
-						<li><a href="{% url 'lesson-list' course_slug=course.slug %}">{{ lesson.title }}</a></li>
-						{% for video_lesson in lesson.videos %}
-						<p>{{ video_lesson }}</p>
-						{% endfor %}
-				{% endfor %}
-			</ol>
-		    </div>
+  <!-- course preview modal start -->
+<!-- Modal -->
+<div class="modal fade video-modal js-course-preview-modal" id="video-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+	  <div class="modal-content">
+		<div class="modal-body p-0">
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+			<i class="fas fa-times"></i>
+		  </button>
+		  <div class="ratio ratio-16x9">
+				<iframe width="870" height="500" class="js-course-preview-video" src="{{ course.lessons.first.videos.first.video_url }}"
+				 
+				title="YouTube video player" frameborder="0" 
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+				allowfullscreen>
+				>
+			</iframe>
+			  
+
+		  </div>
+		</div>
 	  </div>
-	</article> 
+	</div>
+  </div>
+  <!-- course preview modal end -->
 
 {% endblock content %}

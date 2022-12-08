@@ -94,9 +94,8 @@ class Video(BaseModel):
         return reverse(
             "lesson-video-detail",
             kwargs={
-                "course_slug": self.lesson.course.slug,
-                "lesson_slug": self.lesson.pk,
-                "video_slug": self.id,
+                "course_id": self.lesson.course.id,
+                "video_id": self.id,
             },
         )
 

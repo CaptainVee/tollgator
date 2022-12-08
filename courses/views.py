@@ -183,11 +183,12 @@ def lesson_update_view(request, lesson_id, course_id):
     return render(request, "courses/partials/lesson_update_form.html", context)
 
 
-def lesson_video(request, lesson_slug, video_slug, *args, **kwargs):
-    video_queryset = Video.objects.prefetch_related("lesson").filter(lesson=lesson_slug)
-    video = Video.objects.get(id=video_slug)
+def lesson_video(request, course_id, video_id, *args, **kwargs):
+    # lesson_queryset = Lesson.objects.select_related("video").filter(id=lesson_slug)
+    lesson_queryset = Lesson.objects.filter(course__id=course_id)
+    video = Video.objects.get(id=video_id)
 
-    context = {"video_queryset": video_queryset, "video": video}
+    context = {"lesson_queryset": lesson_queryset, "video": video}
     return render(request, "courses/lesson_video.html", context)
 
 

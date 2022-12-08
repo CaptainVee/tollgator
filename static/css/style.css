@@ -841,7 +841,12 @@ h3 {
     top: 9px;
     border-radius: 50%;
 }
+/* video details */
 
+.scroll {
+    max-height: 100vh;
+    overflow-x: scroll;
+}
 
 /* --------- video modal ---------- */
 
