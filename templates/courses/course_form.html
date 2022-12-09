@@ -1,7 +1,7 @@
 {% extends "courses/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-
+<div class="container">
 	<div class= ''>
 		<form action="" method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
@@ -17,4 +17,43 @@
 		</form>	
 	</div>
 
+		<!-- course curriculum start -->
+		<div class="tab-pane fade show active" id="course-curriculum" role="tabpanel" aria-labelledby="course-curriculum-tab">
+			<div class="course-curriculum box">
+			  <h3 class="text-capitalize mb-4">course curriculum</h3>
+			  <!-- accordion start -->
+			  <div class="accordion" id="accordion">
+				<!-- accordion item start -->
+				{% for lesson in course.lessons %}	
+				<div class="accordion-item">
+				  <h2 class="accordion-header" id="heading-1">
+					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ lesson.pk }}" 
+					aria-expanded="true" aria-controls="collapse-{{ lesson.pk }}">
+					{{ lesson.title }} <span> 2 lessons | 20 min</span>
+					</button>
+				  </h2>
+				  <div id="collapse-{{ lesson.pk }}" class="accordion-collapse collapse" aria-labelledby="heading-1" 
+				  data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+					  <ul>
+					  {% for video_lesson in lesson.videos %}
+						<li>
+						  <i class="fas fa-play-circle"></i>
+						  {{ video_lesson }}
+						  <span>06:00</span>
+						</li>
+					  {% endfor %}
+					  </ul>
+					</div>
+				  </div>		
+				</div>
+				{% endfor %}
+				<!-- accordion item end -->
+				
+			  </div>
+			  <!-- accordion end -->
+			</div>
+		  </div>
+		  <!-- course curriculum end -->
+		</div>
 {% endblock content %}

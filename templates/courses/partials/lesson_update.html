@@ -2,8 +2,12 @@
     <h2>{{ lesson.title }}</h2>
 </div>
 <div class="card-body">
-    <p>{{ lesson.description }}</p>
+    {% if lesson.description %}
+        <p>{{ lesson.description }}</p>
+    {% else %}
+        <p>No description for this lesson</p>
+    {% endif %}
 </div>
 
 <button hx-get="{% url 'lesson-update' lesson_id=lesson.id course_id=course_id %}"
-        hx-target="#lesson-details">edit</button>
+        hx-target="#lesson-details-{{ lesson.pk }}">edit</button>

@@ -3,7 +3,7 @@ from . import views
 from .views import (
     Home,
     CourseListView,
-    user_course_list_view,
+    UserCourseListView,
     CourseDetailView,
     CourseCreateView,
     CourseUpdateView,
@@ -30,7 +30,7 @@ urlpatterns = [
     path("", Home.as_view(), name="course-home"),
     path("courses/", CourseListView.as_view(), name="courses-list"),
     path("new/", new, name="new"),
-    path("user/", user_course_list_view, name="user-course-list"),
+    path("instructor/dashboard", UserCourseListView.as_view(), name="user-course-list"),
     path("yt_course/playlist", yt_playlist_create_course, name="yt_course_create"),
     path("course/new/", CourseCreateView.as_view(), name="course-create"),
     path("course/new/playlist", playlist_create, name="playlist-create"),

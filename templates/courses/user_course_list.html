@@ -1,19 +1,52 @@
 {% extends "courses/base.html" %}
 {% block content %}
-	<h1 class="mb-3"> courses by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1>
-	{% for course in courses %}
-		<article class="media content-section">
-		  <img class="rounded-circle article-img" src="{{ courses.author.user.image.url }}">
-		  <div class="media-body">
-		    <div class="article-metadata">
-		      <a class="mr-2" href="">{{ course.author }}</a>
-		      <small class="text-muted">{{ course.created_at | date:'F d, Y' }}</small>
-		    </div>
-		    <h2><a class="article-title" href="" >{{ courses.title }}</a></h2>
-		    <p class="article-content">{{ course.content }}</p>
+<section class="course-details section-padding">
+	<div class="container">
+		<h2>Your Courses - ({{ page_obj.paginator.count }})</h2>
+		  <!-- course header start -->
+		  {% for course in courses %}
+		  
+		  <div class="course-header box mb-4">
+			<a href="{% url 'course-update' course.pk %}"><h2 class="text-capitalize">{{ course.title }}</h2></a>
+			<div class="rating">
+			  <span class="average-rating">(4.5)</span>
+			  <span class="average-stars">
+				<i class="fas fa-star"></i>
+				<i class="fas fa-star"></i>
+				<i class="fas fa-star"></i>
+				<i class="fas fa-star-half-alt"></i>
+			  </span>
+			  <span class="reviews">(230 Reviews)</span>
+			</div>
+			<ul>
+			  <li>enrolled students - <span>220</span></li>
+			  <li>last updated - <span>{{ course.updated_at | date:'F d, Y' }}</span></li>
+			</ul>
 		  </div>
-		</article> 
-	{% endfor %}
+		  <!-- course header end -->
+		  {% endfor %}
+
+		  <div class="course-header box">
+			<h2 class="text-capitalize">{{ course.title }}</h2>
+			<div class="rating">
+			  <span class="average-rating">(4.5)</span>
+			  <span class="average-stars">
+				<i class="fas fa-star"></i>
+				<i class="fas fa-star"></i>
+				<i class="fas fa-star"></i>
+				<i class="fas fa-star-half-alt"></i>
+			  </span>
+			  <span class="reviews">(230 Reviews)</span>
+			</div>
+			<ul>
+			  <li>enrolled students - <span>220</span></li>
+			  <li>last updated - <span>{{ course.updated_at | date:'F d, Y' }}</span></li>
+			</ul>
+		  </div>
+		  <!-- course header end -->
+	</div>
+</section>
+
 	{% if is_paginated %}
 		{% if page_obj.has_previous %}
 			<a class= "btn btn-outline-info mb-4 " href="?page=1">First</a>

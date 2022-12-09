@@ -57,7 +57,7 @@
                     <li class="sub-menu-item"><a href="{% url 'new' %}">Signup</a></li>
                   </ul>
                 </li>
-                <li class="menu-item"><a href="{% url 'new' %}">Contact</a></li>
+                <li class="menu-item"><a href="{% url 'user-course-list' %}">Instructor</a></li>
               </ul>
             </nav>
           </div>
@@ -152,14 +152,15 @@
 
 
 
-
-  <script>
-
+<!-- Htmx for PUT (this doesn't work if placed in a seperate js file) -->
+<script>
+  document.body.addEventListener('htmx:configRequest', (event) => {
+      event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    })
 </script>
 
   <!-- javascript -->
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> 
-<script src="{% static 'js/htmx/csrf_token.js' %}"></script> 
 <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

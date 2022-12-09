@@ -1,6 +1,7 @@
 {% extends 'courses/base.html' %}
 
 {% block content %}
+<div class="container">
 <h2 class="card-title">{{ lessons.first.get_course }}</h2>
 {% for lesson in lessons %}
 <div >
@@ -16,5 +17,6 @@
 
     </div>
   </div>
+</div>
 {% endfor %}
 {% endblock content %}

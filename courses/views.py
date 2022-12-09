@@ -46,12 +46,14 @@ class CourseListView(ListView):
     paginate_by = 5
 
 
-def user_course_list_view(request):
-    courses = Course.objects.select_related("author").filter(author=request.user)
+class UserCourseListView(ListView):
+    model = Course
+    template_name = "courses/user_course_list.html"
+    context_object_name = "courses"
+    paginate_by = 5
 
-    context = {"courses": courses}
-    print(courses)
-    return render(request, "courses/user_course_list.html", context)
+    def get_queryset(self):
+        return Course.objects.select_related("author").filter(author=self.request.user)
 
 
 class CourseDetailView(View):
@@ -90,7 +92,7 @@ def playlist_create(request):
 
 class CourseUpdateView(LoginRequiredMixin, UpdateView):
     model = Course
-    fields = ["title", "content", "image", "price"]
+    fields = ["title", "content", "thumbnail", "pricing"]
 
     def form_valid(self, form):
         form.instance.author = get_object_or_404(User, username=self.request.user)
@@ -158,17 +160,21 @@ def lesson_list_view(request, course_slug):
     return render(request, "courses/lesson_list.html", context)
 
 
-def lesson_detail_view(request, lesson_id, course_id):
-    lesson = get_object_or_404(Lesson, id=lesson_id)
-    new_url = reverse("video-create", kwargs={"lesson_id": lesson.id})
-    context = {"lesson": lesson, "course_id": course_id, "new_url": new_url}
+def lesson_detail_view(request, lesson_id, course_id, *args, **kwargs):
+    # lesson = get_object_or_404(Lesson, id=lesson_id)
+    lesson_qs = Lesson.objects.filter(course__id=course_id)
+    # new_url = reverse("video-create", kwargs={"lesson_id": lesson.id})
+    context = {"lesson_qs": lesson_qs, "course_id": course_id}
     if request.method == "GET":
         return render(request, "courses/lesson_detail.html", context)
     elif request.method == "PUT":
         data = QueryDict(request.body).dict()
-        form = LessonForm(data, instance=lesson)
+        print(data)
+        form = LessonForm(data)  # instance=lesson
         if form.is_valid():
+            print("is valid", kwargs, args)
             form.save()
+            print("done")
             return render(request, "courses/partials/lesson_update.html", context)
         context["form"] = form
 
@@ -184,7 +190,6 @@ def lesson_update_view(request, lesson_id, course_id):
 
 
 def lesson_video(request, course_id, video_id, *args, **kwargs):
-    # lesson_queryset = Lesson.objects.select_related("video").filter(id=lesson_slug)
     lesson_queryset = Lesson.objects.filter(course__id=course_id)
     video = Video.objects.get(id=video_id)
 
