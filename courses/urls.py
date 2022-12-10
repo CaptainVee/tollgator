@@ -20,6 +20,7 @@ from .views import (
     video_update_view,
     new,
     playlist_create,
+    lesson_display,
 )
 
 # from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
@@ -52,6 +53,16 @@ urlpatterns = [
         "<slug:course_id>/lesson/<slug:lesson_id>/",
         lesson_detail_view,
         name="lesson-detail",
+    ),
+    path(
+        "<slug:course_id>/lesson/",
+        lesson_detail_view,
+        name="lesson-new",
+    ),
+    path(
+        "<slug:course_id>/lessonsss/",
+        lesson_display,
+        name="lesson-display",
     ),
     path(
         "<slug:course_id>/video/<slug:video_id>/",

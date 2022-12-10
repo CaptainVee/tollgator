@@ -160,25 +160,78 @@ def lesson_list_view(request, course_slug):
     return render(request, "courses/lesson_list.html", context)
 
 
-def lesson_detail_view(request, lesson_id, course_id, *args, **kwargs):
-    # lesson = get_object_or_404(Lesson, id=lesson_id)
-    lesson_qs = Lesson.objects.filter(course__id=course_id)
-    # new_url = reverse("video-create", kwargs={"lesson_id": lesson.id})
-    context = {"lesson_qs": lesson_qs, "course_id": course_id}
-    if request.method == "GET":
-        return render(request, "courses/lesson_detail.html", context)
-    elif request.method == "PUT":
-        data = QueryDict(request.body).dict()
-        print(data)
-        form = LessonForm(data)  # instance=lesson
-        if form.is_valid():
-            print("is valid", kwargs, args)
-            form.save()
-            print("done")
-            return render(request, "courses/partials/lesson_update.html", context)
-        context["form"] = form
+def lesson_detail_view(request, course_id=None, lesson_id=None):
+    if request.htmx:
+        try:
+            course = Course.objects.get(id=course_id)
+        except:
+            course = None
+        if course_id == None:
+            return HttpResponse("NOT FOUND")
 
-        render(request, "courses/partials/lesson_update_form.html", context)
+        lesson = None
+        if lesson_id is not None:
+            try:
+                lesson = Lesson.objects.get(course=course, id=lesson_id)
+            except:
+                lesson = None
+
+        form = LessonForm(request.POST or None, instance=lesson)
+
+        form_url = reverse("lesson-new", kwargs={"course_id": course.id})
+        if lesson:
+            form_url = reverse(
+                "lesson-detail",
+                kwargs={"course_id": course.id, "lesson_id": lesson.id},
+            )
+        context = {
+            "form_url": form_url,
+            "form": form,
+            "course": course,
+            "lesson": lesson,
+        }
+        if form.is_valid():
+            new_lesson = form.save(commit=False)
+            if lesson is None:
+                new_lesson.course = course
+            new_lesson.save()
+            context["lesson"] = new_lesson
+
+            return render(request, "courses/partials/resource_list.html", context)
+
+        return render(request, "courses/partials/lesson_form.html", context)
+    else:
+        raise Http404
+
+
+# def lesson_detail_view(request, lesson_id, course_id, *args, **kwargs):
+#     # lesson = get_object_or_404(Lesson, id=lesson_id)
+#     lesson_qs = Lesson.objects.filter(course__id=course_id)
+#     # new_url = reverse("video-create", kwargs={"lesson_id": lesson.id})
+#     context = {"lesson_qs": lesson_qs, "course_id": course_id}
+#     if request.method == "GET":
+#         return render(request, "courses/lesson_detail.html", context)
+#     elif request.method == "PUT":
+#         data = QueryDict(request.body).dict()
+#         print(data)
+#         form = LessonForm(data)  # instance=lesson
+#         if form.is_valid():
+#             print("is valid", kwargs, args)
+#             form.save()
+#             print("done")
+#             return render(request, "courses/partials/lesson_update.html", context)
+#         context["form"] = form
+
+#         render(request, "courses/partials/lesson_update_form.html", context)
+
+
+def lesson_display(request, course_id):
+
+    lesson_qs = Lesson.objects.filter(course__id=course_id)
+
+    context = {"lesson_qs": lesson_qs}
+
+    return render(request, "courses/lesson_detail.html", context)
 
 
 def lesson_update_view(request, lesson_id, course_id):

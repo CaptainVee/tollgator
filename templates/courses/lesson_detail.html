@@ -4,13 +4,15 @@
 {% block content %}
 	<div class="container">
 		<h1>lesson detail</h1>
-	{% for lesson in lesson_qs %}
-	<div  class="card mb-4">
-		
 		<h2>{{ lesson.course }}</h2>
+	{% for lesson in lesson_qs %}
+	<div  class="card mb-4 p-3">
+		
+		
 		<div id="lesson-details-{{ lesson.pk }}">
-			{% include 'courses/partials/lesson_update.html' %}
+			{% include 'courses/partials/resource_list.html' %}
 		</div>
+
 			<ol>
 				{% for video in lesson.videos %}
 					{% include 'courses/partials/video_list.html' %}
@@ -18,12 +20,21 @@
 			</ol>
 		<div id="new-video" class="">
 		</div>
-			<button hx-get="{% url 'video-create' lesson_id=lesson.id %}"
+		<div>
+			<button class="btn btn-theme" hx-get="{% url 'video-create' lesson_id=lesson.id %}"
 				hx-target="#new-video"
 				hx-trigger="click">
-				Newer</button>
+				New Video</button>
+		</div>
 
 	</div>
 	{% endfor %}
+	<div id="new-lesson" class="">
+	</div>
+		<button class="btn btn-theme btn-block" hx-get="{% url 'lesson-new' course_id=lesson_qs.first.course.id %}"
+			hx-target="#new-lesson"
+			hx-trigger="click">
+			New lesson
+		</button>
 </div>
 {% endblock content %}

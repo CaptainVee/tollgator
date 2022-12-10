@@ -6,7 +6,7 @@
 {% for lesson in lessons %}
 <div >
     <div class="card card-body">
-        <h2 class="card-title"><a href="{% url 'lesson-detail' course_id=lesson.course.id lesson_id=lesson.id %}">{{lesson.title}}</a></h2>
+        <h2 class="card-title"><a href="{% url 'lesson-display' course_id=lesson.course.id %}">{{lesson.title}}</a></h2>
     
         <ol>
             {% for video in lesson.videos %}

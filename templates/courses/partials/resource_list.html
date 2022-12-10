@@ -1,11 +1,14 @@
-{% if created_lessons %}
-<div class="">
-    {% for lesson in created_lessons %}
-        <div class="card card-body mb-3">
-            <a href="">{{lesson.title}}</a>
+<div id="lesson-{{ lesson.id }}" class="">
+        <h2>{{ lesson.title }}</h2>
+        <div class="card-body">
+            {% if lesson.description %}
+                <p>{{ lesson.description }}</p>
+            {% else %}
+                <p>No description for this lesson</p>
+            {% endif %}
         </div>
-    {% endfor %}
+        <button hx-get="{% url 'lesson-detail' course_id=lesson.course.id lesson_id=lesson.id %}"
+                hx-target="#lesson-{{ lesson.id }}"
+                hx-trigger="click">
+            Edit</button>
 </div>
-{% else %}
- <p>No lesson Found.</p>
-{% endif %}
