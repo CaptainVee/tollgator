@@ -16,6 +16,7 @@ from .views import (
     get_video_url,
     enroll,
     clear_messages,
+    generate_certificate_view,
     new,
 )
 
@@ -56,6 +57,11 @@ urlpatterns = [
         "course/<slug:course_slug>/enroll/",
         enroll,
         name="enroll",
+    ),
+    path(
+        "get-certificate/<slug:course_id>/",
+        generate_certificate_view,
+        name="certificate",
     ),
 ]
 

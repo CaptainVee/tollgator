@@ -19,7 +19,7 @@ from django.views.generic import (
 from .models import Course, Lesson, Video, Order, Pricing
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
-from .utils import yt_playlist_details, yt_video_details, yt_playlist_videos
+from .utils import yt_playlist_details, generate_certificates, yt_playlist_videos
 
 
 # from pypaystack import Transaction, Customer, Plan
@@ -339,6 +339,19 @@ def enroll(request, course_slug):
         messages.success(request, "You have successfully enrolled for this course.")
 
     return redirect("lesson-list", course_slug)
+
+
+def generate_certificate_view(request, course_id):
+    user = request.user
+    if user.first_name and user.last_name is not None:
+        fullname = "{} {}".format(user.first_name, user.last_name)
+    else:
+        fullname = user.username
+    certificate_url = generate_certificates(name=fullname)
+
+    context = {"certificate_url": "http://127.0.0.1:8000/" + certificate_url}
+
+    return render(request, "courses/certificate.html", context)
 
 
 def clear_messages(request):
