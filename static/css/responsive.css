@@ -239,4 +239,7 @@
     .modal-dialog {
         margin: 8px 15px;
     }
+    .iframe-container {
+        height: 400px;
+    }
 }

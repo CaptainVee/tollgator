@@ -1,12 +1,10 @@
 from email.policy import default
-from enum import unique
 import black
 from autoslug import AutoSlugField
 from django.db import models
 from django.urls import reverse
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
-from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
@@ -46,7 +44,7 @@ class Course(BaseModel):
         return self.lesson_set.all().order_by("position")
 
     def get_absolute_url(self):
-        return reverse("lesson-list", kwargs={"course_slug": self.slug})
+        return reverse("course-update", kwargs={"pk": self.pk})
 
     # def get_add_to_cart_url(self):
     #     return reverse("add-to-cart", kwargs={"pk": self.pk})

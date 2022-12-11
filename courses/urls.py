@@ -8,19 +8,15 @@ from .views import (
     CourseCreateView,
     CourseUpdateView,
     CourseDeleteView,
-    yt_playlist_create_course,
-    lesson_create_view,
-    lesson_update_view,
-    lesson_list_view,
-    lesson_video,
-    get_video_url,
+    course_create_playlist_view,
     lesson_detail_view,
+    lesson_create_update,
+    lesson_video_view,
+    video_create_update,
+    get_video_url,
     enroll,
     clear_messages,
-    video_update_view,
     new,
-    playlist_create,
-    lesson_display,
 )
 
 # from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
@@ -29,12 +25,15 @@ from .views import (
 
 urlpatterns = [
     path("", Home.as_view(), name="course-home"),
-    path("courses/", CourseListView.as_view(), name="courses-list"),
+    path("courses/", CourseListView.as_view(), name="course-list"),
     path("new/", new, name="new"),
     path("instructor/dashboard", UserCourseListView.as_view(), name="user-course-list"),
-    path("yt_course/playlist", yt_playlist_create_course, name="yt_course_create"),
     path("course/new/", CourseCreateView.as_view(), name="course-create"),
-    path("course/new/playlist", playlist_create, name="playlist-create"),
+    path(
+        "course/new/playlist",
+        course_create_playlist_view,
+        name="course-create-playlist",
+    ),
     path(
         "course/<slug:course_slug>/",
         CourseDetailView.as_view(),
@@ -44,29 +43,13 @@ urlpatterns = [
     path("course/<int:pk>/delete", CourseDeleteView.as_view(), name="course-delete"),
     # path("about/", views.about, name="courses-about"),
     path(
-        "course/<slug:course_slug>/lessons/",
-        lesson_list_view,
-        name="lesson-list",
-    ),
-    path("lesson/<slug:course_id>/new/", lesson_create_view, name="lesson-create"),
-    path(
-        "<slug:course_id>/lesson/<slug:lesson_id>/",
+        "<slug:course_id>/lessons/",
         lesson_detail_view,
         name="lesson-detail",
     ),
     path(
-        "<slug:course_id>/lesson/",
-        lesson_detail_view,
-        name="lesson-new",
-    ),
-    path(
-        "<slug:course_id>/lessonsss/",
-        lesson_display,
-        name="lesson-display",
-    ),
-    path(
         "<slug:course_id>/video/<slug:video_id>/",
-        lesson_video,
+        lesson_video_view,
         name="lesson-video-detail",
     ),
     path(
@@ -79,19 +62,24 @@ urlpatterns = [
 
 htmx_urlpatterns = [
     path(
+        "<slug:course_id>/lesson/<slug:lesson_id>/",
+        lesson_create_update,
+        name="lesson-detail",
+    ),
+    path(
+        "<slug:course_id>/lesson/new/",
+        lesson_create_update,
+        name="lesson-new",
+    ),
+    path(
         "video/update/<slug:lesson_id>/<slug:video_id>/",
-        video_update_view,
+        video_create_update,
         name="video-update",
     ),
     path(
         "video/new/<slug:lesson_id>/",
-        video_update_view,
+        video_create_update,
         name="video-create",
-    ),
-    path(
-        "<slug:course_id>/lesson_update/<slug:lesson_id>/",
-        lesson_update_view,
-        name="lesson-update",
     ),
     path("video/<slug:video_slug>", get_video_url, name="video-url"),
     path("clear/", clear_messages, name="clear"),

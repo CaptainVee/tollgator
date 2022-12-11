@@ -2,7 +2,19 @@
 {% load static %}
 
 {% block content %}
-  
+  <!-- breadcrumb start -->
+<div class="breadcrumb-nav">
+	<div class="container">
+	  <nav aria-label="breadcrumb">
+		<ol class="breadcrumb mb-0">
+		  <li class="breadcrumb-item"><a href="{% url 'course-list' %}">Home</a></li>
+		  <li class="breadcrumb-item active" aria-current="page">course details</li>
+		</ol>
+	  </nav>
+	</div>
+   </div>
+  <!-- breadcrumb start -->
+
   <!-- course details section start -->
    <section class="course-details section-padding">
 	<div class="container">

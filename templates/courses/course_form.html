@@ -12,11 +12,11 @@
 
 			</fieldset>
 			<div class='form-group'>
-				<button class= 'btn- btn-outline-info' type="submit">Create Course</button>
+				<button class= 'btn- btn-outline-info' type="submit">Edit Course</button>
 			</div>
 		</form>	
 	</div>
-
+	<a href="{% url 'lesson-detail' course.id %}" class="btn btn-theme">Edit Lessons</a>
 		<!-- course curriculum start -->
 		<div class="tab-pane fade show active" id="course-curriculum" role="tabpanel" aria-labelledby="course-curriculum-tab">
 			<div class="course-curriculum box">

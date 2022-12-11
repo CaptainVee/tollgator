@@ -1,10 +1,12 @@
 {% extends "courses/base.html" %}
 {% block content %}
+<div class="container p-5">
 
-<form action=""  method="POST">
-    {% csrf_token %}
-    <input type="text" name="playlist_id" placeholder="enter the playlist id">
-    <button type="submit" class="btn btn-info">Submit</button>
-</form>
-
+    <form action=""  method="POST">
+        {% csrf_token %}
+        <input type="text" name="playlist_id" placeholder="enter the playlist id">
+        <button type="submit" class="btn btn-info">Submit</button>
+    </form>
+    
+</div>
 {% endblock content %}
