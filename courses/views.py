@@ -18,6 +18,7 @@ from django.views.generic import (
 )
 from .models import Course, Lesson, Video, Order, Pricing
 from common.utils import get_or_none
+from common.models import TrueFalse
 from .forms import LessonForm, VideoForm
 from .utils import yt_playlist_details, generate_certificates, yt_playlist_videos
 
@@ -106,13 +107,20 @@ def course_create_playlist_view(request):
     """
     For creating courses from a playlist url
     """
-
     if request.method == "POST":
         playlist_id = request.POST.get("playlist_id")
-        yt_playlist_create_course(user=request.user, playlist_id=playlist_id)
-        return redirect("courses-home")
+        course, boolean = yt_playlist_create_course(
+            user=request.user, playlist_id=playlist_id
+        )
 
-    context = {"title": "About"}
+        true_false = TrueFalse.objects.all()[0]
+        true_false.boolean = boolean
+        # true_false.save()
+        print(true_false.boolean)
+
+        return redirect("lesson_detail_view", course.id)
+
+    context = {}
 
     return render(request, "courses/playlist_form.html", context)
 
@@ -146,7 +154,7 @@ def yt_playlist_create_course(user, playlist_id):
                         position=video["position"],
                         video_url=video["video_id"],
                     )
-                return redirect("courses-home")
+                return course, True
             except:
                 return HttpResponse(" Sorry o video fault")
 
@@ -359,6 +367,11 @@ def clear_messages(request):
     clears the django toast messages on click
     """
     return HttpResponse("")
+
+
+def get_boolean(request):
+    if TrueFalse.objects.all()[0].boolean == True:
+        return
 
 
 def about(request):

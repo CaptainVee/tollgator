@@ -16,3 +16,10 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
         ordering = ["-created_at", "-updated_at"]
+
+
+class TrueFalse(models.Model):
+    boolean = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.boolean

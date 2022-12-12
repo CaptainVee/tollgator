@@ -857,6 +857,42 @@ h3 {
     height: 100%;
 }
 
+/* Playlist-form */
+
+.playlist-form-box {
+    height: 70vh;
+    padding: 30px;
+}
+
+.playlist-form p {
+    color: var(--main-color);
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.playlist-form input {
+    width: 70%;
+    height: 68px;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 1px solid #b3afaf;
+    background-color: inherit;
+}
+
+.playlist-form input::placeholder {
+    color: var(--black-alpha-40)
+}
+
+.playlist-form button {
+    width: fit-content;
+    margin: 10px 0;
+}
+
+.playlist-form button i {
+    margin-left: 5px;
+}
+
 /* --------- video modal ---------- */
 
 .video-modal .btn-close {
