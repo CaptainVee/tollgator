@@ -26,6 +26,8 @@ class Course(BaseModel):
     #     default=list,
     # ) #Can be used only on postgress database
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True)
+    thumbnail_url = models.URLField(blank=True, null=True)
+    # youtube_channel = models.CharField(max_length=500, blank=True, null=True)
     # category = models.ForeignKey(
     #     "Category", on_delete=models.SET_NULL, null=True, blank=False
     # )

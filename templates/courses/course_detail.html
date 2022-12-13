@@ -81,7 +81,7 @@
 					  <div class="accordion-body">
 						<ul>
 						{% for video_lesson in lesson.videos %}
-						  <li>
+						  <li class="mb-2">
 							<i class="fas fa-play-circle"></i>
 							{{ video_lesson }}
 							<span>06:00</span>
@@ -311,14 +311,19 @@
 			<!-- course reviews end -->
 		  </div>
 		  <!-- tab panes end -->
-  
-  
+
+
 		</div>
 		<div class="col-lg-4">
 		  <!-- course sidebar start -->
 		  <div class="course-sidebar box">
-			<div class="img-box position-relative" data-bs-toggle="modal" data-bs-target="#video-modal">
-			  <img src="{% static 'img/courses/web-development/3.jpg' %}" class="w-100" alt="course img">
+			<div class="img-box position-relative" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+			
+			{% if course.thumbnail_url == None %}
+				<img src="{{ course.thumbnail.url }}" alt="course img">
+			  {% else %}
+				<img src="{{ course.thumbnail_url }}" alt="course img">
+			  {% endif %}
 			  <div class="play-icon">
 				<i class="fas fa-play"></i>
 			  </div>
@@ -350,8 +355,9 @@
 				{% else %}
 					<a class="btn-block btn btn-dark" href="" >ADD TO CART</a>
 			{% endif %}			
-			<a class="btn btn-theme" href="{% url 'certificate' course.id %}">Get certificate</a>
 			</div>
+			<a class="btn btn-theme mt-2" href="{% url 'certificate' course.id %}">Get certificate</a>
+
 		  </div>
 		  <!-- course sidebar end -->
   
@@ -361,30 +367,29 @@
    </section>
   <!-- course details section end -->
 
-  <!-- course preview modal start -->
-<!-- Modal -->
-<div class="modal fade video-modal js-course-preview-modal" id="video-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- course preview modal start -->
+  <!-- Modal -->
+  <div class="modal fade  video-modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 	  <div class="modal-content">
 		<div class="modal-body p-0">
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-			<i class="fas fa-times"></i>
-		  </button>
-		  <div class="ratio ratio-16x9">
-				<iframe width="870" height="500" class="js-course-preview-video" src="{{ course.lessons.first.videos.first.video_url }}"
-				 
-				title="YouTube video player" frameborder="0" 
-				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-				allowfullscreen>
-				>
-			</iframe>
-			  
-
-		  </div>
+			<button onclick = "pause()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+				<i class="fas fa-times"></i></button>
+			<div class="ratio ratio-16x9">
+			<iframe id="videoId" 
+			width="870" 
+			height="500" 
+			src="https://www.youtube.com/embed/{{ course.lessons.first.videos.first.video_url }}?enablejsapi=1"
+			title="YouTube video player" 
+			frameborder="0" 
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+			allowfullscreen> </iframe>
+			</div>
 		</div>
 	  </div>
 	</div>
   </div>
+
   <!-- course preview modal end -->
 
 {% endblock content %}

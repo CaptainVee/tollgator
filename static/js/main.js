@@ -20,14 +20,14 @@ function coursePreviewVideo(){
     const coursePreviewModal = document.querySelector('.js-course-preview-modal')
     if (coursePreviewModal) {
         coursePreviewModal.addEventListener('shown.bs.modal', function (){
-            this.querySelector('.js-course-preview-video').play()
-            this.querySelector('.js-course-preview-video').currentTime = 0
+            console.log("cow")
         })
         
         coursePreviewModal.addEventListener('hide.bs.modal', function(e){
-            console.log(this.querySelector("#video-modal iframe").attr())
-            this.querySelector("#video-modal iframe").attr("src", this.querySelector("#video-modal iframe").attr("src"));
-            
+            // To pause the YouTube video
+            let Video_element = document.getElementById("video-modal")
+            Video_element.contentWindow.postMessage('{"event":"command","func":"PauseVideo","args":""}', '*');
+            console.log("ok o")                        
         })
     }
 
@@ -35,6 +35,17 @@ function coursePreviewVideo(){
 
 coursePreviewVideo()
 
+
+	 // to stop the video
+	 function stop() {
+		let video = document.getElementById("videoId")
+		video.contentWindow.postMessage( '{"event":"command", "func":"stopVideo", "args":""}', '*');
+	 }
+	 // to pause the video
+	 function pause() {
+		let video = document.getElementById("videoId")
+		video.contentWindow.postMessage( '{"event":"command", "func":"pauseVideo", "args":""}', '*');
+	 }
 // ----------- Header menu
 
 function headerMenu(){

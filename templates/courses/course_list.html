@@ -51,7 +51,11 @@
 					<a href="{% url 'course-detail' course_slug=course.slug %}" class="link">
 					  <div class="courses-item-inner">
 						<div class="img-box">
-						  <img src="{{ course.thumbnail.url }}" alt="course img">
+						  {% if course.thumbnail_url == None %}
+							<img src="{{ course.thumbnail.url }}" alt="course img">
+						  {% else %}
+							<img src="{{ course.thumbnail_url }}" alt="course img">
+						  {% endif %}
 						</div>
 						<h3 class="title">{{ course.title }}</h3>
 						<div class="instructor">

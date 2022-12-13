@@ -18,7 +18,6 @@ from django.views.generic import (
 )
 from .models import Course, Lesson, Video, Order, Pricing
 from common.utils import get_or_none
-from common.models import TrueFalse
 from .forms import LessonForm, VideoForm
 from .utils import yt_playlist_details, generate_certificates, yt_playlist_videos
 
@@ -132,6 +131,8 @@ def yt_playlist_create_course(user, playlist_id):
             author=user,
             title=playlist_details["title"],
             brief_description=playlist_details["description"],
+            thumbnail_url=playlist_details["thumbnails"]["standard"]["url"],
+            # youtube_channel=playlist_details["channelTitle"],
             pricing=Pricing.objects.get(name="Free"),
         )
         try:
@@ -368,11 +369,6 @@ def get_spinner(request):
     returns spinner
     """
     return render(request, "courses/partials/spinner.html", {})
-
-
-def get_boolean(request):
-    if TrueFalse.objects.all()[0].boolean == True:
-        return
 
 
 def about(request):
