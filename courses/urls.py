@@ -16,6 +16,7 @@ from .views import (
     get_video_url,
     enroll,
     clear_messages,
+    get_spinner,
     generate_certificate_view,
     new,
 )
@@ -88,6 +89,7 @@ htmx_urlpatterns = [
         name="video-create",
     ),
     path("video/<slug:video_slug>", get_video_url, name="video-url"),
+    path("spinner/", get_spinner, name="get-spinner"),
     path("clear/", clear_messages, name="clear"),
 ]
 

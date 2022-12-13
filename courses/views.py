@@ -109,16 +109,10 @@ def course_create_playlist_view(request):
     """
     if request.method == "POST":
         playlist_id = request.POST.get("playlist_id")
-        course, boolean = yt_playlist_create_course(
-            user=request.user, playlist_id=playlist_id
-        )
 
-        true_false = TrueFalse.objects.all()[0]
-        true_false.boolean = boolean
-        # true_false.save()
-        print(true_false.boolean)
+        course = yt_playlist_create_course(user=request.user, playlist_id=playlist_id)
 
-        return redirect("lesson_detail_view", course.id)
+        return redirect("lesson-detail", course.id)
 
     context = {}
 
@@ -154,7 +148,7 @@ def yt_playlist_create_course(user, playlist_id):
                         position=video["position"],
                         video_url=video["video_id"],
                     )
-                return course, True
+                return course
             except:
                 return HttpResponse(" Sorry o video fault")
 
@@ -367,6 +361,13 @@ def clear_messages(request):
     clears the django toast messages on click
     """
     return HttpResponse("")
+
+
+def get_spinner(request):
+    """
+    returns spinner
+    """
+    return render(request, "courses/partials/spinner.html", {})
 
 
 def get_boolean(request):

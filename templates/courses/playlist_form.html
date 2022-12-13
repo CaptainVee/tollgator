@@ -3,7 +3,7 @@
 <div class="container p-5">
     <div class="playlist-form-box">
 
-        <form action=""  method="POST" class="playlist-form">
+        <form action=""  method="POST"  class="playlist-form">
             {% csrf_token %}
             <fieldset class='form-group'>
 				<p class= 'mb-4'>Create course faster with just a Youtube Playlist</p>
@@ -11,10 +11,11 @@
 			</fieldset>
             <div class="d-grid">
                 <input type="text" name="playlist_id" placeholder="eg PL5B692fm6--uQRRDTPsJDp4o0xbzkoyf8">
-                <button hx-post="" type="submit" class="btn btn-theme">
+                <button hx-get="{% url 'get-spinner' %}" hx-swap="innerHTML" type="submit" class="btn btn-theme">
                     OK |<i class="fa fa-check" aria-hidden="true"></i>
                 </button>
             </div>
+            <div id="course-spinner"></div>
             <!-- <div class="progress">
                 <div id="pb" class="progress-bar" style="width:5%"></div>
             </div> -->
