@@ -20,7 +20,13 @@ from django.views.generic import (
 from .models import Course, Lesson, Video, Order, Pricing
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
-from .utils import yt_playlist_details, generate_certificates, yt_playlist_videos
+from .utils import (
+    yt_playlist_details,
+    generate_certificates,
+    yt_playlist_videos,
+    yt_video_duration,
+    youtube_duration_convertion,
+)
 
 
 # from pypaystack import Transaction, Customer, Plan
@@ -147,21 +153,38 @@ def yt_playlist_create_course(user, playlist_id):
                 position=1,
             )
             try:
+                total_lesson_time = 0
                 for video in video_list:
+                    video_id = video["video_id"]
+                    yt_duration = yt_video_duration(video_id)
+                    video_seconds, cleaned_total_time = youtube_duration_convertion(
+                        yt_duration
+                    )
                     Video.objects.create(
                         lesson=lesson,
                         title=video["title"],
                         position=video["position"],
-                        video_id=video["video_id"],
+                        video_id=video_id,
+                        duration_seconds=video_seconds,
+                        duration_time=cleaned_total_time,
                     )
+                    total_lesson_time += video_seconds
+
+                lesson.total_video_seconds = total_lesson_time
+                course.total_watch_time = total_lesson_time
+                lesson.save()
+                course.save()
                 return course
             except:
+                print(" Sorry o video fault")
                 return HttpResponse(" Sorry o video fault")
 
         except:
+            print(" Sorry o lesson fault")
             return HttpResponse(" Sorry o lesson fault")
 
     except:
+        HttpResponse(" Sorry o course fault")
         return HttpResponse(" Sorry o course fault")
 
 

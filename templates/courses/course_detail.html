@@ -74,7 +74,7 @@
 					<h2 class="accordion-header" id="heading-1">
 					  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ lesson.pk }}" 
 					  aria-expanded="true" aria-controls="collapse-{{ lesson.pk }}">
-					  {{ lesson.title }} <span> {{ lesson.videos.count }} videos | {{ lesson.videos_duration}}</span>
+					  {{ lesson.title }} <span> {{ lesson.videos.count }} videos | {{ lesson.total_video_seconds|hour_minute }}</span>
 					  </button>
 					</h2>
 					<div id="collapse-{{ lesson.pk }}" class="accordion-collapse collapse" aria-labelledby="heading-1" 
@@ -85,7 +85,7 @@
 						  <li class="mb-2">
 							<i class="fas fa-play-circle"></i>
 							{{ video }}
-							<span>{{ video.video_seconds }}</span>
+							<span>{{ video.duration_time|hour_minute_second }}</span>
 						  </li>
 						{% endfor %}
 						</ul>
@@ -336,8 +336,8 @@
 			</div>
 			<h3 class="mb-3">Course Features</h3>
 			<ul class="features-list">
-			  <li>Total {{ course.lessons.count }} lesson{{ course.lessons.count|pluralize }}</li>
-			  <li>Other features</li>
+			  <li>Total  lesson{{ course.lessons.count|pluralize }} {{ course.lessons.count }}</li>
+			  <li>{{ course.total_watch_time|hour }} Total watch time</li>
 			  <li>Other features</li>
 			  <li>Other features</li>
 			</ul>

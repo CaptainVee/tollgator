@@ -84,18 +84,11 @@ def youtube_duration_convertion(duration):
     minutes = int(minutes.group(1)) if minutes else 0
     seconds = int(seconds.group(1)) if seconds else 0
 
-    video_seconds = timedelta(
-        hours=hours,
-        minutes=minutes,
-        seconds=seconds,
-    ).total_seconds()
+    video_seconds = hours * 3600 + minutes * 60 + seconds
 
-    minutes, seconds = divmod(video_seconds, 60)
-    hours, minutes = divmod(minutes, 60)
+    cleaned_total_time = time(hour=int(hours), minute=int(minutes), second=int(seconds))
 
-    total_time = time(hour=int(hours), minute=int(minutes), second=int(seconds))
-
-    return video_seconds, total_time
+    return video_seconds, cleaned_total_time
 
 
 def my_random_string(string_length=10):

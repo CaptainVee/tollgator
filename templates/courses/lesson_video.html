@@ -1,5 +1,6 @@
 {% extends 'courses/base.html' %}
 {% load static %}
+{% load duration %}
 
 {% block content %}
   
@@ -71,7 +72,7 @@
                       <h2 class="accordion-header" id="heading-1">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ lesson.pk }}" 
                         aria-expanded="true" aria-controls="collapse-{{ lesson.pk }}">
-                        {{ lesson.title }} <span> 2 lessons | 20 min</span>
+                        {{ lesson.title }} <span>{{ lesson.videos.count }} videos | {{ lesson.total_video_seconds|hour_minute }}</span>
                         </button>
                       </h2>
                       <div id="collapse-{{ lesson.pk }}" class="accordion-collapse collapse show" aria-labelledby="heading-1" 
@@ -85,7 +86,7 @@
                                 hx-target="#video-frame">
                                     <i class="fas fa-play-circle"></i>
                                     {{ video }}
-                                    <span>06:00</span>
+                                    <span>{{ video.duration_time|hour_minute_second }}</span>
                                 </a>
                             </li>
                           {% endfor %}

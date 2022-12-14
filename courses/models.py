@@ -30,7 +30,7 @@ class Course(BaseModel):
     # ) #Can be used only on postgress database
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True)
     thumbnail_url = models.URLField(blank=True, null=True)
-    duration = models.IntegerField(null=True, default=0)
+    total_watch_time = models.IntegerField(null=True, default=0)
     # youtube_channel = models.CharField(max_length=500, blank=True, null=True)
     # category = models.ForeignKey(
     #     "Category", on_delete=models.SET_NULL, null=True, blank=False
@@ -64,7 +64,7 @@ class Lesson(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     position = models.IntegerField()
     description = models.CharField(max_length=250, null=True, blank=True)
-    total_video_length = models.FloatField(null=True, blank=True)
+    total_video_seconds = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -81,13 +81,6 @@ class Lesson(BaseModel):
     @property
     def videos(self):
         return self.video_set.all().order_by("position")
-
-    @property
-    def videos_duration(self):
-        i = 0
-        for a in self.video_set.all():
-            i += a.duration_seconds
-        return i
 
 
 class Video(BaseModel):
@@ -114,18 +107,6 @@ class Video(BaseModel):
     @property
     def videos(self):
         return self.video_set.all().order_by("position")
-
-    @property
-    def video_seconds(self):
-        # self.video_duration = 0
-        # self.save()
-        if self.duration_seconds <= 0:
-            duration = yt_video_duration(self.video_id)
-            video_seconds, total_time = youtube_duration_convertion(duration)
-            self.duration_seconds = int(video_seconds)
-            self.duration_time = total_time
-            self.save()
-        return f"{self.duration_time}"
 
 
 class Order(BaseModel):
