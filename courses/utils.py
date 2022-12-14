@@ -2,9 +2,15 @@ from googleapiclient.discovery import build
 import uuid
 from django.core.mail import EmailMessage
 import cv2
+import re
+from datetime import timedelta, time
 
 api_key = ""
 youtube = build("youtube", "v3", developerKey=api_key)
+
+hours_pattern = re.compile(r"(\d+)H")
+minutes_pattern = re.compile(r"(\d+)M")
+seconds_pattern = re.compile(r"(\d+)S")
 
 
 def yt_playlist_details(playlist_id):
@@ -43,7 +49,9 @@ def yt_playlist_videos(playlist_id):
             new_dict = {}
             new_dict["title"] = item["snippet"]["title"]
             new_dict["position"] = item["snippet"]["position"]
-            new_dict["video_id"] = item["snippet"]["resourceId"]["videoId"]
+            video_id = item["snippet"]["resourceId"]["videoId"]
+            new_dict["video_id"] = video_id
+
             video_details.append(new_dict)
             # video_details["thumbnail"] = item["snippet"]["thumbnail"]
 
@@ -54,20 +62,40 @@ def yt_playlist_videos(playlist_id):
     return video_details
 
 
-def yt_video_details(video_ids):
-    api_key = ""
-    youtube = build("youtube", "v3", developerKey=api_key)
-
-    request = youtube.videos().list(part="contentDetails", id=video_ids)
+def yt_video_duration(video_id):
+    request = youtube.videos().list(part="contentDetails", id=video_id)
     response = request.execute()
 
-    duration_list = []
-    for item in response["items"]:
-        duration = item["contentDetails"]["duration"]
-        duration_list.append(duration)
+    duration = response["items"][0]["contentDetails"]["duration"]
 
-    print(duration_list)
-    pass
+    return duration
+
+
+def youtube_duration_convertion(duration):
+    """
+    returns a properly formatted time
+    """
+
+    hours = hours_pattern.search(duration)
+    minutes = minutes_pattern.search(duration)
+    seconds = seconds_pattern.search(duration)
+
+    hours = int(hours.group(1)) if hours else 0
+    minutes = int(minutes.group(1)) if minutes else 0
+    seconds = int(seconds.group(1)) if seconds else 0
+
+    video_seconds = timedelta(
+        hours=hours,
+        minutes=minutes,
+        seconds=seconds,
+    ).total_seconds()
+
+    minutes, seconds = divmod(video_seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+
+    total_time = time(hour=int(hours), minute=int(minutes), second=int(seconds))
+
+    return video_seconds, total_time
 
 
 def my_random_string(string_length=10):

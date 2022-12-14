@@ -10,6 +10,9 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from common.models import BaseModel
 from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES, COURSE_TYPE
+from courses.utils import yt_video_duration, youtube_duration_convertion
+from datetime import time
+
 
 User = settings.AUTH_USER_MODEL
 
@@ -27,6 +30,7 @@ class Course(BaseModel):
     # ) #Can be used only on postgress database
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True)
     thumbnail_url = models.URLField(blank=True, null=True)
+    duration = models.IntegerField(null=True, default=0)
     # youtube_channel = models.CharField(max_length=500, blank=True, null=True)
     # category = models.ForeignKey(
     #     "Category", on_delete=models.SET_NULL, null=True, blank=False
@@ -78,14 +82,22 @@ class Lesson(BaseModel):
     def videos(self):
         return self.video_set.all().order_by("position")
 
+    @property
+    def videos_duration(self):
+        i = 0
+        for a in self.video_set.all():
+            i += a.duration_seconds
+        return i
+
 
 class Video(BaseModel):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False, null=False)
-    video_url = models.URLField(max_length=300, null=False, blank=False)
-    embedded_link = models.TextField(blank=True, null=True)
+    video_id = models.CharField(max_length=15, null=False, blank=False)
+    video_url = models.URLField(max_length=300, blank=True, null=True)
     position = models.IntegerField()
-    video_length = models.FloatField(null=True, blank=True)
+    duration_seconds = models.IntegerField(null=True, default=0)
+    duration_time = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -102,6 +114,18 @@ class Video(BaseModel):
     @property
     def videos(self):
         return self.video_set.all().order_by("position")
+
+    @property
+    def video_seconds(self):
+        # self.video_duration = 0
+        # self.save()
+        if self.duration_seconds <= 0:
+            duration = yt_video_duration(self.video_id)
+            video_seconds, total_time = youtube_duration_convertion(duration)
+            self.duration_seconds = int(video_seconds)
+            self.duration_time = total_time
+            self.save()
+        return f"{self.duration_time}"
 
 
 class Order(BaseModel):

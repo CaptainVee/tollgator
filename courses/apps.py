@@ -2,4 +2,7 @@ from django.apps import AppConfig
 
 
 class CoursesConfig(AppConfig):
-    name = 'courses'
+    name = "courses"
+
+    def ready(self):
+        import user.signals

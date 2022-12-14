@@ -1,3 +1,4 @@
+import random
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
@@ -39,7 +40,9 @@ class Home(ListView):
     context_object_name = "courses"
 
     def get_queryset(self):
-        return Course.objects.all()[:4]
+        course = list(Course.objects.all())
+        course = random.sample(course, 4)
+        return course
 
 
 class CourseListView(ListView):
@@ -76,6 +79,7 @@ class CourseDetailView(View):
     def get(self, request, course_slug, *args, **kwargs):
         user = request.user
         course = Course.objects.select_related("pricing").get(slug=course_slug)
+        lesson_qs = Lesson.objects.filter(course=course)
         if user.is_anonymous:
             order = None
         else:
@@ -83,6 +87,7 @@ class CourseDetailView(View):
 
         context = {
             "course": course,
+            "lesson_qs": lesson_qs,
             "order": order,
         }
         return render(request, "courses/course_detail.html", context)
@@ -147,7 +152,7 @@ def yt_playlist_create_course(user, playlist_id):
                         lesson=lesson,
                         title=video["title"],
                         position=video["position"],
-                        video_url=video["video_id"],
+                        video_id=video["video_id"],
                     )
                 return course
             except:
@@ -193,7 +198,8 @@ class CourseUpdateView(LoginRequiredMixin, UpdateView):
 
 class CourseDeleteView(LoginRequiredMixin, DeleteView):
     model = Course
-    success_url = "/"
+    success_url = "/instructor/dashboard"
+    context_object_name = "course"
 
     def test_func(self):
         course = self.get_object()

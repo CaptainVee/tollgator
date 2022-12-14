@@ -1,5 +1,6 @@
 {% extends "courses/base.html" %}
 {% load static %}
+{% load duration %}
 
 {% block content %}
   <!-- breadcrumb start -->
@@ -68,23 +69,23 @@
 				<!-- accordion start -->
 				<div class="accordion" id="accordion">
 				  <!-- accordion item start -->
-				  {% for lesson in course.lessons %}	
+				  {% for lesson in lesson_qs %}	
 				  <div class="accordion-item">
 					<h2 class="accordion-header" id="heading-1">
 					  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ lesson.pk }}" 
 					  aria-expanded="true" aria-controls="collapse-{{ lesson.pk }}">
-					  {{ lesson.title }} <span> 2 lessons | 20 min</span>
+					  {{ lesson.title }} <span> {{ lesson.videos.count }} videos | {{ lesson.videos_duration}}</span>
 					  </button>
 					</h2>
 					<div id="collapse-{{ lesson.pk }}" class="accordion-collapse collapse" aria-labelledby="heading-1" 
 					data-bs-parent="#accordionExample">
 					  <div class="accordion-body">
 						<ul>
-						{% for video_lesson in lesson.videos %}
+						{% for video in lesson.videos %}
 						  <li class="mb-2">
 							<i class="fas fa-play-circle"></i>
-							{{ video_lesson }}
-							<span>06:00</span>
+							{{ video }}
+							<span>{{ video.video_seconds }}</span>
 						  </li>
 						{% endfor %}
 						</ul>
@@ -103,10 +104,9 @@
 			<div class="tab-pane fade " id="course-description" role="tabpanel" aria-labelledby="course-description-tab">
 			  <div class="course-description box">
 				<h3 class="text-capitalize mb-4">Description</h3>
-				<p>{{ course.content }}</p>
+				<p>{{ course.brief_description }}</p>
 				<h4>who is this course designed for</h4>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse repellat eligendi eos, amet neque magni ipsa ratione 
-				  beatae velit necessitatibus quas assumenda obcaecati suscipit quae, placeat excepturi dolor quod asperiores?</p>
+				<p>{{ course.content }}</p>
 				<h4>why should you take this course</h4>
 				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos accusamus sequi odit incidunt, nobis quasi sunt, 
 				  enim quibusdam nihil saepe fugiat itaque architecto, blanditiis alias nam soluta aut ipsum pariatur.</p>
@@ -125,7 +125,7 @@
 					  </div>
 					</div>
 					<div class="right-box">
-					  <h4>John Doe <span>web developer</span></h4>
+					  <h4>{{ course.author }}</h4>
 					  <ul>
 						<li><i class="fas fa-star"></i> 4.5 Rating</li>
 						<li><i class="fas fa-play-circle"></i> 10 Courses</li>
@@ -336,7 +336,7 @@
 			</div>
 			<h3 class="mb-3">Course Features</h3>
 			<ul class="features-list">
-			  <li>Total 15 lessons</li>
+			  <li>Total {{ course.lessons.count }} lesson{{ course.lessons.count|pluralize }}</li>
 			  <li>Other features</li>
 			  <li>Other features</li>
 			  <li>Other features</li>
@@ -379,7 +379,7 @@
 			<iframe id="videoId" 
 			width="870" 
 			height="500" 
-			src="https://www.youtube.com/embed/{{ course.lessons.first.videos.first.video_url }}?enablejsapi=1"
+			src="https://www.youtube.com/embed/{{ lesson_qs.first.videos.first.video_id }}?enablejsapi=1"
 			title="YouTube video player" 
 			frameborder="0" 
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 

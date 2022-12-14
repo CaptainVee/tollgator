@@ -17,7 +17,7 @@ class LessonForm(forms.ModelForm):
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
-        fields = ["title", "embedded_link", "position"]
+        fields = ["title", "video_url", "position"]
 
 
 class Fform(forms.Form):

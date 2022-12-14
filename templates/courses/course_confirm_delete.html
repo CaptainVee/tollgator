@@ -1,0 +1,18 @@
+{% extends "courses/base.html" %}
+{% block content %}
+
+	<div class= 'container'>
+		<form method="POST">
+			{% csrf_token %}
+			<fieldset class='form-group'>
+				<legend class= 'mb-4'>Delete Course</legend>
+				<p class="h5 text-danger">Are you sure you want to delete this course "{{ course.title }}" </p>
+			</fieldset>
+			<div class='form-group'>
+				<button class= 'btn btn-theme' type="submit">Yes, Delete</button>
+				<a class= 'btn btn-outline-secondary' href="{% url 'course-update' course.pk %}" >Cancel</a>
+			</div>
+		</form>	
+	</div>
+
+{% endblock content %}
