@@ -1,6 +1,14 @@
+{% load static %}
+<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+<iframe id="player" width="870" height="500" src="https://www.youtube.com/embed/{{ video.video_id }}?enablejsapi=1"
+    frameborder="0" style="border: solid 4px #37474f"></iframe>
 
-    <iframe width="870" height="500" src="https://www.youtube.com/embed/{{ video.video_id }}" 
-        title="YouTube video player" frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen>
-    </iframe>
+<script>
+    // 2. This code loads the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+</script>
+<script src="{% static 'js/cc.js' %}"></script>

@@ -109,6 +109,14 @@ class Video(BaseModel):
         return self.video_set.all().order_by("position")
 
 
+class WatchTime(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    video = models.OneToOneField(Video, on_delete=models.CASCADE)
+    finished_video = models.BooleanField(default=False)
+    stopped_at = models.FloatField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(

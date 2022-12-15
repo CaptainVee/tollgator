@@ -17,7 +17,7 @@ from django.views.generic import (
     DeleteView,
     View,
 )
-from .models import Course, Lesson, Video, Order, Pricing
+from .models import Course, Lesson, Video, Order, Pricing, WatchTime
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
 from .utils import (
@@ -294,10 +294,13 @@ def lesson_video_view(request, course_id, video_id, *args, **kwargs):
     """
     renders the lesson video page that shows list of videos in a course
     """
-    lesson_queryset = Lesson.objects.filter(course__id=course_id)
+    lesson_queryset = Lesson.objects.filter(course__id=course_id).select_related(
+        "course"
+    )
     video = Video.objects.get(id=video_id)
+    course = lesson_queryset[0].course
 
-    context = {"lesson_queryset": lesson_queryset, "video": video}
+    context = {"lesson_queryset": lesson_queryset, "video": video, "course": course}
     return render(request, "courses/lesson_video.html", context)
 
 
@@ -405,10 +408,29 @@ def about(request):
 
 
 def new(request):
-    # video_list = yt_playlist_videos(playlist_id="PL1A2CSdiySGIPxpSlgzsZiWDavYTAx61d")
+    """-1 unstarted, 0  ended, 1  playing, 2  paused, 3  buffering, 5  video cued"""
+    current_time = request.POST.get("currentTime")
+    video_id = request.POST.get("videoId")
+    event = int(request.POST.get("event"))
+    player_state = int(request.POST.get("playerState"))
 
-    # print(lister)
-    return render(request, "courses/new/index.html", {"title": "About"})
+    try:
+        video = Video.objects.get(id=video_id)
+    except:
+        return HttpResponse("Video not found")
+
+    if event and player_state == 2:
+        WatchTime.objects.update_or_create(
+            user=request.user, video=video, defaults={"stopped_at": current_time}
+        )
+    elif event and player_state == 0:
+        WatchTime.objects.update_or_create(
+            user=request.user,
+            video=video,
+            defaults={"stopped_at": current_time, "finished_video": True},
+        )
+
+    return True
 
 
 # def is_valid_form(values):
