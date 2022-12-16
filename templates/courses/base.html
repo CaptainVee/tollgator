@@ -60,10 +60,13 @@
                 <a class="js-toggle-sub-menu" href="#">Pages<i class="fas fa-chevron-down"></i></a>
                 <ul class="sub-menu js-sub-menu">
                   <li class="sub-menu-item">
-                    <a href="{% url 'new' %}">Login</a>
+                    <a href="{% url 'account_login' %}">Login</a>
                   </li>
                   <li class="sub-menu-item">
-                    <a href="{% url 'new' %}">Signup</a>
+                    <a href="{% url 'account_logout' %}">Signup</a>
+                  </li>
+                  <li class="sub-menu-item">
+                    <a href="{% url 'account_logout' %}">Logout</a>
                   </li>
                 </ul>
               </li>

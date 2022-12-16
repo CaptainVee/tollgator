@@ -76,6 +76,7 @@
           aria-labelledby="course-curriculum-tab">
           <div class="course-curriculum box">
             <h3 class="text-capitalize mb-4">Course curriculum</h3>
+
             <!-- accordion start -->
             <div class="accordion" id="accordion">
               <!-- accordion item start -->
@@ -95,9 +96,11 @@
                     <ul>
                       {% for video in lesson.videos %}
                       <li class="mb-4">
-                        <a href="{{ video.get_absolute_url }}" hx-get="{% url 'video-url' video.id %}"
-                          hx-target="#video-frame">
-                          <i class="fas fa-play-circle"></i>
+                        <form action="" hx-post="{% url 'finished-video' video.id %}">
+                          {{ form }}
+                        </form>
+                        <a href="" hx-get="{% url 'video-url' video.id %}" hx-target="#video-frame">
+
                           {{ video }}
                           <span>{{ video.duration_time|hour_minute_second }}</span>
                         </a>

@@ -38,6 +38,13 @@ class Course(BaseModel):
     pricing = models.ForeignKey(
         "Pricing", on_delete=models.SET_NULL, null=True, blank=False
     )
+    last_video_watched = models.OneToOneField(
+        "Video",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="last_video_watched",
+    )
 
     def __str__(self):
         return self.title
@@ -105,16 +112,26 @@ class Video(BaseModel):
         )
 
     @property
-    def videos(self):
-        return self.video_set.all().order_by("position")
+    def get_course_id(self):
+        return self.lesson.course.id
+
+    # @property
+    # def stopped_at(self):
+    #     return WatchTime.objects.get(video=self)
 
 
 class WatchTime(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     video = models.OneToOneField(Video, on_delete=models.CASCADE)
     finished_video = models.BooleanField(default=False)
-    stopped_at = models.FloatField(blank=True, null=True)
+    stopped_at = models.IntegerField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def start(self):
+        if self.stopped_at < 10:
+            return self.stopped_at
+        return self.stopped_at - 5
 
 
 class Order(BaseModel):

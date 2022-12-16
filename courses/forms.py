@@ -2,7 +2,7 @@ from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
-from courses.models import Lesson, Video
+from courses.models import Lesson, Video, WatchTime
 
 
 PAYMENT_CHOICES = (("S", "Stripe"), ("P", "PayPal"))
@@ -18,6 +18,12 @@ class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
         fields = ["title", "video_url", "position"]
+
+
+class WatchTimeForm(forms.ModelForm):
+    class Meta:
+        model = WatchTime
+        fields = ["finished_video"]
 
 
 class Fform(forms.Form):

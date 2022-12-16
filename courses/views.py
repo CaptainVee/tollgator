@@ -19,7 +19,7 @@ from django.views.generic import (
 )
 from .models import Course, Lesson, Video, Order, Pricing, WatchTime
 from common.utils import get_or_none
-from .forms import LessonForm, VideoForm
+from .forms import LessonForm, VideoForm, WatchTimeForm
 from .utils import (
     yt_playlist_details,
     generate_certificates,
@@ -297,19 +297,34 @@ def lesson_video_view(request, course_id, video_id, *args, **kwargs):
     lesson_queryset = Lesson.objects.filter(course__id=course_id).select_related(
         "course"
     )
-    video = Video.objects.get(id=video_id)
     course = lesson_queryset[0].course
-
-    context = {"lesson_queryset": lesson_queryset, "video": video, "course": course}
+    last_video_watched = course.last_video_watched
+    start = last_video_watched.watchtime.start
+    form = WatchTimeForm
+    context = {
+        "lesson_queryset": lesson_queryset,
+        "last_video_watched": last_video_watched,
+        "course": course,
+        "start": start,
+        "form": form,
+    }
     return render(request, "courses/lesson_video.html", context)
 
 
-def get_video_url(request, video_slug):
+def get_video_url(request, video_id):
     """
     gets the video url in other to pass it to the video in lesson video view
     """
-    video = Video.objects.get(id=video_slug)
-    context = {"video": video}
+    try:
+        watchtime = WatchTime.objects.select_related("video").get(video__id=video_id)
+        video = watchtime.video
+        start = watchtime.start
+    except WatchTime.DoesNotExist:
+        video = Video.objects.get(id=video_id)
+        start = 0
+
+    context = {"last_video_watched": video, "start": start}
+
     return render(request, "courses/partials/video_frame.html", context)
 
 
@@ -403,34 +418,49 @@ def get_spinner(request):
     return render(request, "courses/partials/spinner.html", {})
 
 
+def finished_video(request, id):
+    watchtime = WatchTime.objects.get(id=id)
+    form = WatchTimeForm(request.POST, instance=watchtime)
+    if form.is_valid():
+        print("worked")
+        form.save()
+
+
 def about(request):
     return render(request, "courses/about.html", {"title": "About"})
 
 
-def new(request):
+def watchtime_create(request):
     """-1 unstarted, 0  ended, 1  playing, 2  paused, 3  buffering, 5  video cued"""
-    current_time = request.POST.get("currentTime")
+    current_time = int(float(request.POST.get("currentTime")))
     video_id = request.POST.get("videoId")
     event = int(request.POST.get("event"))
-    player_state = int(request.POST.get("playerState"))
+    player_state_ended = int(request.POST.get("playerState[ENDED]"))
+    player_state_playing = int(request.POST.get("playerState[PLAYING]"))
+    player_state_paused = int(request.POST.get("playerState[PAUSED]"))
 
     try:
         video = Video.objects.get(id=video_id)
     except:
         return HttpResponse("Video not found")
-
-    if event and player_state == 2:
+    if event == player_state_paused:
         WatchTime.objects.update_or_create(
             user=request.user, video=video, defaults={"stopped_at": current_time}
         )
-    elif event and player_state == 0:
+    elif event == player_state_ended:
         WatchTime.objects.update_or_create(
             user=request.user,
             video=video,
             defaults={"stopped_at": current_time, "finished_video": True},
         )
-
-    return True
+    elif event == player_state_playing:
+        course = Course.objects.get(id=video.get_course_id)
+        course.last_video_watched = video
+        course.save()
+    else:
+        return HttpResponse("False")
+    # write to account player_state_playing
+    return HttpResponse("True")
 
 
 # def is_valid_form(values):
