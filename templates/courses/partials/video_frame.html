@@ -1,8 +1,10 @@
 {% load static %}
 <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
-<iframe id="player" width="870" height="500"
+
+<iframe hx-get="{% url 'get-video-sidebar' last_video_watched.get_course_id %}" hx-trigger="load" hx-swap="innerHTML"
+    hx-target="#course-curriculum" id="player" width="870" height="500"
     src="https://www.youtube.com/embed/{{ last_video_watched.video_id }}?enablejsapi=1&start={{ start }}"
-    frameborder="0" style="border: solid 4px #37474f"></iframe>
+    frameborder="0" allowfullscreen style="border: solid 4px #37474f"></iframe>
 
 <script>
     // 2. This code loads the IFrame Player API code asynchronously.
@@ -15,8 +17,6 @@
     function onYouTubeIframeAPIReady() {
         player = new YT.Player("player", {
             playerVars: {
-                playsinline: 1,
-                modestbranding: 1,
                 start: '{{ start }}'
             },
             events: {
@@ -70,3 +70,20 @@
 
     onYouTubeIframeAPIReady();
 </script>
+<!-- 
+fetch('/watchtime/create/', {
+    method: 'POST',
+    headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        currentTime: currentTime,
+        videoId: "{{ last_video_watched.id }}",
+        event: eventData,
+        playerState: playerState,
+    })
+})
+    .then(response => response)
+    .then(data => console.log(data))
+    .catch(error => console.error(error)) -->

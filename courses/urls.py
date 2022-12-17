@@ -19,7 +19,8 @@ from .views import (
     get_spinner,
     generate_certificate_view,
     watchtime_create,
-    finished_video,
+    toggle_finished_video,
+    get_video_sidebar,
 )
 
 # from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
@@ -90,7 +91,16 @@ htmx_urlpatterns = [
         name="video-create",
     ),
     path("video/<slug:video_id>", get_video_url, name="video-url"),
-    path("finished/video/<slug:video_id>", finished_video, name="finished-video"),
+    path(
+        "finished/video/<slug:video_id>",
+        toggle_finished_video,
+        name="toggle-finished-video",
+    ),
+    path(
+        "video/sidebar/<slug:course_id>",
+        get_video_sidebar,
+        name="get-video-sidebar",
+    ),
     path("spinner/", get_spinner, name="get-spinner"),
     path("clear/", clear_messages, name="clear"),
 ]

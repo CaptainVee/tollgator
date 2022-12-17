@@ -124,7 +124,7 @@ class WatchTime(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     video = models.OneToOneField(Video, on_delete=models.CASCADE)
     finished_video = models.BooleanField(default=False)
-    stopped_at = models.IntegerField(blank=True, null=True)
+    stopped_at = models.IntegerField(blank=True, null=True, default=0)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
@@ -132,6 +132,9 @@ class WatchTime(models.Model):
         if self.stopped_at < 10:
             return self.stopped_at
         return self.stopped_at - 5
+
+    def __str__(self):
+        return f"watch time for {self.video}"
 
 
 class Order(BaseModel):

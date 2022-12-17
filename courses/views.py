@@ -19,7 +19,7 @@ from django.views.generic import (
 )
 from .models import Course, Lesson, Video, Order, Pricing, WatchTime
 from common.utils import get_or_none
-from .forms import LessonForm, VideoForm, WatchTimeForm
+from .forms import LessonForm, VideoForm
 from .utils import (
     yt_playlist_details,
     generate_certificates,
@@ -294,19 +294,16 @@ def lesson_video_view(request, course_id, video_id, *args, **kwargs):
     """
     renders the lesson video page that shows list of videos in a course
     """
-    lesson_queryset = Lesson.objects.filter(course__id=course_id).select_related(
-        "course"
-    )
-    course = lesson_queryset[0].course
+    course = Course.objects.get(id=course_id)
+    lesson_queryset = Lesson.objects.filter(course=course)
     last_video_watched = course.last_video_watched
     start = last_video_watched.watchtime.start
-    form = WatchTimeForm
+
     context = {
         "lesson_queryset": lesson_queryset,
         "last_video_watched": last_video_watched,
         "course": course,
         "start": start,
-        "form": form,
     }
     return render(request, "courses/lesson_video.html", context)
 
@@ -418,12 +415,33 @@ def get_spinner(request):
     return render(request, "courses/partials/spinner.html", {})
 
 
-def finished_video(request, id):
-    watchtime = WatchTime.objects.get(id=id)
-    form = WatchTimeForm(request.POST, instance=watchtime)
-    if form.is_valid():
-        print("worked")
-        form.save()
+def get_video_sidebar(request, course_id):
+    """
+    returns sidebar of video list
+    """
+    course = Course.objects.get(id=course_id)
+    lesson_queryset = Lesson.objects.filter(course=course)
+
+    context = {"lesson_queryset": lesson_queryset, "course": course}
+
+    return render(request, "courses/partials/video_sidebar.html", context)
+
+
+def toggle_finished_video(request, video_id):
+    video = Video.objects.get(id=video_id)
+    obj, _ = WatchTime.objects.get_or_create(user=request.user, video=video)
+    if obj.finished_video == False:
+        obj.finished_video = True
+        obj.save()
+        return HttpResponse(
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>'
+        )
+    elif obj.finished_video == True:
+        obj.finished_video = False
+        obj.save()
+        return HttpResponse(
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">'
+        )
 
 
 def about(request):
@@ -453,6 +471,7 @@ def watchtime_create(request):
             video=video,
             defaults={"stopped_at": current_time, "finished_video": True},
         )
+        print("finished")
     elif event == player_state_playing:
         course = Course.objects.get(id=video.get_course_id)
         course.last_video_watched = video
