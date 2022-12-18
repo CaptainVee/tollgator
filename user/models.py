@@ -56,7 +56,8 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-    def get_name(self):
+    @property
+    def get_full_name(self):
         return self.user.name
 
     @property

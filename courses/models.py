@@ -10,7 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from common.models import BaseModel
 from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES, COURSE_TYPE
-from courses.utils import yt_video_duration, youtube_duration_convertion
 from datetime import time
 
 
@@ -19,6 +18,7 @@ User = settings.AUTH_USER_MODEL
 
 class Course(BaseModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    playlist = models.CharField(max_length=100, blank=True, null=True)
     title = models.CharField(max_length=150, unique=True)
     brief_description = models.CharField(max_length=500, blank=True, null=True)
     content = models.TextField()
@@ -56,6 +56,10 @@ class Course(BaseModel):
     def lessons(self):
         return self.lesson_set.all().order_by("position")
 
+    @property
+    def video_count(self):
+        return self.video_set.all().count()
+
     def get_absolute_url(self):
         return reverse("course-update", kwargs={"pk": self.pk})
 
@@ -72,6 +76,9 @@ class Lesson(BaseModel):
     position = models.IntegerField()
     description = models.CharField(max_length=250, null=True, blank=True)
     total_video_seconds = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["position"]
 
     def __str__(self):
         return self.title
@@ -91,6 +98,7 @@ class Lesson(BaseModel):
 
 
 class Video(BaseModel):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False, null=False)
     video_id = models.CharField(max_length=15, null=False, blank=False)
@@ -111,14 +119,6 @@ class Video(BaseModel):
             },
         )
 
-    @property
-    def get_course_id(self):
-        return self.lesson.course.id
-
-    # @property
-    # def stopped_at(self):
-    #     return WatchTime.objects.get(video=self)
-
 
 class WatchTime(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -135,6 +135,14 @@ class WatchTime(models.Model):
 
     def __str__(self):
         return f"watch time for {self.video}"
+
+
+class Certificate(BaseModel):
+    course = models.ForeignKey(
+        Course, on_delete=models.SET_NULL, null=True
+    )  # change this to something better
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
 
 
 class Order(BaseModel):

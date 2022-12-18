@@ -18,9 +18,7 @@ testimonialSlider();
 function coursePreviewVideo() {
   const coursePreviewModal = document.querySelector(".js-course-preview-modal");
   if (coursePreviewModal) {
-    coursePreviewModal.addEventListener("shown.bs.modal", function () {
-      console.log("cow");
-    });
+    coursePreviewModal.addEventListener("shown.bs.modal", function () {});
 
     coursePreviewModal.addEventListener("hide.bs.modal", function (e) {
       // To pause the YouTube video
@@ -29,7 +27,6 @@ function coursePreviewVideo() {
         '{"event":"command","func":"PauseVideo","args":""}',
         "*"
       );
-      console.log("ok o");
     });
   }
 }

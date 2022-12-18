@@ -218,6 +218,11 @@ h3 {
     transition: transform 0.3s ease;
 }
 
+.header .menu-item img {
+    width: 2.2rem;
+    height: 2.2rem;
+}
+
 .header .sub-menu {
     position: absolute;
     background-color: var(--white);

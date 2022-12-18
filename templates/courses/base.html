@@ -56,8 +56,18 @@
                   <li class="sub-menu-item"><a href="#">Course-detail</a></li>
                 </ul>
               </li>
+
+              <li class="menu-item">
+                <a href="{% url 'user-course-list' %}">Instructor</a>
+              </li>
+              <li class="menu-item">
+                <a href="{% url 'course-create-playlist' %}">youtube PL</a>
+              </li>
+              {% if user.is_authenticated %}
               <li class="menu-item menu-item-has-children">
-                <a class="js-toggle-sub-menu" href="#">Pages<i class="fas fa-chevron-down"></i></a>
+                <a class="js-toggle-sub-menu" href="#">
+                  Profile <i class="fas fa-chevron-down"></i>
+                </a>
                 <ul class="sub-menu js-sub-menu">
                   <li class="sub-menu-item">
                     <a href="{% url 'account_login' %}">Login</a>
@@ -70,12 +80,17 @@
                   </li>
                 </ul>
               </li>
+              {% else %}
               <li class="menu-item">
-                <a href="{% url 'user-course-list' %}">Instructor</a>
+                <a href="{% url 'course-home' %}">Login</a>
               </li>
               <li class="menu-item">
-                <a href="{% url 'course-create-playlist' %}">youtube PL</a>
+                <div>
+
+                  <a class="btn btn-theme" href="{% url 'course-home' %}">Join Free</a>
+                </div>
               </li>
+              {% endif %}
             </ul>
           </nav>
         </div>

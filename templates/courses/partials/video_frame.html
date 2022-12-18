@@ -1,11 +1,10 @@
 {% load static %}
 <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
 
-<iframe hx-get="{% url 'get-video-sidebar' last_video_watched.get_course_id %}" hx-trigger="load" hx-swap="innerHTML"
+<iframe hx-get="{% url 'get-video-sidebar' last_video_watched.course.id %}" hx-trigger="load" hx-swap="innerHTML"
     hx-target="#course-curriculum" id="player" width="870" height="500"
     src="https://www.youtube.com/embed/{{ last_video_watched.video_id }}?enablejsapi=1&start={{ start }}"
     frameborder="0" allowfullscreen style="border: solid 4px #37474f"></iframe>
-
 <script>
     // 2. This code loads the IFrame Player API code asynchronously.
     var tag = document.createElement("script");
@@ -44,6 +43,7 @@
             !false
         ) {
             const currentTime = player.getCurrentTime();
+            // event.target.loadVideoById("bHQqvYy5KYo", 5, "large")
             savePlaybackTime(currentTime, event.data, YT.PlayerState);
         }
     }

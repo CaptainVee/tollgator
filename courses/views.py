@@ -17,7 +17,7 @@ from django.views.generic import (
     DeleteView,
     View,
 )
-from .models import Course, Lesson, Video, Order, Pricing, WatchTime
+from .models import Course, Lesson, Video, Order, Pricing, WatchTime, Certificate
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
 from .utils import (
@@ -176,7 +176,6 @@ def yt_playlist_create_course(user, playlist_id):
                 course.save()
                 return course
             except:
-                print(" Sorry o video fault")
                 return HttpResponse(" Sorry o video fault")
 
         except:
@@ -298,12 +297,17 @@ def lesson_video_view(request, course_id, video_id, *args, **kwargs):
     lesson_queryset = Lesson.objects.filter(course=course)
     last_video_watched = course.last_video_watched
     start = last_video_watched.watchtime.start
+    completed_count = Video.objects.filter(
+        course=course, watchtime__finished_video=True
+    ).count()
+    progress = (completed_count / course.video_count) * 100
 
     context = {
         "lesson_queryset": lesson_queryset,
         "last_video_watched": last_video_watched,
         "course": course,
         "start": start,
+        "progress": progress,
     }
     return render(request, "courses/lesson_video.html", context)
 
@@ -344,7 +348,9 @@ def video_create_update(request, lesson_id=None, video_id=None):
             except:
                 video = None
 
-        form = VideoForm(request.POST or None, instance=video)
+        form = VideoForm(
+            course=lesson.course, data=request.POST or None, instance=video
+        )
 
         form_url = reverse("video-create", kwargs={"lesson_id": lesson.id})
         if video:
@@ -390,11 +396,18 @@ def enroll(request, course_slug):
 
 def generate_certificate_view(request, course_id):
     user = request.user
-    if user.first_name and user.last_name is not None:
-        fullname = "{} {}".format(user.first_name, user.last_name)
-    else:
-        fullname = user.username
-    certificate_url = generate_certificates(name=fullname)
+    course = Course.objects.get(id=course_id)
+    completed_count = Video.objects.filter(
+        course=course, watchtime__finished_video=True
+    ).count()
+    if completed_count != course.video_count:
+        return HttpResponse("You haven't Completed this course yet")
+
+    certificate = Certificate.objects.get_or_create(user=user, course=course)
+
+    fullname = certificate.user.get_full_name
+
+    certificate_url = generate_certificates(name=fullname, course=course.title)
 
     context = {"certificate_url": "http://127.0.0.1:8000/" + certificate_url}
 
@@ -471,14 +484,13 @@ def watchtime_create(request):
             video=video,
             defaults={"stopped_at": current_time, "finished_video": True},
         )
-        print("finished")
     elif event == player_state_playing:
         course = Course.objects.get(id=video.get_course_id)
         course.last_video_watched = video
         course.save()
     else:
         return HttpResponse("False")
-    # write to account player_state_playing
+
     return HttpResponse("True")
 
 

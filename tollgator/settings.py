@@ -168,7 +168,7 @@ MEDIA_URL = "/media/"
 
 # CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-LOGIN_REDIRECT_URL = "courses-home"
+LOGIN_REDIRECT_URL = "course-home"
 LOGIN_URL = "dashboard"
 
 AUTH_USER_MODEL = "user.User"

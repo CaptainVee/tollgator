@@ -5,6 +5,7 @@ from .models import (
     Lesson,
     Video,
     WatchTime,
+    Certificate,
     Order,
     Pricing,
     Category,
@@ -18,6 +19,7 @@ admin.site.register(Lesson)
 admin.site.register(Video)
 admin.site.register(Order)
 admin.site.register(WatchTime)
+admin.site.register(Certificate)
 admin.site.register(Pricing)
 admin.site.register(Category)
 # admin.site.register(Pricing)
