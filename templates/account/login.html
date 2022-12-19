@@ -1,53 +1,56 @@
-{% extends "account/base.html" %}
+{% extends "courses/base.html" %}
 
 {% load i18n %}
 {% load account socialaccount %}
 {% block content %}
 
 
-  <div class="container">
+<div class="container">
 
-    <form class="login" method="POST">
+  <form class="login" method="POST">
 
-			<div>        
-					{{form.non_field_errors}}			   
-			</div>
-          {% csrf_token %}
-          <div class="inner-form">
-            <div class="wrap1">
-              <div class="group1">
-                <h2>Log In</h2>
-                <span class="small">Don't have an account yet? <a href="{% url 'account_signup' %}">Sign Up</a></span>
-              </div>
-            </div>
-            <div class="wrap2">
-              <div class="form-group">
-                <label class="label" for="exampleInputEmail1">Email/ Username</label>
-                <div class="placehold">
-                  <input type="text" name="login" id="id_login" id="idnputEmail" name="email" placeholder="Email" aria-describedby="emailHelp" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <div class="placehold">
-                  <input  type="password" name="password" id="id_password" placeholder="Password" required>
-                </div>
-                
-              </div>
-              <div class="form-check">
-                <label class="form-check-label" for="exampleCheck1">Remember me</label>
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              </div>
-            </div>
-		  {% if redirect_field_value %}
-		  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-		  {% endif %}
-          <div class="wrap3">
-            <button type="submit" class="btn-pry">Log In</button>
-            <a class="button secondaryAction small" href="{% url 'account_reset_password' %}">{% translate "Forgot Password?" %}</a>
-          </div>
-          
+    <div>
+      {{form.non_field_errors}}
+    </div>
+    {% csrf_token %}
+    <div class="inner-form">
+      <div class="wrap1">
+        <div class="group1">
+          <h2>Log In</h2>
+          <span class="small">Don't have an account yet? <a href="{% url 'account_signup' %}">Sign Up</a></span>
         </div>
-        </form>
-  </div>
+      </div>
+      <div class="wrap2">
+        <div class="form-group">
+          <label class="label" for="exampleInputEmail1">Email/ Username</label>
+          <div class="placehold">
+            <input type="text" name="login" id="id_login" id="idnputEmail" placeholder="Email"
+              aria-describedby="emailHelp" class="form-control" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <div class="placehold">
+            <input type="password" name="password" id="id_password" placeholder="Password" class="form-control"
+              required>
+          </div>
+
+        </div>
+        <div class="form-check">
+          <label class="form-check-label" for="exampleCheck1">Remember me</label>
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+        </div>
+      </div>
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+      <div class="wrap3">
+        <button type="submit" class="btn btn-theme">Log In</button>
+        <a class="button secondaryAction small" href="{% url 'account_reset_password' %}">{% translate "Forgot
+          Password?" %}</a>
+      </div>
+
+    </div>
+  </form>
+</div>
 {% endblock %}

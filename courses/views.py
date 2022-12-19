@@ -289,6 +289,19 @@ def lesson_create_update(request, course_id=None, lesson_id=None):
         raise Http404
 
 
+def lesson_delete_view(request, course_id, lesson_id):
+    try:
+        lesson = Lesson.objects.select_related("course").get(id=lesson_id)
+    except Lesson.DoesNotExist:
+        raise Http404
+    if request.user != lesson.course.author:
+        return HttpResponse("Unauthorized Request", status=401)
+
+    lesson.delete()
+
+    return HttpResponse("")
+
+
 def lesson_video_view(request, course_id, video_id, *args, **kwargs):
     """
     renders the lesson video page that shows list of videos in a course
@@ -368,6 +381,7 @@ def video_create_update(request, lesson_id=None, video_id=None):
             new_video = form.save(commit=False)
             if video is None:
                 new_video.lesson = lesson
+                new_video.coursev = lesson.course
             new_video.save()
             context["video"] = new_video
 
@@ -376,6 +390,18 @@ def video_create_update(request, lesson_id=None, video_id=None):
         return render(request, "courses/partials/video_form.html", context)
     else:
         raise Http404
+
+
+def video_delete_view(request, lesson_id, video_id):
+    try:
+        video = Video.objects.select_related("lesson").get(id=video_id)
+    except Video.DoesNotExist:
+        raise Http404
+    if request.user != video.course.author:
+        return HttpResponse("Unauthorized Request", status=401)
+
+    video.delete()
+    return HttpResponse("")
 
 
 def enroll(request, course_slug):

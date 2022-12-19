@@ -21,6 +21,8 @@ from .views import (
     watchtime_create,
     toggle_finished_video,
     get_video_sidebar,
+    lesson_delete_view,
+    video_delete_view,
 )
 
 # from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
@@ -81,6 +83,11 @@ htmx_urlpatterns = [
         name="lesson-new",
     ),
     path(
+        "delete/lesson/<slug:course_id>/<slug:lesson_id>/",
+        lesson_delete_view,
+        name="lesson-delete",
+    ),
+    path(
         "video/update/<slug:lesson_id>/<slug:video_id>/",
         video_create_update,
         name="video-update",
@@ -89,6 +96,11 @@ htmx_urlpatterns = [
         "video/new/<slug:lesson_id>/",
         video_create_update,
         name="video-create",
+    ),
+    path(
+        "delete/video/<slug:lesson_id>/<slug:video_id>/",
+        video_delete_view,
+        name="video-delete",
     ),
     path("video/<slug:video_id>", get_video_url, name="video-url"),
     path(

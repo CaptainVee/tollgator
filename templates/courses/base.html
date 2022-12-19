@@ -73,7 +73,7 @@
                     <a href="{% url 'account_login' %}">Login</a>
                   </li>
                   <li class="sub-menu-item">
-                    <a href="{% url 'account_logout' %}">Signup</a>
+                    <a href="{% url 'account_signup' %}">Signup</a>
                   </li>
                   <li class="sub-menu-item">
                     <a href="{% url 'account_logout' %}">Logout</a>
@@ -82,12 +82,12 @@
               </li>
               {% else %}
               <li class="menu-item">
-                <a href="{% url 'course-home' %}">Login</a>
+                <a href="{% url 'account_login' %}">Login</a>
               </li>
               <li class="menu-item">
                 <div>
 
-                  <a class="btn btn-theme" href="{% url 'course-home' %}">Join Free</a>
+                  <a class="btn btn-theme" href="{% url 'account_signup' %}">Join Free</a>
                 </div>
               </li>
               {% endif %}
@@ -99,92 +99,95 @@
     <!-- header end -->
 
     {% if messages %}
-    <div class="messages" hx-get="{% url 'clear' %}">
+    <div class="messages" hx-trigger="load delay:3s" hx-get="{% url 'clear' %}">
       {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}" style="display: flex; justify-content: space-between">
-        {{ message }}<i class="bi bi-x-lg"></i>
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
       </div>
-      {% endfor %}
     </div>
-    {% endif %}
-    <br />
-    {% block content %}{% endblock %}
+  </div>
+  {% endfor %}
+  </div>
+  {% endif %}
+  <br />
 
-    <!-- footer start -->
-    <footer class="footer">
-      <div class="footer-top">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-6 col-lg-3">
-              <div class="footer-item">
-                <h3 class="footer-logo"><span>toll</span>gator</h3>
-                <ul>
-                  <li><a href="#">about</a></li>
-                  <li><a href="#">what we offer</a></li>
-                  <li><a href="#">careers</a></li>
-                  <li><a href="#">certificates</a></li>
-                  <li><a href="#">blog</a></li>
-                </ul>
-              </div>
+  {% block content %}{% endblock %}
+
+  <!-- footer start -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-lg-3">
+            <div class="footer-item">
+              <h3 class="footer-logo"><span>toll</span>gator</h3>
+              <ul>
+                <li><a href="#">about</a></li>
+                <li><a href="#">what we offer</a></li>
+                <li><a href="#">careers</a></li>
+                <li><a href="#">certificates</a></li>
+                <li><a href="#">blog</a></li>
+              </ul>
             </div>
+          </div>
 
-            <div class="col-sm-6 col-lg-3">
-              <div class="footer-item">
-                <h3>Learning</h3>
-                <ul>
-                  <li><a href="#">get the app</a></li>
-                  <li><a href="#">testimonials</a></li>
-                  <li><a href="#">pricing</a></li>
-                  <li><a href="#">faq</a></li>
-                </ul>
-              </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="footer-item">
+              <h3>Learning</h3>
+              <ul>
+                <li><a href="#">get the app</a></li>
+                <li><a href="#">testimonials</a></li>
+                <li><a href="#">pricing</a></li>
+                <li><a href="#">faq</a></li>
+              </ul>
             </div>
+          </div>
 
-            <div class="col-sm-6 col-lg-3">
-              <div class="footer-item">
-                <h3>More</h3>
-                <ul>
-                  <li><a href="#">affiliates</a></li>
-                  <li><a href="#">become a course creator</a></li>
-                  <li><a href="#">training webnairs</a></li>
-                  <li><a href="#">free personality test</a></li>
-                  <li><a href="#">help and support</a></li>
-                </ul>
-              </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="footer-item">
+              <h3>More</h3>
+              <ul>
+                <li><a href="#">affiliates</a></li>
+                <li><a href="#">become a course creator</a></li>
+                <li><a href="#">training webnairs</a></li>
+                <li><a href="#">free personality test</a></li>
+                <li><a href="#">help and support</a></li>
+              </ul>
             </div>
+          </div>
 
-            <div class="col-sm-6 col-lg-3">
-              <div class="footer-item">
-                <h3>Get in Touch</h3>
-                <ul>
-                  <li>
-                    <a href="#"><i class="fab fa-facebook-f social-icon"></i>Facebook</a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="fab fa-twitter social-icon"></i>twitter</a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="fab fa-instagram social-icon"></i>instagram</a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="fab fa-linkedin-in social-icon"></i>linkedin</a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="fab fa-youtube social-icon"></i>youtube</a>
-                  </li>
-                </ul>
-              </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="footer-item">
+              <h3>Get in Touch</h3>
+              <ul>
+                <li>
+                  <a href="#"><i class="fab fa-facebook-f social-icon"></i>Facebook</a>
+                </li>
+                <li>
+                  <a href="#"><i class="fab fa-twitter social-icon"></i>twitter</a>
+                </li>
+                <li>
+                  <a href="#"><i class="fab fa-instagram social-icon"></i>instagram</a>
+                </li>
+                <li>
+                  <a href="#"><i class="fab fa-linkedin-in social-icon"></i>linkedin</a>
+                </li>
+                <li>
+                  <a href="#"><i class="fab fa-youtube social-icon"></i>youtube</a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <div class="container">
-          <p class="m-0 py-4 text-center">copyright &copy; 2022 captainvee</p>
-        </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p class="m-0 py-4 text-center">copyright &copy; 2022 captainvee</p>
       </div>
-    </footer>
-    <!-- footer end -->
+    </div>
+  </footer>
+  <!-- footer end -->
   </div>
   <!-- main wrapper end -->
 

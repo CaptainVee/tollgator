@@ -1,9 +1,36 @@
 <div id="video-{{ video.id }}" class="">
-    <li> 
-        <a href="{{ video.get_absolute_url }}">{{ video.title }}</a> 
+    <li>
+        <a href="{{ video.get_absolute_url }}">{{ video.title }}</a>
         <button hx-get="{% url 'video-update' lesson_id=lesson.id video_id=video.id %}"
-                hx-target="#video-{{ video.id }}"
-                hx-trigger="click">
+            hx-target="#video-{{ video.id }}" hx-trigger="click">
             Edit</button>
+        <!-- Button trigger modal -->
+        <button class="btn-danger" type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#video-{{video.pk}}">
+            Delete
+        </button>
+
+        <!-- Modal -->
+        <div class=" modal fade" id="video-{{video.pk}}" tabindex="-1" aria-labelledby="video-{{video.pk}}Label"
+            aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="" id="video-{{video.pk}}Label">Are you sure?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        You are about to delete ({{ video.title }}) video
+                        would you like to continue?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button hx-delete="{% url 'video-delete' lesson_id=lesson.id video_id=video.id  %}"
+                            hx-target="#video-{{ video.id }}" type="button" class="btn btn-primary"
+                            data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </li>
 </div>

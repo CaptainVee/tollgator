@@ -15,15 +15,6 @@ body{
     align-items: center;
 }
 
-.container {
-    border: 1px solid #f3f3f3;
-    background-color: #fff;
-    text-align: left;
-    padding: 40px 48px;
-    max-width: 500px;
-    width: 500px;
-
-}
 
 form h2{
     font-family: 'Mulish', sans-serif;
@@ -88,31 +79,12 @@ form h2{
     /* position: absolute; */
 }
 
-.btn-pry {
-    margin: 24px 0;
-    font-weight: 400;
-    font-size: 16px;
-    padding: 10px 22px; 
-    background-color: #000;
-    color: #fff;
-    border: 1px solid #000;
-    border-radius: 8px;
-    justify-content: center;
-}
-
-.btn-pry:hover{
-    background-color: #545454;
-    border-color: #545454;
-}
 
 .wrap3 {
     align-items: center;
     margin: auto;
 }
 
-.wrap3 button {
-    display: block;
-}
 
 .forgot-password {
     margin-top: 2em;

@@ -35,6 +35,13 @@
     height: 1.5rem;
 }
 
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-footer {
+    border-top: none;
+}
 
 /* ----------------- section padding, title ---------------- */
 

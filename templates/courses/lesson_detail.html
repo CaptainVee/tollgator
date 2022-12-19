@@ -2,39 +2,32 @@
 
 
 {% block content %}
-	<div class="container">
-		<h1>lesson detail</h1>
-		<h2>{{ lesson.course }}</h2>
+<div class="container">
+	<h1>lesson detail for {{ lesson_qs.first.course }}</h1>
 	{% for lesson in lesson_qs %}
-	<div  class="card mb-4 p-3">
-		
-		
+	<div id="lesson-list-{{ lesson.id }}" class="card mb-4 p-3">
+
 		<div id="lesson-details-{{ lesson.pk }}">
 			{% include 'courses/partials/lesson_list.html' %}
 		</div>
 
-			<ol>
-				{% for video in lesson.videos %}
-					{% include 'courses/partials/video_list.html' %}
-				{% endfor %}
-			</ol>
-		<div id="new-video" class="">
-		</div>
+		<ol>
+			{% for video in lesson.videos %}
+			{% include 'courses/partials/video_list.html' %}
+			{% endfor %}
+		</ol>
 		<div>
-			<button class="btn btn-theme" hx-get="{% url 'video-create' lesson_id=lesson.id %}"
-				hx-target="#new-video"
+			<button class="btn btn-theme" hx-get="{% url 'video-create' lesson_id=lesson.id %}" hx-swap="beforebegin"
 				hx-trigger="click">
 				New Video</button>
 		</div>
 
 	</div>
 	{% endfor %}
-	<div id="new-lesson" class="">
-	</div>
-		<button class="btn btn-theme btn-block" hx-get="{% url 'lesson-new' course_id=lesson_qs.first.course.id %}"
-			hx-target="#new-lesson"
-			hx-trigger="click">
-			New lesson
-		</button>
+
+	<button class="btn btn-theme btn-block" hx-get="{% url 'lesson-new' course_id=lesson_qs.first.course.id %}"
+		hx-swap="beforebegin" hx-trigger="click">
+		New lesson
+	</button>
 </div>
 {% endblock content %}

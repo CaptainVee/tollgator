@@ -1,14 +1,41 @@
 <div id="lesson-{{ lesson.id }}" class="">
-        <h2>{{ lesson.title }}</h2>
-        <div class="card-body">
-            {% if lesson.description %}
-                <p>{{ lesson.description }}</p>
-            {% else %}
-                <p>No description for this lesson</p>
-            {% endif %}
+    <h2>{{ lesson.title }}</h2>
+    <div class="card-body">
+        {% if lesson.description %}
+        <p>{{ lesson.description }}</p>
+        {% else %}
+        <p>No description for this lesson</p>
+        {% endif %}
+    </div>
+    <button hx-get="{% url 'lesson-detail' course_id=lesson.course.id lesson_id=lesson.id %}"
+        hx-target="#lesson-{{ lesson.id }}" hx-trigger="click">
+        Edit</button>
+    <!-- Button trigger modal -->
+    <button class="btn-danger" type="button" class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#lesson-{{lesson.pk}}">
+        Delete
+    </button>
+
+    <!-- Modal -->
+    <div class=" modal fade" id="lesson-{{lesson.pk}}" tabindex="-1" aria-labelledby="lesson-{{lesson.pk}}Label"
+        aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="" id="lesson-{{lesson.pk}}Label">Are you sure?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You are about to delete ({{ lesson.title }}) lesson and all its {{ lesson.videos.count }} content.
+                    would you like to continue?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button hx-delete="{% url 'lesson-delete' course_id=lesson.course.id lesson_id=lesson.id  %}"
+                        hx-target="#lesson-list-{{lesson.id}}" hx-swap="outerHTML" type="button" class="btn btn-primary"
+                        data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
         </div>
-        <button hx-get="{% url 'lesson-detail' course_id=lesson.course.id lesson_id=lesson.id %}"
-                hx-target="#lesson-{{ lesson.id }}"
-                hx-trigger="click">
-            Edit</button>
+    </div>
 </div>
