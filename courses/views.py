@@ -17,7 +17,8 @@ from django.views.generic import (
     DeleteView,
     View,
 )
-from .models import Course, Lesson, Video, Order, Pricing, WatchTime, Certificate
+from .models import Course, Lesson, Video, WatchTime, Certificate
+from order.models import Order, Pricing
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
 from .utils import (
@@ -47,7 +48,10 @@ class Home(ListView):
 
     def get_queryset(self):
         course = list(Course.objects.all())
-        course = random.sample(course, 4)
+        try:
+            course = random.sample(course, 4)
+        except:
+            course = Course.objects.all()[:4]
         return course
 
 
@@ -63,7 +67,7 @@ class CourseListView(ListView):
     paginate_by = 5
 
 
-class UserCourseListView(ListView):
+class UserCourseListView(LoginRequiredMixin, ListView):
     """
     List all the courses created by an instructor
     """
@@ -113,16 +117,18 @@ class CourseCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+@login_required
 def course_create_playlist_view(request):
     """
     For creating courses from a playlist url
     """
     if request.method == "POST":
         playlist_id = request.POST.get("playlist_id")
-
         course = yt_playlist_create_course(user=request.user, playlist_id=playlist_id)
-
-        return redirect("lesson-detail", course.id)
+        try:
+            return redirect("lesson-detail", course.id)
+        except:
+            return course
 
     context = {}
 
@@ -136,11 +142,13 @@ def yt_playlist_create_course(user, playlist_id):
     """
     playlist_details = yt_playlist_details(playlist_id)
     video_list = yt_playlist_videos(playlist_id)
+    print(1212121211)
     try:
 
         course = Course.objects.create(
             author=user,
             title=playlist_details["title"],
+            playlist=playlist_id,
             brief_description=playlist_details["description"],
             thumbnail_url=playlist_details["thumbnails"]["standard"]["url"],
             # youtube_channel=playlist_details["channelTitle"],
@@ -162,6 +170,7 @@ def yt_playlist_create_course(user, playlist_id):
                     )
                     Video.objects.create(
                         lesson=lesson,
+                        course=course,
                         title=video["title"],
                         position=video["position"],
                         video_id=video_id,
@@ -174,17 +183,20 @@ def yt_playlist_create_course(user, playlist_id):
                 course.total_watch_time = total_lesson_time
                 lesson.save()
                 course.save()
+                print("i am finished working")
                 return course
             except:
                 return HttpResponse(" Sorry o video fault")
 
-        except:
+        except Exception as e:
+            print(e)
             print(" Sorry o lesson fault")
             return HttpResponse(" Sorry o lesson fault")
 
-    except:
-        HttpResponse(" Sorry o course fault")
-        return HttpResponse(" Sorry o course fault")
+    except Exception as e:
+        print(e)
+
+        return HttpResponse(e)
 
 
 def bulk_created(big_list, lesson, video):
@@ -404,22 +416,6 @@ def video_delete_view(request, lesson_id, video_id):
     return HttpResponse("")
 
 
-def enroll(request, course_slug):
-    """
-    allows users to enroll or a free course
-    """
-    course = get_object_or_404(Course, slug=course_slug)
-    order = Order.objects.filter(course=course, user=request.user)
-    if order:
-        messages.info(request, "you have already enrolled for this course.")
-    else:
-        order = Order(user=request.user, course=course)
-        order.save()
-        messages.success(request, "You have successfully enrolled for this course.")
-
-    return redirect("lesson-list", course_slug)
-
-
 def generate_certificate_view(request, course_id):
     user = request.user
     course = Course.objects.get(id=course_id)
@@ -518,149 +514,6 @@ def watchtime_create(request):
         return HttpResponse("False")
 
     return HttpResponse("True")
-
-
-# def is_valid_form(values):
-#     valid = True
-#     for field in values:
-#         if field == "":
-#             valid = False
-#     return valid
-
-
-# class OrderSummaryView(LoginRequiredMixin, View):
-#     def get(self, *args, **kwargs):
-#         try:
-#             order = Order.objects.get(user=self.request.user, ordered=False)
-#             context = {"object": order}
-#             return render(self.request, "courses/order_summary.html", context)
-#         except ObjectDoesNotExist:
-#             messages.warning(self.request, "You do not have an active order")
-#             return redirect("/")
-
-
-# def PaymentView(request):
-#     if request.user.is_authenticated:
-#         # items = order.orderitem_set.all()
-#         # cartItems = order.get_cart_items
-#         order = Order.objects.get(user=request.user, ordered=False)
-#         context = {"order": order, "pk_public": settings.PAYSTACK_PUBLIC_KEY}
-#     return render(request, "courses/checkout.html", context)
-
-
-# @login_required
-# def add_to_cart(request, pk):
-#     item = get_object_or_404(Course, pk=pk)
-#     order_item, created = OrderItem.objects.get_or_create(
-#         item=item, user=request.user, ordered=False
-#     )
-#     order_qs = Order.objects.filter(user=request.user, ordered=False)
-#     if order_qs.exists():
-#         order = order_qs[0]
-#         # check if the order item is in the order
-#         if order.items.filter(item__pk=item.pk).exists():
-#             order_item.quantity += 1
-#             order_item.save()
-#             messages.info(request, "This item quantity was updated.")
-#             return redirect("order-summary")
-#         else:
-#             order.items.add(order_item)
-#             messages.info(request, "This item was added to your cart.")
-#             return redirect("order-summary")
-#     else:
-#         ordered_date = timezone.now()
-#         order = Order.objects.create(user=request.user, ordered_date=ordered_date)
-#         order.items.add(order_item)
-#         messages.info(request, "This item was added to your cart.")
-#         return redirect("order-summary")
-
-
-# @login_required
-# def remove_from_cart(request, pk):
-#     item = get_object_or_404(Post, pk=pk)
-#     order_qs = Order.objects.filter(user=request.user, ordered=False)
-#     if order_qs.exists():
-#         order = order_qs[0]
-#         # check if the order item is in the order
-#         if order.items.filter(item__pk=item.pk).exists():
-#             order_item = OrderItem.objects.filter(
-#                 item=item, user=request.user, ordered=False
-#             )[0]
-#             order.items.remove(order_item)
-#             order_item.delete()
-#             messages.info(request, "This item was removed from your cart.")
-#             return redirect("order-summary")
-#         else:
-#             messages.info(request, "This item was not in your cart")
-#             return redirect("post-detail", pk=pk)
-#     else:
-#         messages.info(request, "You do not have an active order")
-#         return redirect("post-detail", pk=pk)
-
-
-# @login_required
-# def remove_single_item_from_cart(request, pk):
-#     item = get_object_or_404(Item, pk=pk)
-#     order_qs = Order.objects.filter(user=request.user, ordered=False)
-#     if order_qs.exists():
-#         order = order_qs[0]
-#         # check if the order item is in the order
-#         if order.items.filter(item__pk=item.pk).exists():
-#             order_item = OrderItem.objects.filter(
-#                 item=item, user=request.user, ordered=False
-#             )[0]
-#             if order_item.quantity > 1:
-#                 order_item.quantity -= 1
-#                 order_item.save()
-#             else:
-#                 order.items.remove(order_item)
-#             messages.info(request, "This item quantity was updated.")
-#             return redirect("order-summary")
-#         else:
-#             messages.info(request, "This item was not in your cart")
-#             return redirect("post-detail", pk=pk)
-#     else:
-#         messages.info(request, "You do not have an active order")
-#         return redirect("post-detail", pk=pk)
-
-
-# class VerifyView(View):
-#     def get(self, request, id, *args, **kwargs):
-#         order = Order.objects.get(user=self.request.user, ordered=False)
-#         paystack = Paystack(secret_key=settings.PAYSTACK_SECRET_KEY)
-
-#         # transaction = Transaction(authorization_key= settings.PAYSTACK_SECRET_KEY )
-#         # response = transaction.verify(id)
-#         transaction = paystack.transaction.initialize(
-#             reference=id, amount="amount", email="email"
-#         )
-#         response = paystack.transaction.verify(reference=id)
-#         data = JsonResponse(response, safe=False)
-#         # assign the payment to the order
-
-#         order_items = order.items.all()
-#         order_items.update(ordered=True)
-#         for item in order_items:
-#             item.save()
-
-#         order.ordered = True
-#         order.ref_code = create_ref_code()
-#         order.save()
-
-#         return render(request, "courses/verify.html", {"title": "verify"})
-
-
-# class StartDetailView(LoginRequiredMixin, View):
-#     def get(self, request, *args, **kwargs):
-#         order = OrderItem.objects.filter(user=self.request.user, ordered=True)
-#         if order.exists():
-#             context = {"object": order}
-#             return render(self.request, "courses/start.html", context)
-#         else:
-#             return render(self.request, "courses/start.html", {"object": None})
-#         # lesson_qs = course.lessons.filter(pk=lesson_pk)
-#         # if lesson_qs.exists():
-#         #     lesson = lesson_qs.first()
 
 
 # def lesson_detail_view(request, lesson_id, course_id, *args, **kwargs):

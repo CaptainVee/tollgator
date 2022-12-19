@@ -64,6 +64,9 @@
                 <a href="{% url 'course-create-playlist' %}">youtube PL</a>
               </li>
               {% if user.is_authenticated %}
+              <li class="menu-item">
+                <a href="{% url 'dashboard' %}">My Courses</a>
+              </li>
               <li class="menu-item menu-item-has-children">
                 <a class="js-toggle-sub-menu" href="#">
                   Profile <i class="fas fa-chevron-down"></i>

@@ -1,14 +1,14 @@
-{% extends "courses/base.html" %}
+{% extends "base.html" %}
 {% block content %}
 <div class="container p-5">
     <div class="playlist-form-box">
 
-        <form action=""  method="POST"  class="playlist-form">
+        <form action="" method="POST" class="playlist-form">
             {% csrf_token %}
             <fieldset class='form-group'>
-				<p class= 'mb-4'>Create course faster with just a Youtube Playlist</p>
-				<h2>Enter the youtube playlist link below </h2>
-			</fieldset>
+                <p class='mb-4'>Create course faster with just a Youtube Playlist</p>
+                <h2>Enter the youtube playlist link below </h2>
+            </fieldset>
             <div class="d-grid">
                 <input type="text" name="playlist_id" placeholder="eg PL5B692fm6--uQRRDTPsJDp4o0xbzkoyf8">
                 <button hx-get="{% url 'get-spinner' %}" hx-swap="innerHTML" type="submit" class="btn btn-theme">
@@ -23,4 +23,3 @@
     </div>
 </div>
 {% endblock content %}
-

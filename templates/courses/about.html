@@ -1,126 +1,135 @@
-{% extends "courses/base.html" %}
+{% extends "base.html" %}
 {% load static %}
-{%  block content %}
+{% block content %}
 <!DOCTYPE html>
 <html>
+
 <head>
 
-   <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
-    <title>Victor Joseph</title>
-   <link rel="stylesheet" type="text/css" href="{% static 'courses/main.css' %}">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+  <title>Victor Joseph</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'courses/main.css' %}">
 </head>
 
 
-    <div class="">
-        <div class="">
-          <h1>No.1 Virtual learning space for instructors and learners.</h1>
-          <p>We're live. One of the reasons we built the tollgator platform is to bridge the gab between offline/online learning. Tollgator makes it possible for instructor to connect with students seemlessly just from a digital device.</p>
-    </div>
+<div class="">
+  <div class="">
+    <h1>No.1 Virtual learning space for instructors and learners.</h1>
+    <p>We're live. One of the reasons we built the tollgator platform is to bridge the gab between offline/online
+      learning. Tollgator makes it possible for instructor to connect with students seemlessly just from a digital
+      device.</p>
+  </div>
 
-<br>
-<br>
-<br>
-<hr class="line-blue-left">
-<h2>Our Audience</h2>
-    <div class="">
+  <br>
+  <br>
+  <br>
+  <hr class="line-blue-left">
+  <h2>Our Audience</h2>
+  <div class="">
+    <div class="card">
+      <img class="card-img" src="{% static 'images/student.jpg' %}" alt="Jane">
+      <div class="container">
+        <p class="title">
+        <h3>Connect with instructors seemlessly</h3>
+        <p>Learners no longer need to switch between platforms to get information passed across by instructors.
+          Tollgator makes it possible to access digital learning resources by instructors and many more functionalities.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <br>
+
+  <div class="row">
+    <div class="column">
       <div class="card">
-        <img class="card-img" src="{% static 'images/student.jpg' %}" alt="Jane">
         <div class="container">
-          <p class="title"><h3>Connect with instructors seemlessly</h3>
-          <p>Learners no longer need to switch between platforms to get information passed across by instructors. Tollgator makes it possible to access digital learning resources by instructors and many more functionalities.</p>
+          <p class="title">For Learners</p>
+          <p>Enroll for courses offered by instructors<br><br>
+            Access course lesson resource(Digital resources)<br><br>
+            Share favourite course with friends.<br><br>
+            Engage in real-time in course discussion board<br><br>
+            Access instructor informational resources</p>
         </div>
       </div>
     </div>
 
-<br>
-<br>
-<br>
-
-<div class="row">
-  <div class="column">
-    <div class="card">
-      <div class="container">
-        <p class="title">For Learners</p>
-        <p>Enroll for courses offered by instructors<br><br>
-         Access course lesson resource(Digital resources)<br><br>
-         Share favourite course with friends.<br><br>
-          Engage in real-time in course discussion board<br><br>
-          Access instructor informational resources</p>
+    <div class="column">
+      <div class="card">
+        <div class="container">
+          <p class="title">For Instructors</p>
+          <p>Setup free or paid courses<br><br>
+            Manage course enrollments.<br><br>
+            Create self paced learning resources. (Videos, Audio, Documents.)<br><br>
+            Realtime Forum for discussions<br><br>
+            Live lecture session Coming soon!!!</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="column">
-    <div class="card">
-      <div class="container">
-        <p class="title">For Instructors</p>
-        <p>Setup free or paid courses<br><br>
-         Manage course enrollments.<br><br>
-         Create self paced learning resources. (Videos, Audio, Documents.)<br><br>
-          Realtime Forum for discussions<br><br>
-          Live lecture session Coming soon!!!</p>
-      </div>
-    </div>
-  </div>
-</div>
+  <style>
+    html {
+      box-sizing: border-box;
+    }
 
-<style>
-html {
-  box-sizing: border-box;
-}
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
 
-*, *:before, *:after {
-  box-sizing: inherit;
-}
+    .column {
+      float: left;
+      width: 49.3%;
+      margin-bottom: 16px;
+      padding: 0 8px;
+    }
 
-.column {
-  float: left;
-  width: 49.3%;
-  margin-bottom: 16px;
-  padding: 0 8px;
-}
+    @media screen and (max-width: 650px) {
+      .column {
+        width: 100%;
+        display: block;
+      }
+    }
 
-@media screen and (max-width: 650px) {
-  .column {
-    width: 100%;
-    display: block;
-  }
-}
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
 
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
+    .container {
+      padding: 0 16px;
+    }
 
-.container {
-  padding: 0 16px;
-}
+    .container::after,
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
 
-.container::after, .row::after {
-  content: "";
-  clear: both;
-  display: table;
-}
+    .title {
+      color: grey;
+    }
 
-.title {
-  color: grey;
-}
+    .button {
+      border: none;
+      outline: 0;
+      display: inline-block;
+      padding: 8px;
+      color: white;
+      background-color: #000;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+    }
 
-.button {
-  border: none;
-  outline: 0;
-  display: inline-block;
-  padding: 8px;
-  color: white;
-  background-color: #000;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-}
-
-.button:hover {
-  background-color: #555;
-}
-</style>
-{% endblock content %}
+    .button:hover {
+      background-color: #555;
+    }
+  </style>
+  {% endblock content %}

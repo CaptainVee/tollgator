@@ -1,11 +1,11 @@
-{% extends "courses/base.html" %}
+{% extends "base.html" %}
 
 {% load i18n %}
 {% load account socialaccount %}
 {% block content %}
 
 
-<div class="container">
+<div class="container wrap">
 
   <form class="login" method="POST">
 
@@ -46,8 +46,8 @@
       {% endif %}
       <div class="wrap3">
         <button type="submit" class="btn btn-theme">Log In</button>
-        <a class="button secondaryAction small" href="{% url 'account_reset_password' %}">{% translate "Forgot
-          Password?" %}</a>
+        <a class="button secondaryAction small" href="{% url 'account_reset_password' %}">
+          {% translate "Forgot Password?" %}</a>
       </div>
 
     </div>

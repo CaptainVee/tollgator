@@ -56,6 +56,7 @@ LOCAL_APPS = [
     "user.apps.UserConfig",
     "courses.apps.CoursesConfig",
     "common.apps.CommonConfig",
+    "order.apps.OrderConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -169,7 +170,7 @@ MEDIA_URL = "/media/"
 # CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 LOGIN_REDIRECT_URL = "course-home"
-LOGIN_URL = "dashboard"
+LOGIN_URL = "account_login"
 
 AUTH_USER_MODEL = "user.User"
 

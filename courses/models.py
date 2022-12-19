@@ -1,4 +1,3 @@
-from email.policy import default
 import black
 from autoslug import AutoSlugField
 from django.db import models
@@ -36,7 +35,7 @@ class Course(BaseModel):
     #     "Category", on_delete=models.SET_NULL, null=True, blank=False
     # )
     pricing = models.ForeignKey(
-        "Pricing", on_delete=models.SET_NULL, null=True, blank=False
+        "order.Pricing", on_delete=models.SET_NULL, null=True, blank=False
     )
     last_video_watched = models.OneToOneField(
         "Video",
@@ -145,20 +144,6 @@ class Certificate(BaseModel):
     completed = models.BooleanField(default=False)
 
 
-class Order(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    course = models.ForeignKey(
-        Course,
-        on_delete=models.SET_NULL,
-        blank=False,
-        null=True,
-        related_name="course_order",
-    )
-
-    def __str__(self):
-        return f"{self.course} order by {self.user}"
-
-
 class CourseRating(BaseModel):
 
     course = models.ForeignKey(
@@ -187,17 +172,6 @@ class CourseRating(BaseModel):
         return self.course
 
 
-class Pricing(BaseModel):
-    name = models.CharField(
-        choices=COURSE_TYPE, max_length=50, null=False, blank=False, default="Free"
-    )
-    description = models.TextField()
-    price = models.FloatField(default=0, null=False, blank=False)
-
-    def __str__(self):
-        return self.name
-
-
 class Category(BaseModel):
     name = models.CharField(max_length=50, blank=False, null=False)
     description = models.TextField()
@@ -208,43 +182,3 @@ class Category(BaseModel):
     class Meta:
         verbose_name = _("category")
         verbose_name_plural = _("categories")
-
-
-class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    street_address = models.CharField(max_length=100)
-    apartment_address = models.CharField(max_length=100)
-    country = CountryField(multiple=False)
-    zip = models.CharField(max_length=100)
-    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
-    default = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.user.username
-
-    class Meta:
-        verbose_name_plural = "Addresses"
-
-
-# class OrderItem(BaseModel):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     ordered = models.BooleanField(default=False)
-#     item = models.ForeignKey(Course, on_delete=models.CASCADE)
-#     quantity = models.IntegerField(default=1)
-
-#     def __str__(self):
-#         return f"{self.quantity} of {self.item.title}"
-
-#     def get_total_item_price(self):
-#         return self.quantity * self.item.price
-
-#     def get_total_discount_item_price(self):
-#         return self.quantity * self.item.discount_price
-
-#     def get_amount_saved(self):
-#         return self.get_total_item_price() - self.get_total_discount_item_price()
-
-#     def get_final_price(self):
-#         if self.item.discount_price:
-#             return self.get_total_discount_item_price()
-#         return self.get_total_item_price()

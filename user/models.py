@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel
+
 from courses.models import Course
 
 
@@ -44,14 +45,6 @@ class UserProfile(models.Model):
     profile_pic = models.ImageField(
         blank=True, null=True, default="default.jpg", upload_to="profile_pics/"
     )
-    cover_image = models.ImageField(
-        default="default.jpg", upload_to="profile_pics/", blank=True, null=True
-    )
-
-    followers_count = models.IntegerField(blank=True, null=True, default=0)
-    following = models.ManyToManyField(
-        "self", symmetrical=False, related_name="followed", blank=True
-    )
 
     def __str__(self):
         return self.user.username
@@ -69,7 +62,7 @@ class UserProfile(models.Model):
         verbose_name_plural = _("user profiles")
 
 
-class Dashboard(BaseModel):
+class UserDashboard(BaseModel):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="user_dashboard"
     )

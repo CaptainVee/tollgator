@@ -3,14 +3,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django.contrib.auth import get_user_model
-from courses.models import Course, Order
-from .models import Dashboard, User
+from order.models import Order
 
 # User = get_user_model()
 
 
 def dashboard(request):
     orders = Order.objects.filter(user=request.user)
+    print(orders)
     # dashboard = Dashboard.objects.prefetch_related("courses_taken").get(
     #     user=request.user
     # )

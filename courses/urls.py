@@ -1,5 +1,4 @@
 from django.urls import path
-from . import views
 from .views import (
     Home,
     CourseListView,
@@ -14,7 +13,6 @@ from .views import (
     lesson_video_view,
     video_create_update,
     get_video_url,
-    enroll,
     clear_messages,
     get_spinner,
     generate_certificate_view,
@@ -58,11 +56,6 @@ urlpatterns = [
         name="lesson-video-detail",
     ),
     path("watchtime/create/", watchtime_create, name="watchtime-create"),
-    path(
-        "course/<slug:course_slug>/enroll/",
-        enroll,
-        name="enroll",
-    ),
     path(
         "get-certificate/<slug:course_id>/",
         generate_certificate_view,

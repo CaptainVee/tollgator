@@ -1,18 +1,18 @@
-{% extends "courses/base.html" %}
+{% extends "base.html" %}
 {% block content %}
 {% if object is not None %}
-	{% for order_item in object.all %}
-    <h2 class="article-title" >{{ order_item.item }}</h2>
-    <p>{{ order_item.item.content }}</p>
+{% for order_item in object.all %}
+<h2 class="article-title">{{ order_item.item }}</h2>
+<p>{{ order_item.item.content }}</p>
 
-	<ol>
+<ol>
 	{% for lesson in order_item.item.lessons %}
-			<li><a href="{{ lesson.get_absolute_url }}">{{ lesson.title }}</a></li>
+	<li><a href="{{ lesson.get_absolute_url }}">{{ lesson.title }}</a></li>
 	{% endfor %}
-	</ol>
+</ol>
 
-    {% endfor %}
+{% endfor %}
 {% else %}
-	<h1 class="article-title" >You do not have any ongoing courses. Please buy a course to get started</h1>
+<h1 class="article-title">You do not have any ongoing courses. Please buy a course to get started</h1>
 {% endif %}
 {% endblock content %}

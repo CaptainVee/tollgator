@@ -42,6 +42,19 @@
 .modal-footer {
     border-top: none;
 }
+/* account */
+.wrap {
+    margin: auto;
+    width: 600px;
+    height: 70vh;
+    padding: 38px;
+    margin-bottom: 20px;
+
+}
+
+.wrap .form-control {
+   border-color:#391d1d;
+}
 
 /* ----------------- section padding, title ---------------- */
 
@@ -84,6 +97,19 @@
     position: relative;
 }
 
+.controls input {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: 0.25rem;
+}
+
+.controls input,
 .form-control {
     height: 48px;
     border-color: var(--border-color-1);
@@ -91,6 +117,7 @@
     background-color: transparent;
 }
 
+.controls input:focus,
 .form-control:focus {
     background-color: transparent;
     border-color: var(--border-color-1);
