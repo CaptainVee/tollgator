@@ -31,18 +31,18 @@
           <div class="tab-pane fade show active" id="web-development" role="tabpanel"
             aria-labelledby="web-development-tab">
             <div class="row justify-content-center">
-
-              {% for order in orders %}
+              {{ user_dashboard.courses_taken }}
+              {% for course in user_dashboard.course_taken %}
               <!-- courses item start -->
               <div class="col-md-6 col-lg-3">
                 <div class="courses-item">
-                  <a href="{% url 'course-detail' course_slug=order.course.slug %}" class="link">
+                  <a href="{% url 'course-detail' course_slug=course.slug %}" class="link">
                     <div class="courses-item-inner">
                       <div class="img-box">
-                        {% if order.course.thumbnail_url == None %}
-                        <img src="{{ order.course.thumbnail.url }}" alt="course img">
+                        {% if course.thumbnail_url == None %}
+                        <img src="{{ course.thumbnail.url }}" alt="course img">
                         {% else %}
-                        <img src="{{ order.course.thumbnail_url }}" alt="course img">
+                        <img src="{{ course.thumbnail_url }}" alt="course img">
                         {% endif %}
                       </div>
                       <h3 class="title">{{ course.title }}</h3>
@@ -51,7 +51,7 @@
                         <span class="instuctor-name">Jon doe</span>
                       </div>
                       <div class="rating">
-                        <span class="average-rating">{{ order.course.get_rating }} (4.5)</span>
+                        <span class="average-rating">{{ course.get_rating }} (4.5)</span>
                         <span class="average-stars">
                           <i class="fas fa-star"></i>
                           <i class="fas fa-star"></i>

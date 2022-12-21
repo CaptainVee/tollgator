@@ -3,19 +3,15 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django.contrib.auth import get_user_model
-from order.models import Order
+from .models import UserDashboard
 
 # User = get_user_model()
 
 
 def dashboard(request):
-    orders = Order.objects.filter(user=request.user)
-    print(orders)
-    # dashboard = Dashboard.objects.prefetch_related("courses_taken").get(
-    #     user=request.user
-    # )
-    context = {"orders": orders}
-    print(orders)
+    enrolled = UserDashboard.objects.get(user=request.user)
+    print(enrolled.courses_taken)
+    context = {"user_dashboard": enrolled}
     return render(request, "user/dashboard.html", context)
 
 

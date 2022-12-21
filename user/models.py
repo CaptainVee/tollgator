@@ -27,6 +27,10 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+    @property
+    def posts(self):
+        return self.courses_set.all().order_by("-date_posted")
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
@@ -38,12 +42,15 @@ class User(AbstractUser):
 User = get_user_model()
 
 
-class UserProfile(models.Model):
+class UserDashboard(BaseModel):
     user = models.OneToOneField(
-        User, on_delete=models.CASCADE, primary_key=True, related_name="user_profile"
+        User, on_delete=models.CASCADE, related_name="user_dashboard"
     )
-    profile_pic = models.ImageField(
-        blank=True, null=True, default="default.jpg", upload_to="profile_pics/"
+    courses_taken = models.ManyToManyField(
+        Course, related_name="courses_taken", blank=True
+    )
+    courses_completed = models.ManyToManyField(
+        Course, related_name="courses_completed", blank=True
     )
 
     def __str__(self):
@@ -53,24 +60,9 @@ class UserProfile(models.Model):
     def get_full_name(self):
         return self.user.name
 
-    @property
-    def posts(self):
-        return self.post_set.all().order_by("-date_posted")
-
     class Meta:
-        verbose_name = _("user profile")
-        verbose_name_plural = _("user profiles")
-
-
-class UserDashboard(BaseModel):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="user_dashboard"
-    )
-    courses_taken = models.ManyToManyField(Course, related_name="courses_taken")
-    courses_completed = models.ManyToManyField(Course, related_name="courses_completed")
-
-    def __str__(self):
-        return self.user.username
+        verbose_name = _("user dashboard")
+        verbose_name_plural = _("user dashboards")
 
 
 class InstructorProfile(models.Model):
