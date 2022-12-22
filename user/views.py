@@ -3,16 +3,36 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django.contrib.auth import get_user_model
-from .models import UserDashboard
+from .models import UserDashboard, Enrollment
 
 # User = get_user_model()
 
 
 def dashboard(request):
-    enrolled = UserDashboard.objects.get(user=request.user)
-    print(enrolled.courses_taken)
-    context = {"user_dashboard": enrolled}
+    # dashboard = UserDashboard.objects.prefetch_related("courses").get(user=request.user)
+    # enrolled = dashboard.courses.all()
+    enrolled = Enrollment.objects.select_related("course").filter(
+        student=request.user.user_dashboard
+    )
+
+    context = {"user_courses_enrollment": enrolled}
     return render(request, "user/dashboard.html", context)
+
+
+def progress(request):
+    in_progress = Enrollment.objects.select_related("course").filter(
+        student=request.user.user_dashboard, completed=False
+    )
+    context = {"user_courses_enrollment": in_progress}
+    return render(request, "user/partials/user_course_list.html", context)
+
+
+def completed(request):
+    completed = Enrollment.objects.select_related("course").filter(
+        student=request.user.user_dashboard, completed=True
+    )
+    context = {"user_courses_enrollment": completed}
+    return render(request, "user/partials/user_course_list.html", context)
 
 
 @login_required

@@ -136,14 +136,6 @@ class WatchTime(models.Model):
         return f"watch time for {self.video}"
 
 
-class Certificate(BaseModel):
-    course = models.ForeignKey(
-        Course, on_delete=models.SET_NULL, null=True
-    )  # change this to something better
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    completed = models.BooleanField(default=False)
-
-
 class CourseRating(BaseModel):
 
     course = models.ForeignKey(

@@ -9,10 +9,13 @@ from django.contrib.auth.decorators import login_required
 from .models import Order, Pricing
 from courses.models import Course
 from common.utils import get_or_none
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
 
+@login_required
 def enroll(request, course_slug):
     """
     allows users to enroll or a free course

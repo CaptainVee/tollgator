@@ -7,7 +7,12 @@ from autoslug import AutoSlugField
 from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
 
-from common.constants import ADDRESS_CHOICES, COURSE_TYPE
+from common.constants import (
+    ADDRESS_CHOICES,
+    COURSE_TYPE,
+    PAYMENT_METHODS,
+    TRANSACTION_STATUSES,
+)
 
 
 User = settings.AUTH_USER_MODEL
@@ -22,6 +27,7 @@ class Order(BaseModel):
         null=True,
         related_name="course_order",
     )
+    ordered = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.course} order by {self.user}"
@@ -44,6 +50,36 @@ class Order(BaseModel):
 #         if self.item.discount_price:
 #             return self.get_total_discount_item_price()
 #         return self.get_total_item_price()
+
+
+class Cart(BaseModel):
+    reference = models.CharField(max_length=100, null=False, blank=False)
+    orders = models.ManyToManyField(Order)
+    total_amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
+    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
+
+
+class Transaction(BaseModel):
+    transaction_ref = models.CharField(max_length=100, null=False, blank=False)
+    cart = models.OneToOneField(Cart, null=False, blank=False, on_delete=models.CASCADE)
+    payment_method = models.CharField(
+        max_length=50, choices=PAYMENT_METHODS, null=False, blank=False
+    )
+    discount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
+    vat = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
+    total_price = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
+    verified = models.BooleanField(default=False)
+    transaction_status = models.CharField(
+        max_length=200,
+        choices=TRANSACTION_STATUSES,
+        null=True,
+        blank=True,
+        default="Pending Payment",
+    )
+    transaction_description = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        return self.cart.user.get_full_name + " - " + self.transaction_ref
 
 
 class Pricing(BaseModel):

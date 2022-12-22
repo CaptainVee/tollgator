@@ -17,7 +17,7 @@ from django.views.generic import (
     DeleteView,
     View,
 )
-from .models import Course, Lesson, Video, WatchTime, Certificate
+from .models import Course, Lesson, Video, WatchTime
 from order.models import Order, Pricing
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
@@ -93,7 +93,7 @@ class CourseDetailView(View):
         if user.is_anonymous:
             order = None
         else:
-            order = get_or_none(Order, course=course, user=request.user)
+            order = get_or_none(Order, course=course, user=request.user, ordered=True)
 
         context = {
             "course": course,
@@ -142,7 +142,7 @@ def yt_playlist_create_course(user, playlist_id):
     """
     playlist_details = yt_playlist_details(playlist_id)
     video_list = yt_playlist_videos(playlist_id)
-    print(1212121211)
+    print(playlist_details)
     try:
 
         course = Course.objects.create(
@@ -242,6 +242,7 @@ class CourseDeleteView(LoginRequiredMixin, DeleteView):
         return False
 
 
+@login_required
 def lesson_detail_view(request, course_id):
     """
     renders the lesson detail view page
@@ -254,6 +255,7 @@ def lesson_detail_view(request, course_id):
     return render(request, "courses/lesson_detail.html", context)
 
 
+@login_required
 def lesson_create_update(request, course_id=None, lesson_id=None):
     """
     creates and updates lessons dynamically with htmx
@@ -301,6 +303,7 @@ def lesson_create_update(request, course_id=None, lesson_id=None):
         raise Http404
 
 
+@login_required
 def lesson_delete_view(request, course_id, lesson_id):
     try:
         lesson = Lesson.objects.select_related("course").get(id=lesson_id)
@@ -314,6 +317,7 @@ def lesson_delete_view(request, course_id, lesson_id):
     return HttpResponse("")
 
 
+@login_required
 def lesson_video_view(request, course_id, video_id, *args, **kwargs):
     """
     renders the lesson video page that shows list of videos in a course
@@ -337,6 +341,7 @@ def lesson_video_view(request, course_id, video_id, *args, **kwargs):
     return render(request, "courses/lesson_video.html", context)
 
 
+@login_required
 def get_video_url(request, video_id):
     """
     gets the video url in other to pass it to the video in lesson video view
@@ -354,6 +359,7 @@ def get_video_url(request, video_id):
     return render(request, "courses/partials/video_frame.html", context)
 
 
+@login_required
 def video_create_update(request, lesson_id=None, video_id=None):
     """
     creates and updates video dynamically with htmx
@@ -404,6 +410,7 @@ def video_create_update(request, lesson_id=None, video_id=None):
         raise Http404
 
 
+@login_required
 def video_delete_view(request, lesson_id, video_id):
     try:
         video = Video.objects.select_related("lesson").get(id=video_id)
@@ -416,7 +423,9 @@ def video_delete_view(request, lesson_id, video_id):
     return HttpResponse("")
 
 
+@login_required
 def generate_certificate_view(request, course_id):
+    return None
     user = request.user
     course = Course.objects.get(id=course_id)
     completed_count = Video.objects.filter(
@@ -450,6 +459,7 @@ def get_spinner(request):
     return render(request, "courses/partials/spinner.html", {})
 
 
+@login_required
 def get_video_sidebar(request, course_id):
     """
     returns sidebar of video list
@@ -462,6 +472,7 @@ def get_video_sidebar(request, course_id):
     return render(request, "courses/partials/video_sidebar.html", context)
 
 
+@login_required
 def toggle_finished_video(request, video_id):
     video = Video.objects.get(id=video_id)
     obj, _ = WatchTime.objects.get_or_create(user=request.user, video=video)
@@ -479,10 +490,7 @@ def toggle_finished_video(request, video_id):
         )
 
 
-def about(request):
-    return render(request, "courses/about.html", {"title": "About"})
-
-
+@login_required
 def watchtime_create(request):
     """-1 unstarted, 0  ended, 1  playing, 2  paused, 3  buffering, 5  video cued"""
     current_time = int(float(request.POST.get("currentTime")))
@@ -514,6 +522,10 @@ def watchtime_create(request):
         return HttpResponse("False")
 
     return HttpResponse("True")
+
+
+def about(request):
+    return render(request, "courses/about.html", {"title": "About"})
 
 
 # def lesson_detail_view(request, lesson_id, course_id, *args, **kwargs):

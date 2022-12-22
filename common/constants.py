@@ -11,7 +11,6 @@ CATEGORY_CHOICES = (
     ("Entertainment", "Entertainment"),
 )
 
-PAYMENT_METHODS = (("payment_card", "Payment Card"), ("bank_transfer", "Bank Transfer"))
 
 ADDRESS_CHOICES = (
     ("B", "Billing"),
@@ -29,4 +28,25 @@ COURSE_TYPE = (
     ("Free", "Free"),
     ("Certificate", "Certificate"),
     ("Paid", "Paid"),
+)
+
+PAYMENT_METHODS = (
+    ("payment_card", "Payment Card"),
+    ("bank_transfer", "Bank Transfer"),
+)
+PAYMENT_CARD = (
+    ("payment_paystack", "PayStack"),
+    ("payment_rave", "Rave by Flutterwave"),
+)
+
+TRANSACTION_STATUSES = (
+    ("Pending Payment", "Pending Payment"),
+    ("Payment Completed", "Payment Completed"),
+)
+
+PAYMENT_STATUS = (
+    ("In Progress", "In Progress"),
+    ("Checkout", "Checkout"),
+    ("Payment pending", "Payment pending"),
+    ("Completed", "Completed"),
 )

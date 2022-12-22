@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel
 
-from courses.models import Course
+from courses.models import Course, Lesson
 
 
 class User(AbstractUser):
@@ -20,12 +20,17 @@ class User(AbstractUser):
         verbose_name=_("username"), db_index=True, max_length=255, unique=True
     )
     date_joined = models.DateTimeField(auto_now_add=True)
+    is_instructor = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse("profile")
 
     def __str__(self):
         return self.username
+
+    @property
+    def get_full_name(self):
+        return self.name
 
     @property
     def posts(self):
@@ -46,11 +51,8 @@ class UserDashboard(BaseModel):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="user_dashboard"
     )
-    courses_taken = models.ManyToManyField(
-        Course, related_name="courses_taken", blank=True
-    )
-    courses_completed = models.ManyToManyField(
-        Course, related_name="courses_completed", blank=True
+    courses = models.ManyToManyField(
+        Course, related_name="courses", blank=True, through="Enrollment"
     )
 
     def __str__(self):
@@ -71,6 +73,17 @@ class InstructorProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-    @property
-    def posts(self):
-        return self.post_set.all().order_by("-date_posted")
+
+class Instructor(BaseModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+class Enrollment(BaseModel):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(UserDashboard, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
+    completed_on = models.DateField(blank=True, null=True)

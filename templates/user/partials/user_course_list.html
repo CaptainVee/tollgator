@@ -1,0 +1,38 @@
+{% load static %}
+{% for enroll in user_courses_enrollment %}
+
+<!-- courses item start -->
+<div class="col-md-6 col-lg-3">
+    <div class="courses-item">
+        <a href="{% url 'course-detail' course_slug=enroll.course.slug %}" class="link">
+            <div class="courses-item-inner">
+                <div class="img-box">
+                    {% if enroll.course.thumbnail_url == None %}
+                    <img src="{{ enroll.course.thumbnail.url }}" alt="course img">
+                    {% else %}
+                    <img src="{{ enroll.course.thumbnail_url }}" alt="course img">
+                    {% endif %}
+                </div>
+                <h3 class="title">{{ enroll.course.title }}</h3>
+                <div class="instructor">
+                    <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
+                    <span class="instuctor-name">Jon doe</span>
+                </div>
+                <div class="rating">
+                    <span class="average-rating">{{ enroll.course.get_rating }} (4.5)</span>
+                    <span class="average-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </span>
+                    <span class="reviews">(230)</span>
+                </div>
+                <div class="price">$ 49</div>
+            </div>
+        </a>
+    </div>
+</div>
+<!-- courses item end -->
+{% endfor %}

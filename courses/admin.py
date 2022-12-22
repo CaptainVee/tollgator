@@ -5,7 +5,6 @@ from .models import (
     Lesson,
     Video,
     WatchTime,
-    Certificate,
     Category,
 )
 
@@ -16,6 +15,5 @@ admin.site.register(CourseRating)
 admin.site.register(Lesson)
 admin.site.register(Video)
 admin.site.register(WatchTime)
-admin.site.register(Certificate)
 admin.site.register(Category)
 # admin.site.register(Pricing)
