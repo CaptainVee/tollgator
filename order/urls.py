@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import enroll
+from .views import enroll, checkout, verify
 
 
 urlpatterns = [
@@ -7,6 +7,16 @@ urlpatterns = [
         "course/<slug:course_slug>/enroll/",
         enroll,
         name="enroll",
+    ),
+    path(
+        "checkout/<slug:id>/",
+        checkout,
+        name="checkout",
+    ),
+    path(
+        "verify/transaction/",
+        verify,
+        name="verify-transaction",
     ),
 ]
 

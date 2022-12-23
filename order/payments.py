@@ -3,7 +3,7 @@ import json
 import requests
 
 
-def initiate_paystack_url(email, amount, transaction_ref):
+def initiate_paystack_url(email, amount, transaction_ref, currency, callback_url):
     url = "https://api.paystack.co/transaction/initialize"
     headers = {
         "Content-Type": "application/json",
@@ -15,12 +15,13 @@ def initiate_paystack_url(email, amount, transaction_ref):
         {
             "email": email,
             "amount": str(amount),
-            "currency": "NGN",
+            "currency": currency,
             "reference": transaction_ref,
-            "callback_url": "http://localhost:8000/user/dashboard/",
+            "callback_url": callback_url,
         }
     )
     response = requests.request("POST", url, headers=headers, data=payload)
+
     return json.loads(response.content)
     # context = {"response" : response['data']['authorization_url']}
 

@@ -6,10 +6,11 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from .models import Order, Pricing
+from .models import Order, Cart, Transaction
 from courses.models import Course
-from common.utils import get_or_none
+from common.utils import get_or_none, my_random_string
 from django.contrib.auth.decorators import login_required
+from .payments import verify_transaction, initiate_paystack_url
 
 
 # Create your views here.
@@ -21,25 +22,57 @@ def enroll(request, course_slug):
     allows users to enroll or a free course
     """
     course = get_object_or_404(Course, slug=course_slug)
-    order = Order.objects.select_related("course").filter(
-        course=course, user=request.user
-    )
-    if order:
+    try:
+        order = Order.objects.get(user=request.user, course=course, ordered=True)
+
         messages.info(request, "you have already enrolled for this course.")
-    else:
-        order = Order(user=request.user, course=course)
-        order.save()
-        messages.success(request, "You have successfully enrolled for this course.")
 
-    return redirect("lesson-video-detail", course_slug)
+        return redirect("lesson-video-detail", course.id, course.last_video_watched.id)
+    except Order.DoesNotExist:
+        order, created = Order.objects.get_or_create(
+            user=request.user, course=course, ordered=False
+        )
+
+        context = {"order": order, "course": course}
+
+        return render(request, "order/checkout.html", context)
 
 
-# def is_valid_form(values):
-#     valid = True
-#     for field in values:
-#         if field == "":
-#             valid = False
-#     return valid
+def checkout(request, id):
+    # cart = get_or_none(Cart, id=id)
+    order = get_or_none(Order, id=id)
+    email = order.user.email
+    amount = 100  # order.course.price
+    currency = "NGN"
+    ref = my_random_string()
+    callback_url = "http://localhost:8000/order/verify/transaction/"
+    response = initiate_paystack_url(
+        email=email,
+        amount=amount,
+        transaction_ref=ref,
+        currency=currency,
+        callback_url=callback_url,
+    )
+    paystack_url = response["data"]["authorization_url"]
+    return redirect(paystack_url)
+
+
+def verify(request):
+    print(request)
+    transaction_ref = request.GET.get("trxref")
+    response = verify_transaction(transaction_ref=transaction_ref)
+    if response["status"] == "true":
+        status = response["data"]["status"]
+        message = response["data"]["gateway_response"]
+        if status == "success":
+            messages.success(request, f"{message}")
+        elif status == "failed":
+            messages.warning(request, f"{message}")
+    elif response["status"] == "false":
+        messages.info(request, "please contact customer support")
+
+    transaction = Transaction.objects.all()
+    return redirect("dashboard")
 
 
 # class OrderSummaryView(LoginRequiredMixin, View):

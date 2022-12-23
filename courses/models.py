@@ -34,9 +34,7 @@ class Course(BaseModel):
     # category = models.ForeignKey(
     #     "Category", on_delete=models.SET_NULL, null=True, blank=False
     # )
-    pricing = models.ForeignKey(
-        "order.Pricing", on_delete=models.SET_NULL, null=True, blank=False
-    )
+    price = models.FloatField(default=0)
     last_video_watched = models.OneToOneField(
         "Video",
         on_delete=models.CASCADE,
@@ -48,9 +46,6 @@ class Course(BaseModel):
     def __str__(self):
         return self.title
 
-    def get_pricing(self):
-        return self.pricing.price
-
     @property
     def lessons(self):
         return self.lesson_set.all().order_by("position")
@@ -58,6 +53,10 @@ class Course(BaseModel):
     @property
     def video_count(self):
         return self.video_set.all().count()
+
+    @property
+    def get_price(self):
+        return f"${self.price}"
 
     def get_absolute_url(self):
         return reverse("course-update", kwargs={"pk": self.pk})

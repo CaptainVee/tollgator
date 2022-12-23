@@ -21,6 +21,7 @@ from .views import (
     get_video_sidebar,
     lesson_delete_view,
     video_delete_view,
+    about,
 )
 
 # from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
@@ -38,13 +39,13 @@ urlpatterns = [
         name="course-create-playlist",
     ),
     path(
-        "course/<slug:course_slug>/",
+        "course/<slug:course_slug>/details",
         CourseDetailView.as_view(),
         name="course-detail",
     ),
     path("course/<int:pk>/update/", CourseUpdateView.as_view(), name="course-update"),
     path("course/<int:pk>/delete", CourseDeleteView.as_view(), name="course-delete"),
-    # path("about/", views.about, name="courses-about"),
+    path("about/", about, name="courses-about"),
     path(
         "<slug:course_id>/lessons/",
         lesson_detail_view,

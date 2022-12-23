@@ -1,5 +1,4 @@
 from googleapiclient.discovery import build
-import uuid
 from django.core.mail import EmailMessage
 import cv2
 import re
@@ -89,15 +88,6 @@ def youtube_duration_convertion(duration):
     cleaned_total_time = time(hour=int(hours), minute=int(minutes), second=int(seconds))
 
     return video_seconds, cleaned_total_time
-
-
-def my_random_string(string_length=10):
-    """Returns a random string of length string_length."""
-    random = str(uuid.uuid4())  # Convert UUID format to a Python string.
-    random = random.lower()  # Make all characters uppercase.
-    random = random.replace("-", "")  # Remove the UUID '-'.
-    # usage  = '%s-%s'%('TR',my_random_string(6))
-    return random[0:string_length]  # Return the random string.
 
 
 def generate_certificates(name):

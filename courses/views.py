@@ -18,7 +18,7 @@ from django.views.generic import (
     View,
 )
 from .models import Course, Lesson, Video, WatchTime
-from order.models import Order, Pricing
+from order.models import Order
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
 from .utils import (
@@ -88,7 +88,7 @@ class CourseDetailView(View):
 
     def get(self, request, course_slug, *args, **kwargs):
         user = request.user
-        course = Course.objects.select_related("pricing").get(slug=course_slug)
+        course = Course.objects.get(slug=course_slug)
         lesson_qs = Lesson.objects.filter(course=course)
         if user.is_anonymous:
             order = None
@@ -152,7 +152,6 @@ def yt_playlist_create_course(user, playlist_id):
             brief_description=playlist_details["description"],
             thumbnail_url=playlist_details["thumbnails"]["standard"]["url"],
             # youtube_channel=playlist_details["channelTitle"],
-            pricing=Pricing.objects.get(name="Free"),
         )
         try:
             lesson = Lesson.objects.create(
@@ -216,7 +215,7 @@ def bulk_created(big_list, lesson, video):
 
 class CourseUpdateView(LoginRequiredMixin, UpdateView):
     model = Course
-    fields = ["title", "content", "thumbnail", "pricing"]
+    fields = ["title", "content", "thumbnail", "price"]
 
     def form_valid(self, form):
         form.instance.author = get_object_or_404(User, username=self.request.user)

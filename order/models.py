@@ -82,15 +82,15 @@ class Transaction(BaseModel):
         return self.cart.user.get_full_name + " - " + self.transaction_ref
 
 
-class Pricing(BaseModel):
-    name = models.CharField(
-        choices=COURSE_TYPE, max_length=50, null=False, blank=False, default="Free"
-    )
-    description = models.TextField()
-    price = models.FloatField(default=0, null=False, blank=False)
+# class Pricing(BaseModel):
+#     name = models.CharField(
+#         choices=COURSE_TYPE, max_length=50, null=False, blank=False, default="Free"
+#     )
+#     description = models.TextField()
+#     price = models.FloatField(default=0, null=False, blank=False)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class Address(models.Model):
