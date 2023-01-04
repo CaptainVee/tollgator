@@ -371,7 +371,7 @@
 						<p>You have already enrolled for this course</p>
 						{% endif %}
 						{% else %}
-						<a class="btn btn-block btn-theme" href="{% url 'enroll' course_slug=course.slug %}">
+						<a class="btn btn-block btn-theme" href="{% url 'enroll' course_id=course.id %}">
 							enroll now</a>
 						<a class="btn btn-block btn-dark mt-3" href="">ADD TO CART</a>
 						{% endif %}

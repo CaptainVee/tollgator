@@ -4,7 +4,7 @@ from common.models import BaseModel
 from courses.models import Course
 from django.conf import settings
 from autoslug import AutoSlugField
-from django_countries.fields import CountryField
+from django_countries import fields, Countries
 from django.utils.translation import gettext_lazy as _
 
 from common.constants import (
@@ -14,6 +14,11 @@ from common.constants import (
     TRANSACTION_STATUSES,
 )
 
+# class G8Countries(Countries):
+#     only = [
+#         'CA', 'FR', 'DE', 'IT', 'JP', 'RU', 'GB',
+#         ('EU', _('European Union'))
+#     ]
 
 User = settings.AUTH_USER_MODEL
 
@@ -31,8 +36,6 @@ class Order(BaseModel):
 
     def __str__(self):
         return f"{self.course} order by {self.user}"
-
-    #     def __str__(self):
 
 
 #         return f"{self.quantity} of {self.item.title}"
@@ -57,6 +60,7 @@ class Cart(BaseModel):
     orders = models.ManyToManyField(Order)
     total_amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
+    country = fields.CountryField()
 
 
 class Transaction(BaseModel):
@@ -91,19 +95,3 @@ class Transaction(BaseModel):
 
 #     def __str__(self):
 #         return self.name
-
-
-class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    street_address = models.CharField(max_length=100)
-    apartment_address = models.CharField(max_length=100)
-    country = CountryField(multiple=False)
-    zip = models.CharField(max_length=100)
-    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
-    default = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.user.username
-
-    class Meta:
-        verbose_name_plural = "Addresses"

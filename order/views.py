@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse, Http404
 from django.urls import reverse
+from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -17,31 +18,42 @@ from .payments import verify_transaction, initiate_paystack_url
 
 
 @login_required
-def enroll(request, course_slug):
+@transaction.atomic
+def enroll(request, course_id):
     """
     allows users to enroll or a free course
     """
-    course = get_object_or_404(Course, slug=course_slug)
+    user = request.user
+    course = get_object_or_404(Course, id=course_id)
+
     try:
-        order = Order.objects.get(user=request.user, course=course, ordered=True)
+        order = Order.objects.get(user=user, course=course, ordered=True)
 
         messages.info(request, "you have already enrolled for this course.")
 
         return redirect("lesson-video-detail", course.id, course.last_video_watched.id)
+
     except Order.DoesNotExist:
         order, created = Order.objects.get_or_create(
-            user=request.user, course=course, ordered=False
+            user=user, course=course, ordered=False
         )
-
-        context = {"order": order, "course": course}
+        if created:
+            ref = my_random_string()
+            cart = Cart.objects.create(
+                reference=ref, total_amount=course.price, user=user
+            )
+            cart.orders.add(order)
+        else:
+            cart = order.cart_set.all()[0]
+        context = {"cart": cart, "course": course}
 
         return render(request, "order/checkout.html", context)
 
 
-def checkout(request, id):
-    # cart = get_or_none(Cart, id=id)
-    order = get_or_none(Order, id=id)
-    email = order.user.email
+def checkout(request, cart_id):
+    cart = get_or_none(Cart, id=cart_id)
+    # order = get_or_none(Order, id=cart_id)
+    email = cart.user.email
     amount = 100  # order.course.price
     currency = "NGN"
     ref = my_random_string()
@@ -72,7 +84,7 @@ def verify(request):
         messages.info(request, "please contact customer support")
 
     transaction = Transaction.objects.all()
-    return redirect("dashboard")
+    return render(request, "user/dashboard.html", {})
 
 
 # class OrderSummaryView(LoginRequiredMixin, View):

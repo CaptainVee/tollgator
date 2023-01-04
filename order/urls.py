@@ -4,7 +4,7 @@ from .views import enroll, checkout, verify
 
 urlpatterns = [
     path(
-        "course/<slug:course_slug>/enroll/",
+        "course/<slug:course_id>/enroll/",
         enroll,
         name="enroll",
     ),
