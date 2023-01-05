@@ -11,6 +11,7 @@ from common.constants import (
     ADDRESS_CHOICES,
     COURSE_TYPE,
     PAYMENT_METHODS,
+    PAYMENT_PROVIDER,
     TRANSACTION_STATUSES,
 )
 
@@ -60,7 +61,7 @@ class Cart(BaseModel):
     orders = models.ManyToManyField(Order)
     total_amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
-    country = fields.CountryField()
+    # country = fields.CountryField()
 
 
 class Transaction(BaseModel):
@@ -68,6 +69,9 @@ class Transaction(BaseModel):
     cart = models.OneToOneField(Cart, null=False, blank=False, on_delete=models.CASCADE)
     payment_method = models.CharField(
         max_length=50, choices=PAYMENT_METHODS, null=False, blank=False
+    )
+    payment_provider = models.CharField(
+        max_length=50, choices=PAYMENT_PROVIDER, null=False, blank=False
     )
     discount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     vat = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)

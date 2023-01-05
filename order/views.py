@@ -51,13 +51,21 @@ def enroll(request, course_id):
 
 
 def checkout(request, cart_id):
-    cart = get_or_none(Cart, id=cart_id)
-    # order = get_or_none(Order, id=cart_id)
-    email = cart.user.email
-    amount = 100  # order.course.price
-    currency = "NGN"
     ref = my_random_string()
-    callback_url = "http://localhost:8000/order/verify/transaction/"
+    cart = get_object_or_404(Cart, id=cart_id)
+    transaction, created = Transaction.objects.update_or_create(
+        cart=cart,
+        defaults={
+            "transaction_ref": ref,
+            "payment_provider": "payment_paystack",
+            "total_price": cart.total_amount,
+        },
+    )
+
+    email = cart.user.email
+    amount = cart.total_amount  # order.course.price
+    currency = "NGN"
+    callback_url = f"http://localhost:8000/order/verify/transaction/{transaction.id}"
     response = initiate_paystack_url(
         email=email,
         amount=amount,
@@ -65,26 +73,39 @@ def checkout(request, cart_id):
         currency=currency,
         callback_url=callback_url,
     )
-    paystack_url = response["data"]["authorization_url"]
+    print(response)
+    try:
+        paystack_url = response["data"]["authorization_url"]
+    except:
+        return HttpResponse(response["message"])
     return redirect(paystack_url)
 
 
-def verify(request):
-    print(request)
+def verify(request, transaction_id):
     transaction_ref = request.GET.get("trxref")
+    transaction = get_object_or_404(
+        Transaction, id=transaction_id, transaction_ref=transaction_ref
+    )
     response = verify_transaction(transaction_ref=transaction_ref)
     if response["status"] == "true":
         status = response["data"]["status"]
         message = response["data"]["gateway_response"]
         if status == "success":
-            messages.success(request, f"{message}")
+            print("jkejrkerjkerjekrjekrjekrjkerjkejrkejkerjkrjkerjkekr@@@@@@@@@@@")
+            transaction.transaction_status = "Completed"
+            transaction.transaction_description = message
+            transaction.save()
         elif status == "failed":
-            messages.warning(request, f"{message}")
+            transaction.transaction_status = "Failed"
+            transaction.transaction_description = message
+            transaction.save()
     elif response["status"] == "false":
-        messages.info(request, "please contact customer support")
+        transaction.transaction_description = (
+            "something went wrong with the payment, contact custumer support"
+        )
+        transaction.save()
 
-    transaction = Transaction.objects.all()
-    return render(request, "user/dashboard.html", {})
+    return render(request, "user/dashboard.html", {"transaction": transaction})
 
 
 # class OrderSummaryView(LoginRequiredMixin, View):

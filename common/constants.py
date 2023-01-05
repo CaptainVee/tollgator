@@ -34,7 +34,7 @@ PAYMENT_METHODS = (
     ("payment_card", "Payment Card"),
     ("bank_transfer", "Bank Transfer"),
 )
-PAYMENT_CARD = (
+PAYMENT_PROVIDER = (
     ("payment_paystack", "PayStack"),
     ("payment_rave", "Rave by Flutterwave"),
 )
@@ -45,7 +45,7 @@ TRANSACTION_STATUSES = (
 )
 
 PAYMENT_STATUS = (
-    ("In Progress", "In Progress"),
+    ("Failed", "Failed"),
     ("Checkout", "Checkout"),
     ("Payment pending", "Payment pending"),
     ("Completed", "Completed"),

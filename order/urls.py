@@ -9,12 +9,12 @@ urlpatterns = [
         name="enroll",
     ),
     path(
-        "checkout/<slug:id>/",
+        "checkout/<slug:cart_id>/",
         checkout,
         name="checkout",
     ),
     path(
-        "verify/transaction/",
+        "verify/transaction/<slug:transaction_id>/",
         verify,
         name="verify-transaction",
     ),

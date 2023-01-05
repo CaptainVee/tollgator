@@ -5,171 +5,182 @@
 <section class="courses-section section-padding">
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="section-title text-center mb-4">
-          <p class="sub-title">Welcome back!</p>
+      {% if transaction %}
+      {% if transaction.transaction_status == "Completed" %}
+      <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+        {% else %}
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+          {% endif %}
+          <strong>{{ transaction.transaction_description }}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <nav>
-          <div class="nav nav-tabs border-0 justify-content-center mb-4" id="nav-tab" role="tablist">
-
-            <button class="nav-link active" data-bs-toggle="tab" hx-get="{% url 'dashboard' %}" hx-target="#cow">All
-              Courses</button>
-
-            <button class="nav-link " data-bs-toggle="tab" hx-get="{% url 'in-progress' %}" hx-target="#course-list">In
-              Progress</button>
-
-            <button class="nav-link " data-bs-toggle="tab" hx-get="{% url 'completed' %}" hx-target="#course-list">
-              Completed</button>
-          </div>
-        </nav>
-        <div class="tab-content" id="nav-tabContent">
-          <div class="tab-pane fade show active" id="web-development" role="tabpanel"
-            aria-labelledby="web-development-tab">
-            <div class="row justify-content-center" id="course-list">
-              {% include 'user/partials/user_course_list.html' %}
-            </div>
-          </div>
-          <!-- Health tab start ------------------ -->
-          <div class="tab-pane fade" id="health" role="tabpanel" aria-labelledby="health-tab">
-            <div class="row justify-content-center">
-              <!-- courses item start -->
-              <div class="col-md-6 col-lg-3">
-                <div class="courses-item">
-                  <a href="" class="link">
-                    <div class="courses-item-inner">
-                      <div class="img-box">
-                        <img src="{% static 'img/courses/health/1.jpg' %}" alt="course img">
-                      </div>
-                      <h3 class="title">html for beginners</h3>
-                      <div class="instructor">
-                        <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
-                        <span class="instuctor-name">Jon doe</span>
-                      </div>
-                      <div class="rating">
-                        <span class="average-rating">(4.5)</span>
-                        <span class="average-stars">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star-half-alt"></i>
-                        </span>
-                        <span class="reviews">(230)</span>
-                      </div>
-                      <div class="price">$ 49</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-              <!-- courses item end -->
-
-              <!-- courses item start -->
-              <div class="col-md-6 col-lg-3">
-                <div class="courses-item">
-                  <a href="" class="link">
-                    <div class="courses-item-inner">
-                      <div class="img-box">
-                        <img src="{% static 'img/courses/health/2.jpg' %}" alt="course img">
-                      </div>
-                      <h3 class="title">css for beginners</h3>
-                      <div class="instructor">
-                        <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
-                        <span class="instuctor-name">Jon doe</span>
-                      </div>
-                      <div class="rating">
-                        <span class="average-rating">(4.5)</span>
-                        <span class="average-stars">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star-half-alt"></i>
-                        </span>
-                        <span class="reviews">(230)</span>
-                      </div>
-                      <div class="price">$ 49</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-              <!-- courses item end -->
-            </div>
-          </div>
-          <!-- Music tab start---------------------------- -->
-          <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
-            <div class="row justify-content-center">
-              <!-- courses item start -->
-              <div class="col-md-6 col-lg-3">
-                <div class="courses-item">
-                  <a href="" class="link">
-                    <div class="courses-item-inner">
-                      <div class="img-box">
-                        <img src="{% static 'img/courses/music/1.jpg' %}" alt="course img">
-                      </div>
-                      <h3 class="title">html for beginners</h3>
-                      <div class="instructor">
-                        <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
-                        <span class="instuctor-name">Jon doe</span>
-                      </div>
-                      <div class="rating">
-                        <span class="average-rating">(4.5)</span>
-                        <span class="average-stars">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star-half-alt"></i>
-                        </span>
-                        <span class="reviews">(230)</span>
-                      </div>
-                      <div class="price">$ 49</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-              <!-- courses item end -->
-
-              <!-- courses item start -->
-              <div class="col-md-6 col-lg-3">
-                <div class="courses-item">
-                  <a href="" class="link">
-                    <div class="courses-item-inner">
-                      <div class="img-box">
-                        <img src="{% static 'img/courses/music/2.jpg' %}" alt="course img">
-                      </div>
-                      <h3 class="title">css for beginners</h3>
-                      <div class="instructor">
-                        <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
-                        <span class="instuctor-name">Jon doe</span>
-                      </div>
-                      <div class="rating">
-                        <span class="average-rating">(4.5)</span>
-                        <span class="average-stars">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star-half-alt"></i>
-                        </span>
-                        <span class="reviews">(230)</span>
-                      </div>
-                      <div class="price">$ 49</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-              <!-- courses item end -->
-
-            </div>
+        {% endif %}
+        <div class="col-md-8">
+          <div class="section-title text-center mb-4">
+            <p class="sub-title">Welcome back!</p>
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12">
+          <nav>
+            <div class="nav nav-tabs border-0 justify-content-center mb-4" id="nav-tab" role="tablist">
+
+              <button class="nav-link active" data-bs-toggle="tab" hx-get="{% url 'dashboard' %}" hx-target="#cow">All
+                Courses</button>
+
+              <button class="nav-link " data-bs-toggle="tab" hx-get="{% url 'in-progress' %}"
+                hx-target="#course-list">In
+                Progress</button>
+
+              <button class="nav-link " data-bs-toggle="tab" hx-get="{% url 'completed' %}" hx-target="#course-list">
+                Completed</button>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="web-development" role="tabpanel"
+              aria-labelledby="web-development-tab">
+              <div class="row justify-content-center" id="course-list">
+                {% include 'user/partials/user_course_list.html' %}
+              </div>
+            </div>
+            <!-- Health tab start ------------------ -->
+            <div class="tab-pane fade" id="health" role="tabpanel" aria-labelledby="health-tab">
+              <div class="row justify-content-center">
+                <!-- courses item start -->
+                <div class="col-md-6 col-lg-3">
+                  <div class="courses-item">
+                    <a href="" class="link">
+                      <div class="courses-item-inner">
+                        <div class="img-box">
+                          <img src="{% static 'img/courses/health/1.jpg' %}" alt="course img">
+                        </div>
+                        <h3 class="title">html for beginners</h3>
+                        <div class="instructor">
+                          <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
+                          <span class="instuctor-name">Jon doe</span>
+                        </div>
+                        <div class="rating">
+                          <span class="average-rating">(4.5)</span>
+                          <span class="average-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                          </span>
+                          <span class="reviews">(230)</span>
+                        </div>
+                        <div class="price">$ 49</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <!-- courses item end -->
+
+                <!-- courses item start -->
+                <div class="col-md-6 col-lg-3">
+                  <div class="courses-item">
+                    <a href="" class="link">
+                      <div class="courses-item-inner">
+                        <div class="img-box">
+                          <img src="{% static 'img/courses/health/2.jpg' %}" alt="course img">
+                        </div>
+                        <h3 class="title">css for beginners</h3>
+                        <div class="instructor">
+                          <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
+                          <span class="instuctor-name">Jon doe</span>
+                        </div>
+                        <div class="rating">
+                          <span class="average-rating">(4.5)</span>
+                          <span class="average-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                          </span>
+                          <span class="reviews">(230)</span>
+                        </div>
+                        <div class="price">$ 49</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <!-- courses item end -->
+              </div>
+            </div>
+            <!-- Music tab start---------------------------- -->
+            <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
+              <div class="row justify-content-center">
+                <!-- courses item start -->
+                <div class="col-md-6 col-lg-3">
+                  <div class="courses-item">
+                    <a href="" class="link">
+                      <div class="courses-item-inner">
+                        <div class="img-box">
+                          <img src="{% static 'img/courses/music/1.jpg' %}" alt="course img">
+                        </div>
+                        <h3 class="title">html for beginners</h3>
+                        <div class="instructor">
+                          <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
+                          <span class="instuctor-name">Jon doe</span>
+                        </div>
+                        <div class="rating">
+                          <span class="average-rating">(4.5)</span>
+                          <span class="average-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                          </span>
+                          <span class="reviews">(230)</span>
+                        </div>
+                        <div class="price">$ 49</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <!-- courses item end -->
+
+                <!-- courses item start -->
+                <div class="col-md-6 col-lg-3">
+                  <div class="courses-item">
+                    <a href="" class="link">
+                      <div class="courses-item-inner">
+                        <div class="img-box">
+                          <img src="{% static 'img/courses/music/2.jpg' %}" alt="course img">
+                        </div>
+                        <h3 class="title">css for beginners</h3>
+                        <div class="instructor">
+                          <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
+                          <span class="instuctor-name">Jon doe</span>
+                        </div>
+                        <div class="rating">
+                          <span class="average-rating">(4.5)</span>
+                          <span class="average-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                          </span>
+                          <span class="reviews">(230)</span>
+                        </div>
+                        <div class="price">$ 49</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <!-- courses item end -->
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 </section>
 <!-- courses section start -->
 
