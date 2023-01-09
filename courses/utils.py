@@ -1,11 +1,12 @@
+import os
 from googleapiclient.discovery import build
 from django.core.mail import EmailMessage
 import cv2
 import re
 from datetime import timedelta, time
 
-api_key = ""
-youtube = build("youtube", "v3", developerKey=api_key)
+youtube_api_key = os.environ.get("YOUTUBE_API_KEY")
+youtube = build("youtube", "v3", developerKey=youtube_api_key)
 
 hours_pattern = re.compile(r"(\d+)H")
 minutes_pattern = re.compile(r"(\d+)M")

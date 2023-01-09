@@ -87,25 +87,33 @@ def verify(request, transaction_id):
         Transaction, id=transaction_id, transaction_ref=transaction_ref
     )
     response = verify_transaction(transaction_ref=transaction_ref)
-    if response["status"] == "true":
+
+    if response["status"] == True:
         status = response["data"]["status"]
         message = response["data"]["gateway_response"]
         if status == "success":
-            print("jkejrkerjkerjekrjekrjekrjkerjkejrkejkerjkrjkerjkekr@@@@@@@@@@@")
-            transaction.transaction_status = "Completed"
+            transaction.transaction_status = "Payment Completed"
             transaction.transaction_description = message
             transaction.save()
+
+            for i in transaction.cart.orders.all().select_related("course"):
+                i.ordered = True
+                i.save()
+                request.user.user_dashboard.courses.add(i.course)
+            messages.success(request, f"Your transaction was a {message}")
         elif status == "failed":
-            transaction.transaction_status = "Failed"
+            transaction.transaction_status = "Payment Failed"
             transaction.transaction_description = message
             transaction.save()
-    elif response["status"] == "false":
+            messages.error(request, f"Your transaction {message}")
+    elif response["status"] == False:
+        transaction.transaction_status = "Payment Error"
         transaction.transaction_description = (
             "something went wrong with the payment, contact custumer support"
         )
         transaction.save()
 
-    return render(request, "user/dashboard.html", {"transaction": transaction})
+    return redirect("dashboard")
 
 
 # class OrderSummaryView(LoginRequiredMixin, View):

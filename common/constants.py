@@ -42,6 +42,8 @@ PAYMENT_PROVIDER = (
 TRANSACTION_STATUSES = (
     ("Pending Payment", "Pending Payment"),
     ("Payment Completed", "Payment Completed"),
+    ("Payment Failed", "Payment Failed"),
+    ("Payment Error", "Payment Error"),
 )
 
 PAYMENT_STATUS = (
