@@ -323,8 +323,12 @@ def lesson_video_view(request, course_id, video_id, *args, **kwargs):
     """
     course = Course.objects.get(id=course_id)
     lesson_queryset = Lesson.objects.filter(course=course)
-    last_video_watched = course.last_video_watched
-    start = last_video_watched.watchtime.start
+    last_video_watched = course.last_video_watched(user=request.user)
+
+    try:
+        start = last_video_watched.watchtime.start
+    except:
+        start = 0
     completed_count = Video.objects.filter(
         course=course, watchtime__finished_video=True
     ).count()

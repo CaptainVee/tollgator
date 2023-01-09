@@ -35,13 +35,13 @@ class Course(BaseModel):
     #     "Category", on_delete=models.SET_NULL, null=True, blank=False
     # )
     price = models.FloatField(default=0)
-    last_video_watched = models.OneToOneField(
-        "Video",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="last_video_watched",
-    )
+    # last_video_watched = models.OneToOneField(
+    #     "Video",
+    #     on_delete=models.CASCADE,
+    #     blank=True,
+    #     null=True,
+    #     related_name="last_video_watched",
+    # )
 
     def __str__(self):
         return self.title
@@ -53,6 +53,12 @@ class Course(BaseModel):
     @property
     def video_count(self):
         return self.video_set.all().count()
+
+    def last_video_watched(self, user):
+        enrollment = self.enrollment_set.get(user_dashboard__user=user)
+        if enrollment.last_video_watched == None:
+            enrollment.last_video_watched = self.video_set.first()
+        return enrollment.last_video_watched
 
     @property
     def get_price(self):

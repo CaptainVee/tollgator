@@ -96,10 +96,10 @@ def verify(request, transaction_id):
             transaction.transaction_description = message
             transaction.save()
 
-            for i in transaction.cart.orders.all().select_related("course"):
-                i.ordered = True
-                i.save()
-                request.user.user_dashboard.courses.add(i.course)
+            for order in transaction.cart.orders.all().select_related("course"):
+                order.ordered = True
+                order.save()
+                request.user.user_dashboard.courses.add(order.course)
             messages.success(request, f"Your transaction was a {message}")
         elif status == "failed":
             transaction.transaction_status = "Payment Failed"

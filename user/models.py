@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel
 
-from courses.models import Course, Lesson
+from courses.models import Course, Video
 
 
 class User(AbstractUser):
@@ -84,6 +84,13 @@ class Instructor(BaseModel):
 
 class Enrollment(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    student = models.ForeignKey(UserDashboard, on_delete=models.CASCADE)
+    user_dashboard = models.ForeignKey(UserDashboard, on_delete=models.CASCADE)
+    last_video_watched = models.ForeignKey(
+        Video,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="last_video_watched",
+    )
     completed = models.BooleanField(default=False)
     completed_on = models.DateField(blank=True, null=True)
