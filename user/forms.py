@@ -1,13 +1,20 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import InstructorProfile
+from .models import InstructorProfile, User
 from django.db import transaction
 from django.contrib.auth import get_user_model
-from .models import User
 from django.conf import settings
 
 
-User = settings.AUTH_USER_MODEL
+# User = settings.AUTH_USER_MODEL
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    # image = forms.ImageField()
+
+    class Meta:
+        model = User
+        fields = ["name", "username"]
 
 
 class InstuctorRegistrationForm(UserCreationForm):
@@ -43,22 +50,6 @@ class InstuctorRegistrationForm(UserCreationForm):
 #         user.save()
 #         student = StudentProfile.objects.create(user=user)
 #         return user
-
-
-class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
-
-    class Meta:
-        model = User
-        fields = ["username", "email"]
-
-
-class ProfileUpdateForm(forms.ModelForm):
-    image = forms.ImageField()
-
-    class Meta:
-        model = User
-        fields = ["image"]
 
 
 # class UserRegistrationForm(UserCreationForm):

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django.contrib.auth import get_user_model
 from .models import UserDashboard, Enrollment
+from .forms import ProfileUpdateForm
 
 # User = get_user_model()
 
@@ -12,7 +13,7 @@ def dashboard(request):
     # dashboard = UserDashboard.objects.prefetch_related("courses").get(user=request.user)
     # enrolled = dashboard.courses.all()
     enrolled = Enrollment.objects.select_related("course").filter(
-        student=request.user.user_dashboard
+        user_dashboard=request.user.user_dashboard
     )
 
     context = {"user_courses_enrollment": enrolled}
@@ -21,7 +22,7 @@ def dashboard(request):
 
 def progress(request):
     in_progress = Enrollment.objects.select_related("course").filter(
-        student=request.user.user_dashboard, completed=False
+        user_dashboard=request.user.user_dashboard, completed=False
     )
     context = {"user_courses_enrollment": in_progress}
     return render(request, "user/partials/user_course_list.html", context)
@@ -29,7 +30,7 @@ def progress(request):
 
 def completed(request):
     completed = Enrollment.objects.select_related("course").filter(
-        student=request.user.user_dashboard, completed=True
+        user_dashboard=request.user.user_dashboard, completed=True
     )
     context = {"user_courses_enrollment": completed}
     return render(request, "user/partials/user_course_list.html", context)
@@ -37,7 +38,22 @@ def completed(request):
 
 @login_required
 def profile(request):
-    pass
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        # p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Your Accounthas been updated!")
+            return redirect("profile")
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+
+    context = {
+        "form": form,
+    }
+    return render(request, "user/profile.html", context)
+
     # if request.method == "POST":
     #     try:
     #         u_form = UserUpdateForm(request.POST, instance=request.user)
