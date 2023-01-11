@@ -52,3 +52,10 @@ PAYMENT_STATUS = (
     ("Payment pending", "Payment pending"),
     ("Completed", "Completed"),
 )
+
+PAYOUT_STATUS = (
+    ("Initiated", "Initiated"),
+    ("Processing", "Processing"),
+    ("Completed", "Completed"),
+    ("Failed", "Failed"),
+)

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import InstructorProfile, User
+from .models import User
 from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.conf import settings
@@ -31,7 +31,7 @@ class InstuctorRegistrationForm(UserCreationForm):
     #     user.email = self.cleaned_data.get("email")
     #     user.is_student = True
     #     user.save()
-    #     student = InstructorProfile.objects.create(user=user)
+    #     student =objects.create(user=user)
     #     return user
 
 

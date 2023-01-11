@@ -1,55 +1,174 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="course-details section-padding">
-	<div class="container">
-		<h2>Your Courses - ({{ page_obj.paginator.count }})</h2>
-		<!-- course header start -->
-		{% for course in courses %}
+<div class="container-fluid">
+	<div class="row">
+		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+			<div class="position-sticky pt-3 sidebar-sticky">
+				<ul class="nav flex-column">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">
+							<span data-feather="home" class="align-text-bottom"></span>
+							Dashboard
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file" class="align-text-bottom"></span>
+							Orders
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="shopping-cart" class="align-text-bottom"></span>
+							Products
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="users" class="align-text-bottom"></span>
+							Customers
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="bar-chart-2" class="align-text-bottom"></span>
+							Reports
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="layers" class="align-text-bottom"></span>
+							Integrations
+						</a>
+					</li>
+				</ul>
 
-		<div class="course-header box mb-4">
-			<a href="{% url 'course-update' course.pk %}">
-				<h2 class="text-capitalize">{{ course.title }}</h2>
-			</a>
-			<div class="rating">
-				<span class="average-rating">(4.5)</span>
-				<span class="average-stars">
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star-half-alt"></i>
-				</span>
-				<span class="reviews">(230 Reviews)</span>
+				<h6
+					class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+					<span>Saved reports</span>
+					<a class="link-secondary" href="#" aria-label="Add a new report">
+						<span data-feather="plus-circle" class="align-text-bottom"></span>
+					</a>
+				</h6>
+				<ul class="nav flex-column mb-2">
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text" class="align-text-bottom"></span>
+							Current month
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text" class="align-text-bottom"></span>
+							Last quarter
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text" class="align-text-bottom"></span>
+							Social engagement
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text" class="align-text-bottom"></span>
+							Year-end sale
+						</a>
+					</li>
+				</ul>
 			</div>
-			<ul>
-				<li>enrolled students - <span>220</span></li>
-				<li>last updated - <span>{{ course.updated_at | date:'F d, Y' }}</span></li>
-			</ul>
-		</div>
-		<!-- course header end -->
-		{% endfor %}
+		</nav>
+
+		<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+			<div class="row justify-content-end">
+				<div class="col-sm-3 mb-3">
+					<div class="card bg-info">
+						<div class="card-body">
+							<h5 class="card-title">Total Revenue</h5>
+							<p class="card-text">$3,000</p>
+							<strong><small class="text-success">$300</small> this month</strong>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 mb-3">
+					<div class="card bg-success">
+						<div class="card-body">
+							<h5 class="card-title">Total Enrollment</h5>
+							<p class="card-text">5,000</p>
+							<strong><small class="text-bg-dark">100</small> this month</strong>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 mb-3">
+					<div class="card bg-danger">
+						<div class="card-body">
+							<h5 class="card-title">Instructor Rating</h5>
+							<p class="card-text">$3,000</p>
+							<strong><small class="text-success">$300</small> this month</strong>
+						</div>
+					</div>
+				</div>
+
+				<h2 class="pt-3 pb-2 mb-3 border-bottom">Your Courses - ({{ page_obj.paginator.count }})</h2>
+				<div class="container">
+					<!-- course header start -->
+					{% for course in courses %}
+
+					<div class="course-header box mb-4">
+						<a href="{% url 'course-update' course.pk %}">
+							<h2 class="text-capitalize">{{ course.title }}</h2>
+						</a>
+						<div class="rating">
+							<span class="average-rating">(4.5)</span>
+							<span class="average-stars">
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star-half-alt"></i>
+							</span>
+							<span class="reviews">(230 Reviews)</span>
+						</div>
+						<ul>
+							<li>enrolled students - <span>220</span></li>
+							<li>Total revenue - <span class="badge bg-success"> $2,000</span>
+							</li>
+							<li>last updated - <span>{{ course.updated_at | date:'F d, Y' }}</span></li>
+						</ul>
+					</div>
+
+					<!-- course header end -->
+					{% endfor %}
+				</div>
+				{% if is_paginated %}
+				<nav aria-label="Page navigation ">
+					<ul class="pagination justify-content-center mb-4">
+						{% if page_obj.has_previous %}
+						<li class="page-item"><a class="page-link " href="?page=1">First</a></li>
+						<li class="page-item"><a class="page-link "
+								href="?page={{ page_obj.Previous_page_number }}">Previous</a></li>
+						{% endif %}
+
+						{% for num in page_obj.paginator.page_range %}
+						{% if page_obj.number == num %}
+						<li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <li
+							class="page-item"><a class="page-link " href="?page={{ num }}">{{ num }}</a></li>
+							{% endif %}
+							{% endfor %}
+
+							{% if page_obj.has_next %}
+							<li class="page-item"><a class="page-link "
+									href="?page={{ page_obj.next_page_number }}">Next</a></li>
+							<li class="page-item"><a class="page-link "
+									href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+							{% endif %}
+					</ul>
+				</nav>
+				{% endif %}
+		</main>
 	</div>
-</section>
-{% if is_paginated %}
-<nav aria-label="Page navigation ">
-	<ul class="pagination justify-content-center mb-4">
-		{% if page_obj.has_previous %}
-		<li class="page-item"><a class="page-link " href="?page=1">First</a></li>
-		<li class="page-item"><a class="page-link " href="?page={{ page_obj.Previous_page_number }}">Previous</a></li>
-		{% endif %}
+</div>
 
-		{% for num in page_obj.paginator.page_range %}
-		{% if page_obj.number == num %}
-		<li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-		{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <li class="page-item"><a
-				class="page-link " href="?page={{ num }}">{{ num }}</a></li>
-			{% endif %}
-			{% endfor %}
 
-			{% if page_obj.has_next %}
-			<li class="page-item"><a class="page-link " href="?page={{ page_obj.next_page_number }}">Next</a></li>
-			<li class="page-item"><a class="page-link " href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
-			{% endif %}
-	</ul>
-</nav>
-{% endif %}
 {% endblock content %}

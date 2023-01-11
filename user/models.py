@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from common.models import BaseModel
 
 from courses.models import Course, Video
+from common.constants import PAYOUT_STATUS
 
 
 class User(AbstractUser):
@@ -67,19 +68,24 @@ class UserDashboard(BaseModel):
         verbose_name_plural = _("user dashboards")
 
 
-class InstructorProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-
-    def __str__(self):
-        return self.user.username
-
-
 class Instructor(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
+    acct_name = models.CharField(max_length=250, null=True, blank=True)
+    bank_name = models.CharField(max_length=250, null=True, blank=True)
+    acct_number = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.user.username
+
+
+class Payout(BaseModel):
+    instructor = models.ForeignKey(
+        Instructor, on_delete=models.CASCADE, blank=False, null=False
+    )
+    amount = models.FloatField(null=False, blank=False)
+    comment = models.CharField(max_length=500, blank=True, null=True)
+    status = models.CharField(choices=PAYOUT_STATUS, max_length=20, default="Initiated")
 
 
 class Enrollment(BaseModel):
