@@ -1,7 +1,7 @@
 from django.urls import path
 
 
-from .views import profile, dashboard, progress, completed
+from .views import profile, dashboard, progress, completed, account_details
 
 
 urlpatterns = [
@@ -9,6 +9,7 @@ urlpatterns = [
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/in-progress", progress, name="in-progress"),
     path("dashboard/completed", completed, name="completed"),
+    path("dashboard/account-details", account_details, name="account-details"),
     # path(
     #     "register/student",
     #     StudentRegisterView.as_view(),

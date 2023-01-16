@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django.contrib.auth import get_user_model
-from .models import UserDashboard, Enrollment
+from .models import UserDashboard, Enrollment, BankAccount
 from .forms import ProfileUpdateForm
 
 # User = get_user_model()
@@ -34,6 +34,12 @@ def completed(request):
     )
     context = {"user_courses_enrollment": completed}
     return render(request, "user/partials/user_course_list.html", context)
+
+
+def account_details(request):
+    bank_account = BankAccount.objects.get(instructor=request.user.instructor)[0]
+    context = {"bank_account": bank_account}
+    return render(request, "user/bank_account_details.html", context)
 
 
 @login_required
