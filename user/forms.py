@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User, Withdraw
 from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.conf import settings
@@ -15,6 +15,12 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["name", "username"]
+
+
+class WithdrawalForm(forms.ModelForm):
+    class Meta:
+        model = Withdraw
+        fields = ["amount"]
 
 
 class InstuctorRegistrationForm(UserCreationForm):

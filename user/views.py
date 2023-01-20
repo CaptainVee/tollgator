@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django.contrib.auth import get_user_model
-from .models import UserDashboard, Enrollment, BankAccount
-from .forms import ProfileUpdateForm
+from .models import UserDashboard, Enrollment, BankAccount, Withdraw
+from .forms import ProfileUpdateForm, WithdrawalForm
 
 # User = get_user_model()
 
@@ -37,9 +37,43 @@ def completed(request):
 
 
 def account_details(request):
-    bank_account = BankAccount.objects.get(instructor=request.user.instructor)[0]
+    bank_account = BankAccount.objects.get(instructor=request.user.instructor)
     context = {"bank_account": bank_account}
     return render(request, "user/bank_account_details.html", context)
+
+
+@login_required
+def withdraw_funds(request):
+    bank_account = BankAccount.objects.get(instructor=request.user.instructor)
+    withdrawals = Withdraw.objects.filter(instructor=request.user.instructor)
+
+    if request.method == "POST":
+        form = WithdrawalForm(request.POST)
+        if form.is_valid():
+            withdrawal_amount = int(form.cleaned_data["amount"])
+            if withdrawal_amount < 5000:
+                messages.warning(request, "Please enter a value greater than 5000")
+            elif withdrawal_amount > bank_account.account_balance:
+                messages.warning(request, "Insuficient Funds")
+            else:
+                bank_account.account_balance -= withdrawal_amount
+                bank_account.save()
+                withdrawal = form.save(commit=False)
+                withdrawal.instructor = request.user.instructor
+                withdrawal.save()
+                messages.success(
+                    request,
+                    "Your request has been initiated, please note it may take up to 24hrs for the transaction to be fufilled.",
+                )
+            return redirect("withdraw-funds")
+    else:
+        form = WithdrawalForm()
+    context = {
+        "bank_account": bank_account,
+        "withdrawals": withdrawals,
+        "form": form,
+    }
+    return render(request, "user/withdraw.html", context)
 
 
 @login_required

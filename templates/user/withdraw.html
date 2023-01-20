@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div class="">
+            <h1 class="h2">Withdraw</h1>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body d-flex justify-content-between">
+                    <i class="fas fa-wallet ps-3" style="font-size: 50px;"></i>
+                    <div class="">
+                        <h5 class="card-title ">NGN {{ bank_account.account_balance|floatformat:"-3g" }}</h5>
+                        <p class="card-subtitle mb-2 text-muted">Your Balance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Request Withdrawal
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Withdrawal Form</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col">
+                            <p>Your Account details</p>
+                        </div>
+                        <div class="col">
+                            <div class="card-body bg-light">
+                                <div class="d-flex">Bank Name:
+                                    <h6 class="px-3">{{ bank_account.bank_name }}</h6>
+                                </div>
+                                <div class="d-flex">Account Number:
+                                    <h6 class="px-3">{{ bank_account.account_number }}</h6>
+                                </div>
+                                <div class="d-flex">Account Name:
+                                    <h6 class="px-3">{{ bank_account.account_name }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+
+                                <div class="form-group">
+                                    <p>Avail Bal: NGN {{ bank_account.account_balance|floatformat:"-3g" }}</p>
+                                    <button class="btn btn-theme" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for withdraw in withdrawals %}
+            <tr>
+                <th scope="row">{{ withdraw.pk }}</th>
+                <td>NGN</td>
+                <td>{{ withdraw.amount }}</td>
+                {% if withdraw.status == "Initiated" %}
+                <td><span class="badge bg-secondary">{{ withdraw.status }}</span></td>
+                {% elif withdraw.status == "Processing" %}
+                <td><span class="badge bg-info">{{ withdraw.status }}</span></td>
+                {% elif withdraw.status == "Completed" %}
+                <td><span class="badge bg-success">{{ withdraw.status }}</span></td>
+                {% else %}
+                <td><span class="badge bg-danger">{{ withdraw.status }}</span></td>
+                {% endif %}
+
+                <td>{{ withdraw.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endblock content %}

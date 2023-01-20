@@ -27,7 +27,7 @@ class User(AbstractUser):
         return reverse("profile")
 
     def __str__(self):
-        return self.username
+        return self.email
 
     @property
     def get_full_name(self):
@@ -84,15 +84,22 @@ class BankAccount(BaseModel):
     bank_name = models.CharField(max_length=150, blank=True, null=True)
     account_number = models.CharField(max_length=50, blank=False, null=False)
     account_name = models.CharField(max_length=50, blank=False, null=False)
+    account_balance = models.IntegerField(default=0, blank=False, null=False)
+
+    def __str__(self):
+        return f"{self.bank_name}-{self.account_number}"
 
 
-class Payout(BaseModel):
+class Withdraw(BaseModel):
     instructor = models.ForeignKey(
         Instructor, on_delete=models.CASCADE, blank=False, null=False
     )
-    amount = models.FloatField(null=False, blank=False)
-    comment = models.CharField(max_length=500, blank=True, null=True)
+    amount = models.IntegerField(null=False, blank=False)
+    # comment = models.CharField(max_length=500, blank=True, null=True)
     status = models.CharField(choices=PAYOUT_STATUS, max_length=20, default="Initiated")
+
+    def __str__(self) -> str:
+        return f"{self.instructor}-{self.amount}"
 
 
 class Enrollment(BaseModel):
