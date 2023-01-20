@@ -34,8 +34,8 @@ class User(AbstractUser):
         return self.name
 
     @property
-    def posts(self):
-        return self.courses_set.all().order_by("-date_posted")
+    def courses(self):
+        return self.course_set.all().order_by("created_at")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
@@ -100,6 +100,8 @@ class Withdraw(BaseModel):
 
     def __str__(self) -> str:
         return f"{self.instructor}-{self.amount}"
+
+    # define a save methos or use signal to ensure no withdrwal is made when a user has less than that in hi account
 
 
 class Enrollment(BaseModel):

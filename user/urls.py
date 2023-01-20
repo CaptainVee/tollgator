@@ -8,12 +8,14 @@ from .views import (
     completed,
     account_details,
     withdraw_funds,
+    instructor_dashboard,
 )
 
 
 urlpatterns = [
     path("profile/", profile, name="profile"),
     path("dashboard/", dashboard, name="dashboard"),
+    path("dashboard2/", instructor_dashboard, name="dashboard2"),
     path("dashboard/in-progress/", progress, name="in-progress"),
     path("dashboard/completed/", completed, name="completed"),
     path("dashboard/account-details/", account_details, name="account-details"),

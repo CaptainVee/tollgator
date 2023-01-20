@@ -20,6 +20,12 @@ def dashboard(request):
     return render(request, "user/dashboard.html", context)
 
 
+def instructor_dashboard(request):
+    courses = request.user.courses
+    context = {"courses": courses}
+    return render(request, "courses/user_course_list.html", context)
+
+
 def progress(request):
     in_progress = Enrollment.objects.select_related("course").filter(
         user_dashboard=request.user.user_dashboard, completed=False
@@ -44,6 +50,7 @@ def account_details(request):
 
 @login_required
 def withdraw_funds(request):
+    # return render(request, "small_base.html", {})
     bank_account = BankAccount.objects.get(instructor=request.user.instructor)
     withdrawals = Withdraw.objects.filter(instructor=request.user.instructor)
 
