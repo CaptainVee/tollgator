@@ -37,34 +37,45 @@ from .utils import (
 User = get_user_model()
 
 
-class Home(ListView):
+class Home(View):
     """
-    renders the landing page for unauthenticated users
-    """
-
-    model = Course
-    template_name = "courses/home.html"
-    context_object_name = "courses"
-
-    def get_queryset(self):
-        course = list(Course.objects.all())
-        try:
-            course = random.sample(course, 4)
-        except:
-            course = Course.objects.all()[:4]
-        return course
-
-
-class CourseListView(ListView):
-    """
-    renders the landing page for authenticated users
+    renders the landing page for unauthenticated users but renders
+    courses list page for authenticated users
     """
 
     model = Course
-    template_name = "courses/course_list.html"
-    context_object_name = "courses"
     ordering = ["-updated_at"]
     paginate_by = 5
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated:
+            courses = Course.objects.all()
+            template = ("courses/course_list.html",)
+        else:
+            courses = list(Course.objects.all())
+            try:
+                courses = random.sample(courses, 4)
+            except:
+                courses = Course.objects.all()[:4]
+            template = "courses/home.html"
+
+        context = {
+            "courses": courses,
+        }
+        return render(request, template, context)
+
+
+# class CourseListView(ListView):
+#     """
+#     renders the landing page for authenticated users
+#     """
+
+#     model = Course
+#     template_name = "courses/course_list.html"
+#     context_object_name = "courses"
+#     ordering = ["-updated_at"]
+#     paginate_by = 5
 
 
 class UserCourseListView(LoginRequiredMixin, ListView):

@@ -51,10 +51,19 @@
                 <a href="{% url 'course-list' %}">Courses</a>
               </li>
 
-
-
               <li class="menu-item">
-                <a href="{% url 'course-create-playlist' %}">youtube PL</a>
+                <div class="dropdown">
+                  <a class="btn border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Create
+                  </a>
+
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'course-create-playlist' %}">Playlist</a></li>
+                    <li><a class="dropdown-item" href="#">Video Link</a></li>
+                  </ul>
+                </div>
+
               </li>
 
               {% if user.is_authenticated %}

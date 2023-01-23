@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     Home,
-    CourseListView,
+    # CourseListView,
     UserCourseListView,
     CourseDetailView,
     CourseCreateView,
@@ -30,7 +30,7 @@ from .views import (
 
 urlpatterns = [
     path("", Home.as_view(), name="course-home"),
-    path("courses/", CourseListView.as_view(), name="course-list"),
+    # path("courses/", CourseListView.as_view(), name="course-list"),
     path("instructor/dashboard", UserCourseListView.as_view(), name="user-course-list"),
     path("course/new/", CourseCreateView.as_view(), name="course-create"),
     path(
