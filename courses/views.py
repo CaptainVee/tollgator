@@ -155,7 +155,6 @@ def yt_playlist_create_course(user, playlist_id):
     video_list = yt_playlist_videos(playlist_id)
     print(playlist_details)
     try:
-
         course = Course.objects.create(
             author=user,
             title=playlist_details["title"],
@@ -196,12 +195,12 @@ def yt_playlist_create_course(user, playlist_id):
                 print("i am finished working")
                 return course
             except:
-                return HttpResponse(" Sorry o video fault")
+                return HttpResponse("Sorry o video fault")
 
         except Exception as e:
             print(e)
-            print(" Sorry o lesson fault")
-            return HttpResponse(" Sorry o lesson fault")
+            print("Sorry o lesson fault")
+            return HttpResponse("Sorry o lesson fault")
 
     except Exception as e:
         print(e)
@@ -439,6 +438,8 @@ def video_delete_view(request, lesson_id, video_id):
 
 @login_required
 def generate_certificate_view(request, course_id):
+
+    return render(request, "courses/test.html", {})
     return None
     user = request.user
     course = Course.objects.get(id=course_id)
