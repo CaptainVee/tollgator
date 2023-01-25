@@ -17,6 +17,7 @@ from django.views.generic import (
     DeleteView,
     View,
 )
+from celery.result import AsyncResult
 from .models import Course, Lesson, Video, WatchTime
 from order.models import Order
 from common.utils import get_or_none
@@ -28,6 +29,7 @@ from .utils import (
     yt_video_duration,
     youtube_duration_convertion,
 )
+from .tasks import yt_playlist_create_course
 
 
 # from pypaystack import Transaction, Customer, Plan
@@ -133,94 +135,99 @@ def course_create_playlist_view(request):
     """
     For creating courses from a playlist url
     """
-    if request.method == "POST":
-        playlist_id = request.POST.get("playlist_id")
-        course = yt_playlist_create_course(user=request.user, playlist_id=playlist_id)
-        try:
-            return redirect("lesson-detail", course.id)
-        except:
-            return course
-
     context = {}
+    if request.method == "POST":
+        # TODO ensure users does not sumbit empty forms
+        playlist_id = request.POST.get("playlist_id")
+        result = yt_playlist_create_course.delay(
+            user=request.user, playlist_id=playlist_id
+        )
+        context = {"result": result}
+        # while True:
+        #     if
+        # try:
+        #     return redirect("lesson-detail", course.id)
+        # except:
+        #     return course
 
     return render(request, "courses/playlist_form.html", context)
 
 
-@transaction.atomic
-def yt_playlist_create_course(user, playlist_id):
-    """
-    function for creating course from a youtube playlist url
-    """
-    playlist_details = yt_playlist_details(playlist_id)
-    video_list = yt_playlist_videos(playlist_id)
-    print(playlist_details)
-    try:
-        course = Course.objects.create(
-            author=user,
-            title=playlist_details["title"],
-            playlist=playlist_id,
-            brief_description=playlist_details["description"],
-            thumbnail_url=playlist_details["thumbnails"]["standard"]["url"],
-            # youtube_channel=playlist_details["channelTitle"],
-        )
-        try:
-            lesson = Lesson.objects.create(
-                course=course,
-                title="Lesson 1",
-                position=1,
-            )
-            try:
-                total_lesson_time = 0
-                for video in video_list:
-                    video_id = video["video_id"]
-                    yt_duration = yt_video_duration(video_id)
-                    video_seconds, cleaned_total_time = youtube_duration_convertion(
-                        yt_duration
-                    )
-                    Video.objects.create(
-                        lesson=lesson,
-                        course=course,
-                        title=video["title"],
-                        position=video["position"],
-                        video_id=video_id,
-                        duration_seconds=video_seconds,
-                        duration_time=cleaned_total_time,
-                    )
-                    total_lesson_time += video_seconds
+# @transaction.atomic
+# def yt_playlist_create_course(user, playlist_id):
+#     """
+#     function for creating course from a youtube playlist url
+#     """
+#     playlist_details = yt_playlist_details(playlist_id)
+#     video_list = yt_playlist_videos(playlist_id)
+#     print(playlist_details)
+#     try:
+#         course = Course.objects.create(
+#             author=user,
+#             title=playlist_details["title"],
+#             playlist=playlist_id,
+#             brief_description=playlist_details["description"],
+#             thumbnail_url=playlist_details["thumbnails"]["standard"]["url"],
+#             # youtube_channel=playlist_details["channelTitle"],
+#         )
+#         try:
+#             lesson = Lesson.objects.create(
+#                 course=course,
+#                 title="Lesson 1",
+#                 position=1,
+#             )
+#             try:
+#                 total_lesson_time = 0
+#                 for video in video_list:
+#                     video_id = video["video_id"]
+#                     yt_duration = yt_video_duration(video_id)
+#                     video_seconds, cleaned_total_time = youtube_duration_convertion(
+#                         yt_duration
+#                     )
+#                     Video.objects.create(
+#                         lesson=lesson,
+#                         course=course,
+#                         title=video["title"],
+#                         position=video["position"],
+#                         video_id=video_id,
+#                         duration_seconds=video_seconds,
+#                         duration_time=cleaned_total_time,
+#                     )
+#                     total_lesson_time += video_seconds
 
-                lesson.total_video_seconds = total_lesson_time
-                course.total_watch_time = total_lesson_time
-                lesson.save()
-                course.save()
-                print("i am finished working")
-                return course
-            except:
-                return HttpResponse("Sorry o video fault")
+#                 lesson.total_video_seconds = total_lesson_time
+#                 course.total_watch_time = total_lesson_time
+#                 lesson.save()
+#                 course.save()
+#                 print("i am finished working")
+#                 return course
+#             except:
+#                 return HttpResponse("Sorry o video fault")
 
-        except Exception as e:
-            print(e)
-            print("Sorry o lesson fault")
-            return HttpResponse("Sorry o lesson fault")
+#         except Exception as e:
+#             print(e)
+#             print("Sorry o lesson fault")
+#             return HttpResponse("Sorry o lesson fault")
 
-    except Exception as e:
-        print(e)
+#     except Exception as e:
+#         print(e)
 
-        return HttpResponse(e)
+#         return HttpResponse(e)
 
 
-def bulk_created(big_list, lesson, video):
-    bulk_list = []
+# def bulk_created(big_list, lesson, video):
+#     bulk_list = []
 
-    for a in big_list:
-        bulk_list.append(
-            Video(
-                lesson=lesson,
-                title=video["title"],
-                position=video["position"],
-                video_url=video["video_id"],
-            )
-        )
-    Video.objects.bulk_create(bulk_list, batch_size=999)
+#     for a in big_list:
+#         bulk_list.append(
+#             Video(
+#                 lesson=lesson,
+#                 title=video["title"],
+#                 position=video["position"],
+#                 video_url=video["video_id"],
+#             )
+#         )
+#     Video.objects.bulk_create(bulk_list, batch_size=999)
 
 
 class CourseUpdateView(LoginRequiredMixin, UpdateView):
@@ -484,6 +491,17 @@ def get_video_sidebar(request, course_id):
 
     context = {"lesson_queryset": lesson_queryset, "course": course}
 
+    return render(request, "courses/partials/video_sidebar.html", context)
+
+
+@csrf_exempt
+def get_status(request, task_id):
+    task_result = AsyncResult(task_id)
+    context = {
+        "task_id": task_id,
+        "task_status": task_result.status,  # e.g SUCCESS, FALIURE,
+        "task_result": task_result.result,  # the return value of the function
+    }
     return render(request, "courses/partials/video_sidebar.html", context)
 
 
