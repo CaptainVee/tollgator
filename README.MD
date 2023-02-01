@@ -37,3 +37,15 @@ Tollgator is a web-applications that allow users to turn their youtube videos to
    ```
 
 1. Test at [http://localhost:8000/](http://localhost:8000/)
+
+1. start the redis server in another terminal:
+
+   ```sh
+   $ redis-server
+   ```
+
+1. start the celery server in another terminal too:
+
+   ```sh
+   $ celery -A tollgator worker -l INFO
+   ```

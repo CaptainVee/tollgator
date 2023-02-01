@@ -140,7 +140,7 @@ def course_create_playlist_view(request):
         # TODO ensure users does not sumbit empty forms
         playlist_id = request.POST.get("playlist_id")
         result = yt_playlist_create_course.delay(
-            user=request.user, playlist_id=playlist_id
+            b_user=request.user.id, playlist_id=playlist_id
         )
         context = {"result": result}
         # while True:

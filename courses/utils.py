@@ -30,7 +30,7 @@ def yt_playlist_details(playlist_id):
 def yt_playlist_videos(playlist_id):
     """
     returns the list of youtube videos in a playlist as a list with the video title,
-    position and video id respectively. example ['title', 0, 'CkIrizsP64c'],
+    position and video id respectively. example [{'title', 0, 'CkIrizsP64c'}, {'title', 1, 'CkIrizsP64c'},]
     """
     next_page_token = None
     video_details = []
