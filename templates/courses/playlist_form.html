@@ -3,14 +3,6 @@
 {% block content %}
 <div class="container p-5">
     <div class="playlist-form-box">
-        {% if error %}
-        <div class="alert alert-primary" role="alert">
-            <div class="">
-                <p>error! {{ error }}</p>
-                <small>this error occured at {{ error_occured_at }}</small>
-            </div>
-        </div>
-        {% endif %}
 
         <form action="" method="POST" class="playlist-form">
             {% csrf_token %}
@@ -20,9 +12,9 @@
             </fieldset>
             <div class="d-grid">
                 <input type="text" name="playlist_id" placeholder="eg PL5B692fm6--uQRRDTPsJDp4o0xbzkoyf8">
-                <button hx-swap="outerHTML" type="submit" class="btn btn-theme">
+
+                <button hx-get="{% url 'get-spinner' %}" hx-swap="innerHTML" type="submit" class="btn btn-theme">
                     OK |<i class="fa fa-check" aria-hidden="true"></i>
-                    <img class="htmx-indicator" src="{% static 'svg/ball-triangle.svg' %}">
                 </button>
             </div>
             <div id="course-spinner"></div>

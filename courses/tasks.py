@@ -23,14 +23,12 @@ def yt_playlist_create_course(self, b_user, playlist_id):
     """
     function for creating course from a youtube playlist url
     """
-    print("@@@@@@@@", self.request)
-    error = ""
     error_occured_at = ""
+
     try:
         playlist_details = yt_playlist_details(playlist_id)
         video_list = yt_playlist_videos(playlist_id)
     except Exception as e:
-        error = e
         error_occured_at = "trying to get playlist details from youtube"
     else:
         try:
@@ -71,18 +69,16 @@ def yt_playlist_create_course(self, b_user, playlist_id):
                     course.total_watch_time = total_lesson_time
                     lesson.save()
                     course.save()
-                    return redirect("lesson-detail", course.id)
+                    return "Course was created successfully"
                 except Exception as e:
-                    error = e
+
                     error_occured_at = "trying to create video object"
 
             except Exception as e:
-                error = e
                 error_occured_at = "trying to create lesson object"
 
         except Exception as e:
-            error = e
             error_occured_at = "trying to create course object"
+
     finally:
-        context = {"error": error, "error_occured_at": error_occured_at}
-        return render(request, "courses/playlist_form.html", context)
+        return f'"Task failed at {error_occured_at} because of: " {str(e)}'

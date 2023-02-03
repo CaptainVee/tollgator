@@ -2,7 +2,7 @@ import random
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
-from django.http import HttpResponse, Http404, QueryDict
+from django.http import HttpResponse, Http404, QueryDict, JsonResponse
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
@@ -502,7 +502,7 @@ def get_status(request, task_id):
         "task_status": task_result.status,  # e.g SUCCESS, FALIURE,
         "task_result": task_result.result,  # the return value of the function
     }
-    return render(request, "courses/partials/video_sidebar.html", context)
+    return JsonResponse(context)
 
 
 @login_required
