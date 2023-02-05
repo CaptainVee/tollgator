@@ -142,7 +142,8 @@ def course_create_playlist_view(request):
         result = yt_playlist_create_course.delay(
             b_user=request.user.id, playlist_id=playlist_id
         )
-        context = {"result": result}
+        task_id = result.id
+        context = {"task_id": task_id}
         # while True:
         #     if
         # try:
@@ -497,12 +498,23 @@ def get_video_sidebar(request, course_id):
 @csrf_exempt
 def get_status(request, task_id):
     task_result = AsyncResult(task_id)
+    if task_result.status == "SUCCESS":
+        if task_result.result == "SUCCESS":
+            messages.success(request, "Your course was successfully created")
+            return redirect("user-course-list")
+        else:
+            messages.warning(request, str(task_result.result))
+            return redirect("course-create-playlist")
+    elif task_result.status == "FAILURE":
+        messages.warning(request, "There was a problem with that request")
+        return redirect("course-create-playlist")
+
     context = {
         "task_id": task_id,
         "task_status": task_result.status,  # e.g SUCCESS, FALIURE,
         "task_result": task_result.result,  # the return value of the function
     }
-    return JsonResponse(context)
+    return render(request, "courses/partials/spinner.html", context)
 
 
 @login_required

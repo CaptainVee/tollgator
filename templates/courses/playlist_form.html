@@ -13,17 +13,21 @@
             <div class="d-grid">
                 <input type="text" name="playlist_id" placeholder="eg PL5B692fm6--uQRRDTPsJDp4o0xbzkoyf8">
 
-                <button hx-get="{% url 'get-spinner' %}" hx-swap="innerHTML" type="submit" class="btn btn-theme">
+                <button type="submit" class="btn btn-theme">
                     OK |<i class="fa fa-check" aria-hidden="true"></i>
                 </button>
+
             </div>
-            <div id="course-spinner"></div>
-            <!-- <div class="progress">
-                <div id="pb" class="progress-bar" style="width:5%"></div>
-            </div> -->
+            {% if task_id %}
+            <div hx-get="{% url 'get-task-status' task_id %}" hx-trigger="every 1s" hx-target="#cow"
+                hx-swap="outerHTML">
+                <!-- the stuff here is not corrrect but i have to go now -->
+            </div>
+            {% endif %}
         </form>
     </div>
 </div>
+
 
 <!-- <div hx-target="this" hx-swap="outerHTML">
     <h3>Start Progress</h3>
