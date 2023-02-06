@@ -1,1 +1,27 @@
-<p>Loading.....</p>
+{% if task_status == "STARTED" or task_status == "PENDING" %}
+<div hx-get="{% url 'get-task-status' task_id=task_id width=width|default:0  %}" hx-trigger="every 1s"
+    hx-swap="outerHTML">
+    <div class="progress">
+        <div id="pb" class="progress-bar" style="width:{{ width|default:0  }}%">
+        </div>
+    </div>
+</div>
+{% elif task_status == "SUCCESS" %}
+{% if task_result == "SUCCESS" %}
+<div hx-target="#status" hx-swap="outerHTML">
+    <h3>Your Course was successfully created </h3>
+</div>
+{% else %}
+<div hx-target="#status" hx-swap="outerHTML">
+    <h3>{{ task_result }} </h3>
+</div>
+{% endif %}
+{% elif task_status == "FAILURE" %}
+<div hx-target="#status" hx-swap="outerHTML">
+    <h3>Task failed, please check your inputs </h3>
+</div>
+{% else %}
+<div hx-target="#status" hx-swap="outerHTML">
+    <h3>something srange happend. contact customer care support</h3>
+</div>
+{% endif %}

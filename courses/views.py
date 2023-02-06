@@ -140,7 +140,7 @@ def course_create_playlist_view(request):
         # TODO ensure users does not sumbit empty forms
         playlist_id = request.POST.get("playlist_id")
         result = yt_playlist_create_course.delay(
-            b_user=request.user.id, playlist_id=playlist_id
+            user_id=request.user.id, playlist_id=playlist_id
         )
         task_id = result.id
         context = {"task_id": task_id}
@@ -496,24 +496,19 @@ def get_video_sidebar(request, course_id):
 
 
 @csrf_exempt
-def get_status(request, task_id):
+def get_status(request, task_id, width):
     task_result = AsyncResult(task_id)
-    if task_result.status == "SUCCESS":
-        if task_result.result == "SUCCESS":
-            messages.success(request, "Your course was successfully created")
-            return redirect("user-course-list")
-        else:
-            messages.warning(request, str(task_result.result))
-            return redirect("course-create-playlist")
-    elif task_result.status == "FAILURE":
-        messages.warning(request, "There was a problem with that request")
-        return redirect("course-create-playlist")
+
+    if width >= 90:
+        width -= 10
 
     context = {
         "task_id": task_id,
-        "task_status": task_result.status,  # e.g SUCCESS, FALIURE,
+        "task_status": task_result.status,  # e.g 'PENDING', 'STARTED', 'SUCCESS', 'FAILURE', and 'RETRY'
         "task_result": task_result.result,  # the return value of the function
+        "width": width + 10,
     }
+
     return render(request, "courses/partials/spinner.html", context)
 
 

@@ -109,7 +109,7 @@ htmx_urlpatterns = [
         name="get-video-sidebar",
     ),
     path(
-        "task/get-status/<slug:task_id>",
+        "task/get-status/<slug:task_id>/<int:width>",
         get_status,
         name="get-task-status",
     ),

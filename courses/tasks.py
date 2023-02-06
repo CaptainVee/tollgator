@@ -3,6 +3,7 @@ from celery import shared_task
 from django.shortcuts import render, redirect
 from django.db import transaction
 from django.http import HttpResponse
+from django.contrib.auth import get_user_model
 from .models import Course, Lesson, Video
 from .utils import (
     yt_playlist_details,
@@ -10,6 +11,8 @@ from .utils import (
     yt_video_duration,
     youtube_duration_convertion,
 )
+
+User = get_user_model()
 
 
 @shared_task
@@ -19,23 +22,22 @@ def create_course_from_ytplaylist():
 
 @shared_task(bind=True)  # shared task must always be first
 @transaction.atomic
-def yt_playlist_create_course(self, b_user, playlist_id):
+def yt_playlist_create_course(self, user_id, playlist_id):
     """
     function for creating course from a youtube playlist url
     """
-    error_occured_at = ""
-    error = ""
+    user = User.objects.get(id=user_id)
 
     try:
         playlist_details = yt_playlist_details(playlist_id)
         video_list = yt_playlist_videos(playlist_id)
     except Exception as e:
-        error = e
-        error_occured_at = "trying to get playlist details from youtube"
+        return f"Task failed at trying to get playlist details from youtube because of: {str(e)}"
+
     else:
         try:
             course = Course.objects.create(
-                author=b_user,
+                author=user,
                 title=playlist_details["title"],
                 playlist=playlist_id,
                 brief_description=playlist_details["description"],
@@ -73,16 +75,10 @@ def yt_playlist_create_course(self, b_user, playlist_id):
                     course.save()
                     return "SUCCESS"
                 except Exception as e:
-                    error = e
-                    error_occured_at = "trying to create video object"
+                    return f"Task failed at trying to create video object because of: {str(e)}"
 
             except Exception as e:
-                error = e
-                error_occured_at = "trying to create lesson object"
+                return f"Task failed at trying to create lesson object because of: {str(e)}"
 
         except Exception as e:
-            error = e
-            error_occured_at = "trying to create course object"
-
-    finally:
-        return f'"Task failed at {error_occured_at} because of: " {str(error)}'
+            return f"Task failed at trying to create course object because of: {str(e)}"

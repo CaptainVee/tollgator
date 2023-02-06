@@ -18,10 +18,10 @@
                 </button>
 
             </div>
+            <p></p>
             {% if task_id %}
-            <div hx-get="{% url 'get-task-status' task_id %}" hx-trigger="every 1s" hx-target="#cow"
-                hx-swap="outerHTML">
-                <!-- the stuff here is not corrrect but i have to go now -->
+            <div id="status" hx-get="{% url 'get-task-status' task_id width|default:0 %}" hx-trigger="load"
+                hx-target="#status" hx-swap="outerHTML">
             </div>
             {% endif %}
         </form>
