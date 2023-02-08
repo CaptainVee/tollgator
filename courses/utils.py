@@ -5,7 +5,9 @@ import cv2
 import re
 from datetime import timedelta, time
 
-youtube_api_key = os.environ.get("YOUTUBE_API_KEY")
+youtube_api_key = (
+    "AIzaSyDIbZsXlp1Z0XNFVwG7k6D2AO1NreQgHJs"  # os.environ.get("YOUTUBE_API_KEY")
+)
 youtube = build("youtube", "v3", developerKey=youtube_api_key)
 
 hours_pattern = re.compile(r"(\d+)H")

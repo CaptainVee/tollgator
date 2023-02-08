@@ -2,6 +2,7 @@ import black
 from autoslug import AutoSlugField
 from django.db import models
 from django.urls import reverse
+from django.db.models import Avg
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 from django.contrib.postgres.fields import ArrayField
@@ -66,6 +67,9 @@ class Course(BaseModel):
 
     def get_absolute_url(self):
         return reverse("course-update", kwargs={"pk": self.pk})
+
+    def average_rating(self):
+        return self.course_rating_set.aggregate(Avg("value"))["value__avg"]
 
     # def get_add_to_cart_url(self):
     #     return reverse("add-to-cart", kwargs={"pk": self.pk})
@@ -157,7 +161,7 @@ class CourseRating(BaseModel):
         null=False,
         related_name="user_who_rated",
     )
-    value = models.IntegerField(
+    value = models.PositiveSmallIntegerField(
         verbose_name=_("rating value"),
         choices=RATING,
         default=0,
@@ -166,7 +170,7 @@ class CourseRating(BaseModel):
     review = models.TextField()
 
     def __str__(self):
-        return self.course
+        return self.value
 
 
 class Category(BaseModel):

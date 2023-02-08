@@ -36,7 +36,7 @@
 					</div>
 					<ul>
 						<li>enrolled students - <span>220</span></li>
-						<li>created by - <span><a href="">{{ course.author }}</a></span></li>
+						<li>created by - <span><a href="">{{ course.author.name }}</a></span></li>
 						<li>last updated - <span>{{ course.updated_at | date:'F d, Y' }}</span></li>
 						<li>language - <span>english</span></li>
 					</ul>
@@ -118,11 +118,6 @@
 							<p>{{ course.brief_description }}</p>
 							<h4>who is this course designed for</h4>
 							<p>{{ course.content }}</p>
-							<h4>why should you take this course</h4>
-							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos accusamus sequi odit
-								incidunt, nobis quasi sunt,
-								enim quibusdam nihil saepe fugiat itaque architecto, blanditiis alias nam soluta aut
-								ipsum pariatur.</p>
 						</div>
 					</div>
 					<!-- course description end -->
@@ -143,7 +138,9 @@
 										<h4>{{ course.author }}</h4>
 										<ul>
 											<li><i class="fas fa-star"></i> 4.5 Rating</li>
-											<li><i class="fas fa-play-circle"></i> 10 Courses</li>
+											<li><i class="fas fa-play-circle"></i>
+												{{ course.author.courses.count }} Courses
+											</li>
 											<li><i class="fas fa-certificate"></i> 3000 Reviews</li>
 										</ul>
 									</div>
