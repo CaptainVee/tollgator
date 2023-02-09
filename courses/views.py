@@ -52,14 +52,14 @@ class Home(View):
     def get(self, request, *args, **kwargs):
         user = request.user
         if user.is_authenticated:
-            courses = Course.objects.all()
+            courses = Course.objects.filter(is_private=False)
             template = ("courses/course_list.html",)
         else:
-            courses = list(Course.objects.all())
+            courses = list(Course.objects.filter(is_private=False))
             try:
                 courses = random.sample(courses, 4)
             except:
-                courses = Course.objects.all()[:4]
+                courses = Course.objects.filter(is_private=False)[:4]
             template = "courses/home.html"
 
         context = {
