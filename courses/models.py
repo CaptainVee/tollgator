@@ -9,19 +9,13 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
-from common.models import BaseModel
+from common.models import BaseModel, Currency
 from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES, COURSE_TYPE
 from datetime import time
+from common.utils import get_default_currency
 
 
 User = settings.AUTH_USER_MODEL
-
-
-def get_default_currency():
-    obj, created = Currency.objects.get_or_create(
-        code="USD", defaults={"exchange_rate": 500}
-    )
-    return obj.pkid
 
 
 class Course(BaseModel):
@@ -46,7 +40,7 @@ class Course(BaseModel):
     translation = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=10)
     currency = models.ForeignKey(
-        "Currency", on_delete=models.PROTECT, default=get_default_currency
+        Currency, on_delete=models.PROTECT, default=get_default_currency
     )
     is_private = models.BooleanField(default=True)
 
@@ -244,11 +238,3 @@ class Category(BaseModel):
     class Meta:
         verbose_name = _("category")
         verbose_name_plural = _("categories")
-
-
-class Currency(BaseModel):
-    code = models.CharField(max_length=3, unique=True)
-    exchange_rate = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return self.code

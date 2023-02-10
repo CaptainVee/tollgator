@@ -161,19 +161,3 @@ def email_sending(to_mail, firstname, lastname, location, time, ref):
     except:
         return False
     return True
-
-
-def get_conversion_rate(from_currency, to_currency, amount):
-    url = f"https://api.apilayer.com/fixer/convert?to={to_currency}&from={from_currency}&amount={amount}"
-
-    payload = {}
-    headers = {"apikey": os.environ.get("CURRENCY_API")}
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    status_code = response.status_code
-    if status_code == 200:
-        result = response.text
-        parsed_response = json.loads(result)
-
-        return parsed_response["result"]

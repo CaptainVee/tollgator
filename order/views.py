@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse, Http404
@@ -9,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from .models import Order, Cart, Transaction
 from courses.models import Course
-from common.utils import get_or_none, my_random_string
+from common.utils import get_or_none, my_random_string, convert_currency_to_local
 from django.contrib.auth.decorators import login_required
 from .payments import verify_transaction, initiate_paystack_url
 
@@ -61,11 +62,15 @@ def checkout(request, cart_id):
             "total_price": cart.total_amount,
         },
     )
-
+    server_url = os.environ.get("SERVER_URL")
     email = cart.user.email
-    amount = cart.total_amount  # order.course.price
-    currency = "NGN"
-    callback_url = f"http://localhost:8000/order/verify/transaction/{transaction.id}"
+    amount = convert_currency_to_local(
+        user_currency=cart.user.currency,
+        product_currency="USD",
+        product_amount=cart.total_amount,
+    )
+    currency = cart.user.currency
+    callback_url = f"{server_url}/order/verify/transaction/{transaction.id}"
     response = initiate_paystack_url(
         email=email,
         amount=amount,
@@ -236,16 +241,3 @@ def verify(request, transaction_id):
 #         order.save()
 
 #         return render(request, "courses/verify.html", {"title": "verify"})
-
-
-# class StartDetailView(LoginRequiredMixin, View):
-#     def get(self, request, *args, **kwargs):
-#         order = OrderItem.objects.filter(user=self.request.user, ordered=True)
-#         if order.exists():
-#             context = {"object": order}
-#             return render(self.request, "courses/start.html", context)
-#         else:
-#             return render(self.request, "courses/start.html", {"object": None})
-#         # lesson_qs = course.lessons.filter(pk=lesson_pk)
-#         # if lesson_qs.exists():
-#         #     lesson = lesson_qs.first()

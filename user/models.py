@@ -6,10 +6,11 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel
+from common.models import BaseModel, Currency
 
 from courses.models import Course, Video
 from common.constants import PAYOUT_STATUS
+from common.utils import get_default_currency
 
 
 class User(AbstractUser):
@@ -22,6 +23,9 @@ class User(AbstractUser):
     )
     date_joined = models.DateTimeField(auto_now_add=True)
     is_instructor = models.BooleanField(default=False)
+    currency = models.ForeignKey(
+        Currency, on_delete=models.PROTECT, default=get_default_currency
+    )
 
     def get_absolute_url(self):
         return reverse("profile")
