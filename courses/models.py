@@ -38,23 +38,17 @@ class Course(BaseModel):
     # ) #Can be used only on postgress database
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True)
     thumbnail_url = models.URLField(blank=True, null=True)
-    total_watch_time = models.IntegerField(null=True, default=0)
+    total_watch_time = models.PositiveIntegerField(null=True, default=0)
     # youtube_channel = models.CharField(max_length=500, blank=True, null=True)
     # category = models.ForeignKey(
     #     "Category", on_delete=models.SET_NULL, null=True, blank=False
     # )
+    translation = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=10)
     currency = models.ForeignKey(
         "Currency", on_delete=models.PROTECT, default=get_default_currency
     )
     is_private = models.BooleanField(default=True)
-    # last_video_watched = models.OneToOneField(
-    #     "Video",
-    #     on_delete=models.CASCADE,
-    #     blank=True,
-    #     null=True,
-    #     related_name="last_video_watched",
-    # )
 
     def clean(self):
         if self.price < 0:
@@ -83,19 +77,28 @@ class Course(BaseModel):
 
     @property
     def get_price(self):
-        course_offer = self.course_offer.filter(discounted_price__isnull=False).first()
+        course_offer = self.get_discounted_price()
         if course_offer:
-            return course_offer.discounted_price
+            return f"${course_offer.discounted_price}"
         else:
             return f"${self.price}"
+
+    def get_discounted_price(self):
+        return self.course_offer.filter(discounted_price__isnull=False).first()
+
+    def get_percentage_off(self):
+        course_offer = self.get_discounted_price()
+        percentage_off = round((course_offer.discounted_price / self.price) * 100)
+        return f"{percentage_off}% Off"
 
     def get_absolute_url(self):
         return reverse("course-update", kwargs={"pk": self.pk})
 
-    def average_rating(self):
-        return self.course_rating.aggregate(Avg("value"))["value__avg"]
+    def get_average_rating(self):
+        average = self.course_rating.aggregate(Avg("value"))["value__avg"]
+        return 0 if average is None else average
 
-    def ratings(self):
+    def get_rating_count(self):
         return self.course_rating.all().count()
 
     # def get_add_to_cart_url(self):
@@ -108,9 +111,9 @@ class Course(BaseModel):
 class Lesson(BaseModel):
     title = models.CharField(max_length=200)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    position = models.IntegerField()
+    position = models.PositiveSmallIntegerField()
     description = models.CharField(max_length=250, null=True, blank=True)
-    total_video_seconds = models.IntegerField(null=True, blank=True)
+    total_video_seconds = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ["position"]
@@ -138,8 +141,8 @@ class Video(BaseModel):
     title = models.CharField(max_length=200, blank=False, null=False)
     video_id = models.CharField(max_length=15, null=False, blank=False)
     video_url = models.URLField(max_length=300, blank=True, null=True)
-    position = models.IntegerField()
-    duration_seconds = models.IntegerField(null=True, default=0)
+    position = models.PositiveSmallIntegerField()
+    duration_seconds = models.PositiveIntegerField(null=True, default=0)
     duration_time = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
@@ -159,7 +162,7 @@ class WatchTime(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     video = models.OneToOneField(Video, on_delete=models.CASCADE)
     finished_video = models.BooleanField(default=False)
-    stopped_at = models.IntegerField(blank=True, null=True, default=0)
+    stopped_at = models.PositiveIntegerField(blank=True, null=True, default=0)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property

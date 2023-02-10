@@ -84,7 +84,7 @@ class BankAccount(BaseModel):
     bank_name = models.CharField(max_length=150, blank=True, null=True)
     account_number = models.CharField(max_length=50, blank=False, null=False)
     account_name = models.CharField(max_length=50, blank=False, null=False)
-    account_balance = models.IntegerField(default=0, blank=False, null=False)
+    account_balance = models.PositiveIntegerField(default=0, blank=False, null=False)
 
     def __str__(self):
         return f"{self.bank_name}-{self.account_number}"
@@ -94,7 +94,7 @@ class Withdraw(BaseModel):
     instructor = models.ForeignKey(
         Instructor, on_delete=models.CASCADE, blank=False, null=False
     )
-    amount = models.IntegerField(null=False, blank=False)
+    amount = models.PositiveIntegerField(null=False, blank=False)
     # comment = models.CharField(max_length=500, blank=True, null=True)
     status = models.CharField(choices=PAYOUT_STATUS, max_length=20, default="Initiated")
 

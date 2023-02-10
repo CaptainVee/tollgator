@@ -93,6 +93,28 @@ def youtube_duration_convertion(duration):
     return video_seconds, cleaned_total_time
 
 
+def get_transcript(video_id, course_id):
+    request = youtube.captions().list(part="snippet", videoId=video_id)
+    response = request.execute()
+
+    # Get the transcript of the video in English
+    for item in response["items"]:
+        if item["snippet"]["language"] == "en":
+            caption_id = item["id"]
+            break
+    else:
+        # No English transcript found
+        return None
+
+    request = youtube.captions().download(id=caption_id, tfmt="srv3")
+    transcript = request.execute()
+
+    # Save the transcript text to the Course model
+    # course = Course.objects.get(id=course_id)
+    # course.transcription = transcript
+    # course.save()
+
+
 def generate_certificates(name):
     certificate_template_image = cv2.imread("media/certificate-template.jpeg")
     saved_url = "media/{}.jpeg".format(name.strip())

@@ -49,7 +49,7 @@
 											<span class="instuctor-name">{{ course.author.name }}</span>
 										</div>
 										<div class="rating">
-											<span class="average-rating">{{ course.get_rating }} (4.5)</span>
+											<span class="average-rating">({{ course.get_average_rating }})</span>
 											<span class="average-stars">
 												<i class="fas fa-star"></i>
 												<i class="fas fa-star"></i>
@@ -57,26 +57,23 @@
 												<i class="fas fa-star"></i>
 												<i class="fas fa-star-half-alt"></i>
 											</span>
-											<span class="reviews">(230)</span>
+											<span class="reviews">({{ course.get_rating_count }})</span>
 										</div>
 
-										{% if course.get_price <= 0 %}<div class="price bg-success">Free
+										<div class="price">{{ course.get_price }}</div>
+
 									</div>
-									{% else %}
-									<div class="price">{{ course.get_price }}</div>
-									{% endif %}
+								</a>
 							</div>
-							</a>
 						</div>
+						<!-- courses item end -->
+						{% endfor %}
+
 					</div>
-					<!-- courses item end -->
-					{% endfor %}
 
 				</div>
-
 			</div>
 		</div>
-	</div>
 	</div>
 </section>
 <!-- courses section start -->
