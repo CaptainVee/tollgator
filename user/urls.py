@@ -9,6 +9,7 @@ from .views import (
     account_details,
     withdraw_funds,
     instructor_dashboard,
+    OrderListView,
 )
 
 
@@ -20,11 +21,11 @@ urlpatterns = [
     path("dashboard/completed/", completed, name="completed"),
     path("dashboard/account-details/", account_details, name="account-details"),
     path("dashboard/withdraw-funds/", withdraw_funds, name="withdraw-funds"),
-    # path(
-    #     "register/student",
-    #     StudentRegisterView.as_view(),
-    #     name="student-register",
-    # ),
+    path(
+        "dashboard/orders",
+        OrderListView.as_view(),
+        name="order-list",
+    ),
     # path(
     #     "register/instructor",
     #     InstructorRegisterView.as_view(),

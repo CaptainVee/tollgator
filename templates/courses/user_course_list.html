@@ -10,8 +10,8 @@
 					<div class="card bg-info">
 						<div class="card-body">
 							<h5 class="card-title">Total Revenue</h5>
-							<p class="card-text">{{ user.instructor }}</p>
-							<strong><small class="text-success">$300</small> this month</strong>
+							<p class="card-text">${{ total_revenue }}</p>
+							<!-- <strong><small class="text-success">$300</small> this month</strong> -->
 						</div>
 					</div>
 				</div>
@@ -19,8 +19,8 @@
 					<div class="card bg-success">
 						<div class="card-body">
 							<h5 class="card-title">Total Enrollment</h5>
-							<p class="card-text">5,000</p>
-							<strong><small class="text-bg-dark">100</small> this month</strong>
+							<p class="card-text">{{total_enrollment}}</p>
+							<!-- <strong><small class="text-bg-dark">100</small> this month</strong> -->
 						</div>
 					</div>
 				</div>
@@ -28,13 +28,22 @@
 					<div class="card bg-danger">
 						<div class="card-body">
 							<h5 class="card-title">Instructor Rating</h5>
-							<p class="card-text">$3,000</p>
-							<strong><small class="text-success">$300</small> this month</strong>
+							<div class="rating mb-2">
+								<span class="average-rating">({{avg_rating}})</span>
+								<span class="average-stars">
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star-half-alt"></i>
+								</span>
+								<span class="reviews">(Reviews)</span>
+							</div>
+							<!-- <strong><small class="text-bg-dark">100</small> this month</strong> -->
 						</div>
 					</div>
 				</div>
 
-				<h2 class="pt-3 pb-2 mb-3 border-bottom">Your Courses - ({{ page_obj.paginator.count }})</h2>
+				<h2 class="pt-3 pb-2 mb-3 border-bottom">Your Courses - ({{ courses.paginator.count }})</h2>
 				<div class="container">
 					<!-- course header start -->
 					{% for course in courses %}
@@ -44,18 +53,18 @@
 							<h2 class="text-capitalize">{{ course.title }}</h2>
 						</a>
 						<div class="rating">
-							<span class="average-rating">(4.5)</span>
+							<span class="average-rating">({{ course.get_average_rating }})</span>
 							<span class="average-stars">
 								<i class="fas fa-star"></i>
 								<i class="fas fa-star"></i>
 								<i class="fas fa-star"></i>
 								<i class="fas fa-star-half-alt"></i>
 							</span>
-							<span class="reviews">(230 Reviews)</span>
+							<span class="reviews">({{ course.get_rating_count }} Reviews)</span>
 						</div>
 						<ul>
-							<li>enrolled students - <span>220</span></li>
-							<li>Total revenue - <span class="badge bg-success"> $2,000</span>
+							<li>enrolled students - <span>{{course.get_enrollment_count}}</span></li>
+							<li>Total revenue - <span class="badge bg-success"> ${{ course.get_total_revenue }}</span>
 							</li>
 							<li>last updated - <span>{{ course.updated_at | date:'F d, Y' }}</span></li>
 						</ul>
@@ -64,28 +73,48 @@
 					<!-- course header end -->
 					{% endfor %}
 				</div>
-				{% if is_paginated %}
-				<nav aria-label="Page navigation ">
-					<ul class="pagination justify-content-center mb-4">
-						{% if page_obj.has_previous %}
-						<li class="page-item"><a class="page-link " href="?page=1">First</a></li>
-						<li class="page-item"><a class="page-link "
-								href="?page={{ page_obj.Previous_page_number }}">Previous</a></li>
+				<div class="pagination">
+					<span class="step-links">
+						{% if courses.has_previous %}
+						<a href="?page=1">&laquo; first</a>
+						<a href="?page={{ courses.previous_page_number }}">previous</a>
 						{% endif %}
 
-						{% for num in page_obj.paginator.page_range %}
-						{% if page_obj.number == num %}
+						<span class="current-page">
+							Page {{ courses.number }} of {{ courses.paginator.num_pages }}.
+						</span>
+
+						{% if courses.has_next %}
+						<li class="page-item"><a class="page-link " href="?page={{ courses.next_page_number }}">Next</a>
+						</li>
+						<li class="page-item"><a class="page-link "
+								href="?page={{ courses.paginator.num_pages }}">Last</a></li>
+						{% endif %}
+					</span>
+				</div>
+
+				{% if courses.has_previous %}
+				<nav aria-label="Page navigation ">
+					<ul class="pagination justify-content-center mb-4">
+						{% if courses.has_previous %}
+						<li class="page-item"><a class="page-link " href="?page=1">First</a></li>
+						<li class="page-item"><a class="page-link "
+								href="?page={{ courses.Previous_page_number }}">Previous</a></li>
+						{% endif %}
+
+						{% for num in courses.paginator.page_range %}
+						{% if courses.number == num %}
 						<li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <li
-							class="page-item"><a class="page-link " href="?page={{ num }}">{{ num }}</a></li>
+						{% elif num > courses.number|add:'-3' and num < courses.number|add:'3' %} <li class="page-item">
+							<a class="page-link " href="?page={{ num }}">{{ num }}</a></li>
 							{% endif %}
 							{% endfor %}
 
-							{% if page_obj.has_next %}
+							{% if courses.has_next %}
 							<li class="page-item"><a class="page-link "
-									href="?page={{ page_obj.next_page_number }}">Next</a></li>
+									href="?page={{ courses.next_page_number }}">Next</a></li>
 							<li class="page-item"><a class="page-link "
-									href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+									href="?page={{ courses.paginator.num_pages }}">Last</a></li>
 							{% endif %}
 					</ul>
 				</nav>

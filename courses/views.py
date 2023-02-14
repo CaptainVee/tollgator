@@ -68,18 +68,6 @@ class Home(View):
         return render(request, template, context)
 
 
-# class CourseListView(ListView):
-#     """
-#     renders the landing page for authenticated users
-#     """
-
-#     model = Course
-#     template_name = "courses/course_list.html"
-#     context_object_name = "courses"
-#     ordering = ["-updated_at"]
-#     paginate_by = 5
-
-
 class UserCourseListView(LoginRequiredMixin, ListView):
     """
     List all the courses created by an instructor
@@ -88,7 +76,6 @@ class UserCourseListView(LoginRequiredMixin, ListView):
     model = Course
     template_name = "courses/user_course_list.html"
     context_object_name = "courses"
-    paginate_by = 5
 
     def get_queryset(self):
         return Course.objects.select_related("author").filter(author=self.request.user)

@@ -1,7 +1,7 @@
 from django.db import models
 from common.models import BaseModel
 
-from courses.models import Course
+# from courses.models import Course
 from django.conf import settings
 from autoslug import AutoSlugField
 from django_countries import fields, Countries
@@ -27,16 +27,13 @@ User = settings.AUTH_USER_MODEL
 class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(
-        Course,
+        "courses.Course",
         on_delete=models.SET_NULL,
         blank=False,
         null=True,
         related_name="course_order",
     )
     ordered = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.course} order by {self.user}"
 
 
 #         return f"{self.quantity} of {self.item.title}"

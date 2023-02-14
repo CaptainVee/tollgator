@@ -2,17 +2,18 @@ import black
 from autoslug import AutoSlugField
 from django.db import models
 from django.urls import reverse
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from common.utils import get_default_currency
 from common.models import BaseModel, Currency
 from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES, COURSE_TYPE
+from order.models import Transaction, Order
 from datetime import time
-from common.utils import get_default_currency
 
 
 User = settings.AUTH_USER_MODEL
@@ -73,9 +74,9 @@ class Course(BaseModel):
     def get_price(self):
         course_offer = self.get_discounted_price()
         if course_offer:
-            return f"${course_offer.discounted_price}"
+            return course_offer.discounted_price
         else:
-            return f"${self.price}"
+            return self.price
 
     def get_discounted_price(self):
         return self.course_offer.filter(discounted_price__isnull=False).first()
@@ -89,11 +90,23 @@ class Course(BaseModel):
         return reverse("course-update", kwargs={"pk": self.pk})
 
     def get_average_rating(self):
+        """gives the average number of reviews a course has. eg (4.5) stars"""
         average = self.course_rating.aggregate(Avg("value"))["value__avg"]
         return 0 if average is None else average
 
     def get_rating_count(self):
+        """gives the number of reviews a course has. eg (50) reviews"""
         return self.course_rating.all().count()
+
+    def get_enrollment_count(self):
+        """gives the number of student that has enrolled for a course"""
+        return self.enrollment_set.all().count()
+
+    def get_total_revenue(self):
+        revenue = self.course_order.filter(ordered=True).aggregate(
+            Sum("course__price")
+        )["course__price__sum"]
+        return 0 if revenue is None else revenue
 
     # def get_add_to_cart_url(self):
     #     return reverse("add-to-cart", kwargs={"pk": self.pk})

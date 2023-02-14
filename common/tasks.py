@@ -20,9 +20,13 @@ def setup_periodic_tasks(sender, **kwargs):
 
 @app.task
 def update_exchange_rates():
-    currencies = Currency.objects.all()
+    try:
+        currencies = Currency.objects.all()
 
-    for currency in currencies:
-        conversion_rate = get_conversion_rate(currency.code, "USD", 1)
-        currency.exchange_rate = conversion_rate
-        currency.save()
+        for currency in currencies:
+            conversion_rate = get_conversion_rate(currency.code, "USD", 1)
+            currency.exchange_rate = conversion_rate
+            currency.save()
+    except Exception as e:
+        # TODO use a logger to log the error
+        print(e)

@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.db.models import Prefetch
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
-from django.contrib.auth import get_user_model
+from order.models import Order
+from courses.models import Course, CourseRating, CourseOffer
 from .models import UserDashboard, Enrollment, BankAccount, Withdraw
 from .forms import ProfileUpdateForm, WithdrawalForm
 
-# User = get_user_model()
 
-
+@login_required
 def dashboard(request):
     # dashboard = UserDashboard.objects.prefetch_related("courses").get(user=request.user)
     # enrolled = dashboard.courses.all()
@@ -20,12 +24,51 @@ def dashboard(request):
     return render(request, "user/dashboard.html", context)
 
 
+@login_required
 def instructor_dashboard(request):
-    courses = request.user.courses
-    context = {"courses": courses}
+
+    courses = (
+        Course.objects.filter(author=request.user)
+        .select_related("author")
+        .prefetch_related(
+            Prefetch("course_rating", queryset=CourseRating.objects.all()),
+        )
+    )
+    total_enrollment = 0
+    total_revenue = 0
+    course_ratings = []
+    # courses = request.user.courses.order_by("-created_at")
+    for course in courses:
+        total_revenue += course.get_total_revenue()
+        course_ratings.append(course.get_average_rating())
+        total_enrollment += course.get_enrollment_count()
+    page = request.GET.get("page", 1)  # get current page number from request parameters
+    paginator = Paginator(courses, 5)  # create a Paginator object with 5 items per page
+    try:
+        courses = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        courses = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range, deliver last page of results.
+        courses = paginator.page(paginator.num_pages)
+
+    # Calculate the average rating for all the courses authored by the author
+    if len(course_ratings) > 0:
+        avg_rating = round(sum(course_ratings) / len(course_ratings), 1)
+    else:
+        avg_rating = None
+
+    context = {
+        "courses": courses,
+        "total_revenue": total_revenue,
+        "avg_rating": avg_rating,
+        "total_enrollment": total_enrollment,
+    }
     return render(request, "courses/user_course_list.html", context)
 
 
+@login_required
 def progress(request):
     in_progress = Enrollment.objects.select_related("course").filter(
         user_dashboard=request.user.user_dashboard, completed=False
@@ -34,6 +77,7 @@ def progress(request):
     return render(request, "user/partials/user_course_list.html", context)
 
 
+@login_required
 def completed(request):
     completed = Enrollment.objects.select_related("course").filter(
         user_dashboard=request.user.user_dashboard, completed=True
@@ -42,16 +86,34 @@ def completed(request):
     return render(request, "user/partials/user_course_list.html", context)
 
 
+@login_required
 def account_details(request):
     bank_account = BankAccount.objects.get(instructor=request.user.instructor)
     context = {"bank_account": bank_account}
     return render(request, "user/bank_account_details.html", context)
 
 
+class OrderListView(LoginRequiredMixin, ListView):
+    """
+    List all the order made for an author
+    """
+
+    template_name = "user/user_order_list.html"
+    context_object_name = "orders"
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Order.objects.select_related("user").filter(
+            course__author=self.request.user, ordered=True
+        )
+
+
 @login_required
 def withdraw_funds(request):
-    # return render(request, "small_base.html", {})
-    bank_account = BankAccount.objects.get(instructor=request.user.instructor)
+    try:
+        bank_account = BankAccount.objects.get(instructor=request.user.instructor)
+    except BankAccount.DoesNotExist:
+        bank_account = {}
     withdrawals = Withdraw.objects.filter(instructor=request.user.instructor)
 
     if request.method == "POST":
@@ -87,7 +149,6 @@ def withdraw_funds(request):
 def profile(request):
     if request.method == "POST":
         form = ProfileUpdateForm(request.POST, instance=request.user)
-        # p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
 
         if form.is_valid():
             form.save()
@@ -100,34 +161,6 @@ def profile(request):
         "form": form,
     }
     return render(request, "user/profile.html", context)
-
-    # if request.method == "POST":
-    #     try:
-    #         u_form = UserUpdateForm(request.POST, instance=request.user)
-    #         p_form = ProfileUpdateForm(
-    #             request.POST, request.FILES, instance=request.user.instructorprofile
-    #         )
-    #     except AttributeError:
-    #         u_form = UserUpdateForm(request.POST, instance=request.user)
-    #         p_form = ProfileUpdateForm(
-    #             request.POST, request.FILES, instance=request.user.studentprofile
-    #         )
-
-    #     if u_form.is_valid() and p_form.is_valid():
-    #         u_form.save()
-    #         p_form.save()
-    #         messages.success(request, f"Your Account has been updated!")
-    #         return redirect("profile")
-    # else:
-    #     try:
-    #         u_form = UserUpdateForm(instance=request.user)
-    #         p_form = ProfileUpdateForm(instance=request.user.instructorprofile)
-    #     except AttributeError:
-    #         u_form = UserUpdateForm(instance=request.user)
-    #         p_form = ProfileUpdateForm(instance=request.user.studentprofile)
-
-    # context = {"u_form": u_form, "p_form": p_form}
-    # return render(request, "user/profile.html", context)
 
 
 # class InstructorRegisterView(CreateView):
