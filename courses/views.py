@@ -474,9 +474,9 @@ def watchtime_create(request):
             defaults={"stopped_at": current_time, "finished_video": True},
         )
     elif event == player_state_playing:
-        course = Course.objects.get(id=video.get_course_id)
-        course.last_video_watched = video
-        course.save()
+        enrollment = video.course.enrollment_set.get(user_dashboard__user=request.user)
+        enrollment.last_video_watched = video
+        enrollment.save()
     else:
         return HttpResponse("False")
 
@@ -506,45 +506,3 @@ def about(request):
 #         context["form"] = form
 
 #         render(request, "courses/partials/lesson_update_form.html", context)
-
-
-# def lesson_list_view(request, course_slug):
-#     lessons = Lesson.objects.filter(course__slug=course_slug).select_related("course")
-
-#     context = {"lessons": lessons}
-#     return render(request, "courses/lesson_list.html", context)
-
-
-# @login_required
-# def lesson_create_view(request, course_id):
-#     course = Course.objects.get(id=course_id)
-#     created_lessons = Lesson.objects.filter(course=course)
-#     video_form = VideoForm()
-#     if request.method == "POST":
-#         title = request.POST.get("title")
-#         position = request.POST.get("position")
-#         description = request.POST.get("description")
-#         lesson_form = LessonForm(request.POST)
-
-#         if lesson_form.is_valid():
-#             lesson = Lesson(
-#                 title=title, course=course, position=position, description=description
-#             )
-#             lesson.save()
-#             return redirect("lesson-detail", course_id=course_id, lesson_id=lesson.id)
-#     else:
-#         lesson_form = LessonForm()
-#     context = {
-#         "lesson_form": lesson_form,
-#         "course": course,
-#         "created_lessons": created_lessons,
-#         "video_form": video_form,
-#     }
-#     return render(request, "courses/lesson_form.html", context)
-
-# def lesson_update_view(request, lesson_id, course_id):
-
-#     lesson = get_object_or_404(Lesson, id=lesson_id)
-#     form = LessonForm(instance=lesson)
-#     context = {"lesson": lesson, "course_id": course_id, "form": form}
-#     return render(request, "courses/partials/lesson_update_form.html", context)

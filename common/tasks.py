@@ -1,32 +1,24 @@
-from celery.schedules import crontab
-from celery import Celery
 from .models import Currency
 from .utils import get_conversion_rate
+from celery import shared_task
 
 
-app = Celery()
-
-
-@app.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(
-        crontab(
-            hour="0, 8, 16",
-            minute=0,
-        ),
-        update_exchange_rates.s(),
-    )
-
-
-@app.task
+# Define the task to update exchange rates for a single currency
+@shared_task()
 def update_exchange_rates():
+    """
+    This Celery task updates the exchange rate for each currency in the database using the get_conversion_rate utility function.
+    """
     try:
         currencies = Currency.objects.all()
 
         for currency in currencies:
-            conversion_rate = get_conversion_rate(currency.code, "USD", 1)
+            # Call the get_conversion_rate function to update the exchange rate for this currency
+            conversion_rate = get_conversion_rate("USD", currency.code, 1)
             currency.exchange_rate = conversion_rate
             currency.save()
+            print(f"{currency.code} was updated successfully")
     except Exception as e:
-        # TODO use a logger to log the error
         print(e)
+        # Log the error using the Celery logger
+        print("Failed to update exchange rates: %s", e)

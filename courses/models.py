@@ -67,7 +67,8 @@ class Course(BaseModel):
     def last_video_watched(self, user):
         enrollment = self.enrollment_set.get(user_dashboard__user=user)
         if enrollment.last_video_watched == None:
-            enrollment.last_video_watched = self.video_set.first()
+            enrollment.last_video_watched = self.video_set.last()
+            enrollment.save()
         return enrollment.last_video_watched
 
     @property

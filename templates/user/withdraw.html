@@ -10,7 +10,7 @@
                 <div class="card-body d-flex justify-content-between">
                     <i class="fas fa-wallet ps-3" style="font-size: 50px;"></i>
                     <div class="">
-                        <h5 class="card-title ">NGN {{ bank_account.account_balance|floatformat:"-3g" }}</h5>
+                        <h5 class="card-title ">USD {{ bank_account.account_balance|floatformat:"-3g" }}</h5>
                         <p class="card-subtitle mb-2 text-muted">Your Balance</p>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                                 {{ form|crispy }}
 
                                 <div class="form-group">
-                                    <p>Avail Bal: NGN {{ bank_account.account_balance|floatformat:"-3g" }}</p>
+                                    <p>Avail Bal: USD {{ bank_account.account_balance|floatformat:"-3g" }}</p>
                                     <button class="btn btn-theme" type="submit">Submit</button>
                                 </div>
                             </form>
@@ -80,7 +80,7 @@
             {% for withdraw in withdrawals %}
             <tr>
                 <th scope="row">{{ withdraw.pk }}</th>
-                <td>NGN</td>
+                <td>USD</td>
                 <td>{{ withdraw.amount }}</td>
                 {% if withdraw.status == "Initiated" %}
                 <td><span class="badge bg-secondary">{{ withdraw.status }}</span></td>

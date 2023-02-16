@@ -15,11 +15,6 @@ from .utils import (
 User = get_user_model()
 
 
-@shared_task
-def create_course_from_ytplaylist():
-    pass
-
-
 @shared_task(bind=True)  # shared task must always be first
 @transaction.atomic
 def yt_playlist_create_course(self, user_id, playlist_id):

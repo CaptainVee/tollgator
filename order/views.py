@@ -32,7 +32,9 @@ def enroll(request, course_id):
 
         messages.info(request, "you have already enrolled for this course.")
 
-        return redirect("lesson-video-detail", course.id, course.last_video_watched.id)
+        return redirect(
+            "lesson-video-detail", course.id, course.last_video_watched(request.user).id
+        )
 
     except Order.DoesNotExist:
         order, created = Order.objects.get_or_create(

@@ -1,0 +1,11 @@
+<div class="d-flex">Bank Name:
+    <h5 class="px-3">{{ bank_account.bank_name }}</h5>
+</div>
+<div class="d-flex">Account Number:
+    <h5 class="px-3">{{ bank_account.account_number }}</h5>
+</div>
+<div class="d-flex">Account Name:
+    <h5 class="px-3">{{ bank_account.account_name }}</h5>
+</div>
+<button hx-get="{% url 'bank-account-edit-form' %}" hx-target="#bank-account-details"
+    class="btn btn-theme mt-3">Edit</button>

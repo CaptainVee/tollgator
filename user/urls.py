@@ -6,9 +6,10 @@ from .views import (
     dashboard,
     progress,
     completed,
-    account_details,
+    bank_account_details,
     withdraw_funds,
     instructor_dashboard,
+    bank_account_edit_form,
     OrderListView,
 )
 
@@ -19,13 +20,22 @@ urlpatterns = [
     path("dashboard2/", instructor_dashboard, name="dashboard2"),
     path("dashboard/in-progress/", progress, name="in-progress"),
     path("dashboard/completed/", completed, name="completed"),
-    path("dashboard/account-details/", account_details, name="account-details"),
+    path(
+        "dashboard/bank-account-details/",
+        bank_account_details,
+        name="bank-account-details",
+    ),
     path("dashboard/withdraw-funds/", withdraw_funds, name="withdraw-funds"),
     path(
         "dashboard/orders",
         OrderListView.as_view(),
         name="order-list",
     ),
+    path(
+        "dashboard/bank-account-form/",
+        bank_account_edit_form,
+        name="bank-account-edit-form",
+    )
     # path(
     #     "register/instructor",
     #     InstructorRegisterView.as_view(),

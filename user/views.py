@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.http import QueryDict
 from django.db.models import Prefetch
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,7 +10,7 @@ from django.views.generic import CreateView
 from order.models import Order
 from courses.models import Course, CourseRating, CourseOffer
 from .models import UserDashboard, Enrollment, BankAccount, Withdraw
-from .forms import ProfileUpdateForm, WithdrawalForm
+from .forms import ProfileUpdateForm, WithdrawalForm, BankAcountForm
 
 
 @login_required
@@ -87,10 +88,27 @@ def completed(request):
 
 
 @login_required
-def account_details(request):
+def bank_account_details(request):
     bank_account = BankAccount.objects.get(instructor=request.user.instructor)
     context = {"bank_account": bank_account}
-    return render(request, "user/bank_account_details.html", context)
+    if request.method == "GET":
+        return render(request, "user/bank_account_details.html", context)
+    elif request.method == "PUT":
+        data = QueryDict(request.body).dict()
+        form = BankAcountForm(data, instance=bank_account)
+        if form.is_valid():
+            form.save()
+            return render(request, "user/partials/bank_details.html", context)
+        context["form"] = form
+        return render(request, "user/partials/bank_account_form.html", context)
+
+
+@login_required
+def bank_account_edit_form(request):
+    bank_account = BankAccount.objects.get(instructor=request.user.instructor)
+    form = BankAcountForm(instance=bank_account)
+    context = {"bank_account": bank_account, "form": form}
+    return render(request, "user/partials/bank_account_form.html", context)
 
 
 class OrderListView(LoginRequiredMixin, ListView):

@@ -4,30 +4,21 @@
 <!-- courses item start -->
 <div class="col-md-6 col-lg-3">
     <div class="courses-item">
-        <a href="{% url 'course-detail' course_slug=enroll.course.slug %}" class="link">
+        {% with enroll.last_video_watched.id|default:enroll.course.lessons.first.videos.first.id as video_id %}
+        <a href="{% url 'lesson-video-detail' course_id=enroll.course.id video_id=video_id %}" class="link">
+
+            {% endwith %}
             <div class="courses-item-inner">
                 <div class="img-box">
-                    {% if enroll.course.thumbnail_url == None %}
-                    <img src="{{ enroll.course.thumbnail.url }}" alt="course img">
-                    {% else %}
-                    <img src="{{ enroll.course.thumbnail_url }}" alt="course img">
-                    {% endif %}
+                    {% with enroll.course.thumbnail_url|default:enroll.course.thumbnail.url as thumbnail_url %}
+                    <img src="{{ thumbnail_url }}" alt="course img">
+                    {% endwith %}
+
                 </div>
                 <h3 class="title">{{ enroll.course.title }}</h3>
                 <div class="instructor">
                     <img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
                     <span class="instuctor-name">{{ enroll.course.author.name }}</span>
-                </div>
-                <div class="rating">
-                    <span class="average-rating">({{ enroll.course.get_average_rating }})</span>
-                    <span class="average-stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </span>
-                    <span class="reviews">({{ enroll.course.get_rating_count }})</span>
                 </div>
             </div>
         </a>
