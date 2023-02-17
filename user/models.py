@@ -7,10 +7,9 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel, Currency
+from common.utils import get_default_currency
 
 from courses.models import Course, Video
-from common.constants import PAYOUT_STATUS
-from common.utils import get_default_currency
 
 
 class User(AbstractUser):
@@ -70,42 +69,6 @@ class UserDashboard(BaseModel):
     class Meta:
         verbose_name = _("user dashboard")
         verbose_name_plural = _("user dashboards")
-
-
-class Instructor(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    bio = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.user.username
-
-
-class BankAccount(BaseModel):
-    instructor = models.ForeignKey(
-        Instructor, on_delete=models.CASCADE, null=False, blank=False
-    )
-    country = models.CharField(max_length=50, blank=False, null=False)
-    bank_name = models.CharField(max_length=150, blank=True, null=True)
-    account_number = models.CharField(max_length=50, blank=False, null=False)
-    account_name = models.CharField(max_length=50, blank=False, null=False)
-    account_balance = models.PositiveIntegerField(default=0, blank=False, null=False)
-
-    def __str__(self):
-        return f"{self.bank_name}-{self.account_number}"
-
-
-class Withdraw(BaseModel):
-    instructor = models.ForeignKey(
-        Instructor, on_delete=models.CASCADE, blank=False, null=False
-    )
-    amount = models.PositiveIntegerField(null=False, blank=False)
-    # comment = models.CharField(max_length=500, blank=True, null=True)
-    status = models.CharField(choices=PAYOUT_STATUS, max_length=20, default="Initiated")
-
-    def __str__(self) -> str:
-        return f"{self.instructor}-{self.amount}"
-
-    # define a save methos or use signal to ensure no withdrwal is made when a user has less than that in hi account
 
 
 class Enrollment(BaseModel):

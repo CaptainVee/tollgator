@@ -15,9 +15,10 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 
 
 # Celery Beat Settings
-# Define a periodic task to update exchange rates for all currencies
+
 app.conf.beat_schedule = {
     "update-exchange-rates": {
+        # a periodic task to update exchange rates for all currencies
         "task": "common.tasks.update_exchange_rates",
         "schedule": crontab(hour="0, 8, 16", minute=0),
         #'args': (2,)

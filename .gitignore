@@ -144,3 +144,4 @@ cython_debug/
 migrations/*
 migrations/
 dump.rdb
+celerybeat-schedule.db
