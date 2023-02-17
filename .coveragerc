@@ -1,0 +1,14 @@
+[run]
+source = 
+    courses
+    instructor
+    order
+    user
+omit =
+    */migrations/*
+    */tests/*
+    */venv/*
+    */static/*
+    */__init__.py
+    */admin.py
+    */apps.py

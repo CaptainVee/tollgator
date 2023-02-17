@@ -9,7 +9,7 @@ from .views import (
 
 
 urlpatterns = [
-    path("dashboard2/", instructor_dashboard, name="dashboard2"),
+    path("dashboard/", instructor_dashboard, name="instructor-dashboard"),
     path(
         "dashboard/bank-account-details/",
         bank_account_details,

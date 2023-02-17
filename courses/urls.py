@@ -32,7 +32,7 @@ from .views import (
 urlpatterns = [
     path("", Home.as_view(), name="course-home"),
     # path("courses/", CourseListView.as_view(), name="course-list"),
-    path("instructor/dashboard", UserCourseListView.as_view(), name="user-course-list"),
+    # path("instructor/dashboard", UserCourseListView.as_view(), name="user-course-list"),
     path("course/new/", CourseCreateView.as_view(), name="course-create"),
     path(
         "course/new/playlist",

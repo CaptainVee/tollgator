@@ -49,3 +49,11 @@ Tollgator is a web-applications that allow users to turn their youtube videos to
    ```sh
    $ celery -A tollgator worker -l INFO
    ```
+
+1. For runing test:
+
+   ```sh
+   $ coverage run manage.py test
+
+   $ coverage report
+   ```
