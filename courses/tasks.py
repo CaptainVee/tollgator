@@ -1,5 +1,4 @@
 from celery import shared_task
-
 from django.shortcuts import render, redirect
 from django.db import transaction
 from django.http import HttpResponse

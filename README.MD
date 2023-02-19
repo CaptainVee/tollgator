@@ -57,3 +57,9 @@ Tollgator is a web-applications that allow users to turn their youtube videos to
 
    $ coverage report
    ```
+
+1. For runing test with pytest:
+
+   ```sh
+   $ pytest
+   ```
