@@ -48,6 +48,7 @@ THIRD_PARTY_APPS = [
     "django_htmx",
     "debug_toolbar",
     "bootstrap5",
+    "pytest_django",
 ]
 
 LOCAL_APPS = [
