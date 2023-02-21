@@ -1,65 +1,47 @@
-# from celery.contrib.testing.tasks import assert_task_success, task_message
-# from django.test import TestCase
-# from unittest.mock import patch
+import pytest
+from unittest.mock import patch
+from django.contrib.auth import get_user_model
+from courses.tasks import yt_playlist_create_course
 
-# from courses.tasks import yt_playlist_create_course
+User = get_user_model()
 
 
-# class TestYtPlaylistCreateCourseTask(TestCase):
-#     def test_yt_playlist_create_course_success(self):
-#         user_id = 1
-#         playlist_id = "ABC123"
+@pytest.mark.django_db
+@patch("courses.tasks.yt_playlist_details")
+@patch("courses.tasks.yt_playlist_videos")
+@patch("courses.tasks.yt_video_duration")
+def test_yt_playlist_create_course(mock_duration, mock_videos, mock_details):
+    # Create a user
+    user = User.objects.create_user(username="testuser", password="testpass")
 
-#         # Mock the external functions called in the task
-#         with patch("courses.tasks.yt_playlist_details") as mock_playlist_details, patch(
-#             "courses.tasks.yt_playlist_videos"
-#         ) as mock_playlist_videos, patch(
-#             "courses.tasks.yt_video_duration"
-#         ) as mock_video_duration, patch(
-#             "courses.tasks.youtube_duration_convertion"
-#         ) as mock_duration_conversion:
+    # Set up the mock responses
+    mock_details.return_value = {
+        "title": "Test Playlist",
+        "description": "A test playlist",
+        "thumbnails": {"standard": {"url": "https://example.com/thumbnail.jpg"}},
+    }
+    mock_videos.return_value = [
+        {"title": "Video 1", "video_id": "abc123", "position": 1},
+        {"title": "Video 2", "video_id": "def456", "position": 2},
+    ]
+    mock_duration.return_value = "PT1H23M45S"
 
-#             # Set up mock return values
-#             mock_playlist_details.return_value = {
-#                 "title": "Playlist Title",
-#                 "description": "Playlist description",
-#                 "thumbnails": {
-#                     "standard": {"url": "https://example.com/thumbnail.jpg"}
-#                 },
-#             }
-#             mock_playlist_videos.return_value = [
-#                 {"video_id": "XYZ789", "title": "Video 1", "position": 1},
-#                 {"video_id": "DEF456", "title": "Video 2", "position": 2},
-#             ]
-#             mock_video_duration.return_value = "PT2M30S"
-#             mock_duration_conversion.return_value = (150, "2m 30s")
+    # Call the Celery task
+    result = yt_playlist_create_course.apply(args=[user.id, "testplaylist"])
 
-#             # Call the Celery task
-#             result = yt_playlist_create_course.delay(user_id, playlist_id)
+    # Check that the task returned "SUCCESS"
+    assert result.get() == "SUCCESS"
 
-#             # Check that the task returns "SUCCESS"
-#             assert_task_success(result, "SUCCESS")
+    # Check that a course, lesson, and two videos were created
+    assert user.courses.count() == 1
+    course = user.courses.first()
+    assert course.title == "Test Playlist"
+    assert course.lessons.count() == 1
+    lesson = course.lessons.first()
+    assert lesson.title == "Lesson 1"
+    assert lesson.videos.count() == 2
 
-#             # Check that the Course, Lesson, and Video objects were created with the correct values
-#             message = task_message(result)
-#             course = message["result"]["course"]
-#             lesson = message["result"]["lesson"]
-#             videos = message["result"]["videos"]
-#             self.assertEqual(course.title, "Playlist Title")
-#             self.assertEqual(course.playlist, playlist_id)
-#             self.assertEqual(course.author_id, user_id)
-#             self.assertEqual(course.thumbnail_url, "https://example.com/thumbnail.jpg")
-#             self.assertEqual(course.brief_description, "Playlist description")
-#             self.assertEqual(course.total_watch_time, 300)
-#             self.assertEqual(lesson.title, "Lesson 1")
-#             self.assertEqual(lesson.position, 1)
-#             self.assertEqual(lesson.total_video_seconds, 300)
-#             self.assertEqual(len(videos), 2)
-#             self.assertEqual(videos[0].title, "Video 1")
-#             self.assertEqual(videos[0].position, 1)
-#             self.assertEqual(videos[0].duration_seconds, 150)
-#             self.assertEqual(videos[0].duration_time, "2m 30s")
-#             self.assertEqual(videos[1].title, "Video 2")
-#             self.assertEqual(videos[1].position, 2)
-#             self.assertEqual(videos[1].duration_seconds, 150)
-#             self.assertEqual(videos[1].duration_time, "2m 30s")
+    # Check that the video durations were parsed correctly
+    assert lesson.videos.first().duration_seconds == 5025
+    assert lesson.total_video_seconds == 10050  # there are two videos here
+    assert course.total_watch_time == 10050
