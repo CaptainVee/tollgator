@@ -48,7 +48,10 @@ def enroll(request, course_id):
             cart.orders.add(order)
         else:
             cart = order.cart_set.all()[0]
-        context = {"cart": cart, "course": course}
+        local_price = convert_currency_to_local(
+            user.currency, course.currency, cart.total_amount
+        )
+        context = {"cart": cart, "course": course, "local_price": local_price}
 
         return render(request, "order/checkout.html", context)
 
@@ -64,7 +67,7 @@ def checkout(request, cart_id):
             "total_price": cart.total_amount,
         },
     )
-    server_url = os.environ.get("SERVER_URL")
+    server_url = os.environ.get("SERVER_URL")  # eg localhost:8000
     email = cart.user.email
     amount = convert_currency_to_local(
         user_currency=cart.user.currency,

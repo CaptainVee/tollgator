@@ -9,7 +9,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
-from common.utils import get_default_currency
+from common.utils import get_default_currency, convert_currency_to_local
 from common.models import BaseModel, Currency
 from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES, COURSE_TYPE
 from order.models import Transaction, Order
@@ -78,6 +78,9 @@ class Course(BaseModel):
             return course_offer.discounted_price
         else:
             return self.price
+
+    def get_local_price(self, user):
+        return convert_currency_to_local(user.currency, self.currency, self.get_price)
 
     def get_discounted_price(self):
         return self.course_offer.filter(discounted_price__isnull=False).first()

@@ -46,6 +46,10 @@
                             <span>Total (USD)</span>
                             <strong>${{ cart.total_amount }}</strong>
                         </li>
+                        <small>
+                            <strong>Equvalent in local currency
+                                {{user.currency}} {{ local_price|floatformat:2 }}</strong>
+                        </small>
                     </ul>
                 </div>
                 <div class="col-md-7 col-lg-8">
