@@ -1,0 +1,39 @@
+{% extends "small_base.html" %}
+{% block content %}
+
+<div class="card mb-4">
+    <div class="card-header border-bottom-0">
+        <h3 class="mb-0">Orders</h3>
+        <span>Order Dashboard is a quick overview of all current orders.</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-centered">
+
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">COURSES</th>
+                    <th scope="col">AMOUNT</th>
+                    <th scope="col">INVOICE</th>
+                    <th scope="col">DATE</th>
+                    <th scope="col">METHOD</th>
+                </tr>
+            </thead>
+            {% for order in orders %}
+            <tbody class="border-top-0">
+                <tr>
+                    <th scope="row">{{ order.pk }}</th>
+                    <td>{{order.course}}</td>
+                    <td>${{order.course.price}}</td>
+                    <td>#{{order.cart_set.first.reference}}</td>
+                    <td>{{order.created_at}}</td>
+                    <td>master card</td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock content %}

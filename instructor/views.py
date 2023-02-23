@@ -7,12 +7,41 @@ from django.contrib import messages
 from django.http import QueryDict
 from django.db.models import Prefetch
 from .models import Withdraw, Instructor, BankAccount
-from .forms import BankAcountForm, WithdrawalForm
+from .forms import BankAcountForm, WithdrawalForm, BecomeInstructorForm
 from courses.models import Course, CourseRating
 from order.models import Order
 
 
 # Create your views here.
+
+
+@login_required
+def become_instructor(request):
+    if request.method == "POST":
+        form = BecomeInstructorForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            if not form.cleaned_data["accept_terms_and_conditions"]:
+                form.add_error(
+                    "accept_terms_and_conditions",
+                    "You must accept the terms and conditions to create your profile.",
+                )
+                return render(
+                    request, "instructor/become_instructor_form.html", {"form": form}
+                )
+
+            instructor = form.save(commit=False)
+            instructor.user = request.user
+            instructor.save()
+            # Save the user's information in the database
+            # and set the user as an instructor
+            request.user.profile_pic = request.POST["profile_pic"]
+            request.user.is_instructor = True
+            request.user.save()
+            return redirect("course-home")
+    else:
+        form = BecomeInstructorForm()
+    return render(request, "instructor/become_instructor_form.html", {"form": form})
 
 
 @login_required
@@ -56,7 +85,7 @@ def instructor_dashboard(request):
         "avg_rating": avg_rating,
         "total_enrollment": total_enrollment,
     }
-    return render(request, "courses/user_course_list.html", context)
+    return render(request, "instructor/instructor_dashboard.html", context)
 
 
 class OrderListView(LoginRequiredMixin, ListView):
@@ -64,14 +93,16 @@ class OrderListView(LoginRequiredMixin, ListView):
     List all the order made for an author
     """
 
-    template_name = "user/user_order_list.html"
+    template_name = "instructor/order_list.html"
     context_object_name = "orders"
     paginate_by = 5
 
     def get_queryset(self):
-        return Order.objects.select_related("user").filter(
+
+        orders = Order.objects.select_related("user").filter(
             course__author=self.request.user, ordered=True
         )
+        return orders
 
 
 @login_required
@@ -110,8 +141,8 @@ def withdraw_funds(request):
         form = WithdrawalForm(request.POST)
         if form.is_valid():
             withdrawal_amount = int(form.cleaned_data["amount"])
-            if withdrawal_amount < 5000:
-                messages.warning(request, "Please enter a value greater than 5000")
+            if withdrawal_amount < 50:
+                messages.warning(request, "Please enter a value greater than 49 USD")
             elif withdrawal_amount > bank_account.account_balance:
                 messages.warning(request, "Insuficient Funds")
             else:

@@ -52,7 +52,9 @@
               <li class="menu-item">
                 <a href="{% url 'course-home' %}">Courses</a>
               </li>
-
+              <li class="menu-item">
+                <a href="{% url 'become-instructor' %}">become an Instructor</a>
+              </li>
               <li class="menu-item">
                 <div class="dropdown">
                   <a class="btn border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -158,7 +160,7 @@
               <h3>More</h3>
               <ul>
                 <li><a href="#">affiliates</a></li>
-                <li><a href="#">become a course creator</a></li>
+                <li><a href="{% url 'become-instructor' %}">become a course creator</a></li>
                 <li><a href="#">training webnairs</a></li>
                 <li><a href="#">free personality test</a></li>
                 <li><a href="#">help and support</a></li>

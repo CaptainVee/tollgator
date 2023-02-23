@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from .models import User, Withdraw, BankAccount
+from .models import User, Withdraw, BankAccount, Instructor
 from django.db import transaction
 
 
@@ -16,19 +15,18 @@ class BankAcountForm(forms.ModelForm):
         fields = ["bank_name", "account_number", "account_name"]
 
 
-class InstuctorRegistrationForm(UserCreationForm):
-    pass
-    # email = forms.EmailField()
+class BecomeInstructorForm(forms.ModelForm):
+    profile_pic = forms.ImageField(label="Profile Picture", required=False)
+    accept_terms_and_conditions = forms.BooleanField(
+        label="I accept the terms and conditions", required=True
+    )
 
-    # class Meta:
-    #     model = User
-    #     fields = ["username", "email", "password1", "password2"]
-
-    # @transaction.atomic
-    # def save(self):
-    #     user = super().save(commit=False)
-    #     user.email = self.cleaned_data.get("email")
-    #     user.is_student = True
-    #     user.save()
-    #     student =objects.create(user=user)
-    #     return user
+    class Meta:
+        model = Instructor
+        fields = [
+            "bio",
+            "skills",
+            "experience",
+            "profile_pic",
+            "accept_terms_and_conditions",
+        ]

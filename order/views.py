@@ -47,7 +47,7 @@ def enroll(request, course_id):
             )
             cart.orders.add(order)
         else:
-            cart = order.cart_set.all()[0]
+            cart = order.cart_set.first()
         local_price = convert_currency_to_local(
             user.currency, course.currency, cart.total_amount
         )
@@ -110,10 +110,15 @@ def verify(request, transaction_id):
             transaction.transaction_description = message
             transaction.save()
 
-            for order in transaction.cart.orders.all().select_related("course"):
+            for order in transaction.cart.orders.all().select_related("course__author"):
                 order.ordered = True
                 order.save()
+                user = order.course.author
+                account = user.instuctor.account
+                account.account_balance += order.course.price
+                account.save()
                 request.user.user_dashboard.courses.add(order.course)
+
             messages.success(request, f"Your transaction was a {message}")
         elif status == "failed":
             transaction.transaction_status = "Payment Failed"

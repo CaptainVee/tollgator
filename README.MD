@@ -47,21 +47,15 @@ Tollgator is a web-applications that allow users to turn their youtube videos to
 1. start the celery server in another terminal too:
 
    ```sh
-   $ celery -A proj beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+   $ celery -A tollgator beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
    $ celery -A tollgator worker -l INFO
    ```
 
-1. For runing test:
+1. For runing test with pytest and coverage:
 
    ```sh
-   $ coverage run manage.py test
+   $ coverage run -m pytest
 
    $ coverage report
-   ```
-
-1. For runing test with pytest:
-
-   ```sh
-   $ pytest
    ```

@@ -4,7 +4,6 @@ import requests
 
 
 def initiate_paystack_url(email, amount, transaction_ref, currency, callback_url):
-    print(email, amount, transaction_ref, "dfdfdfdfdfdfdfdf")
     url = "https://api.paystack.co/transaction/initialize"
     headers = {
         "Content-Type": "application/json",

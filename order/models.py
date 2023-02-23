@@ -35,8 +35,9 @@ class Order(BaseModel):
     )
     ordered = models.BooleanField(default=False)
 
+    # def __str__(self):
+    #     return self.cart_set
 
-#         return f"{self.quantity} of {self.item.title}"
 
 #     def get_total_item_price(self):
 #         return self.quantity * self.item.price
@@ -62,7 +63,6 @@ class Cart(BaseModel):
 
     @property
     def get_first_course(self):
-        print("tjjkjrjtkrjtkrjtktr", self.orders)
         return self.orders.first().course
 
 

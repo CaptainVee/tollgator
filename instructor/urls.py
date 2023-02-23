@@ -4,6 +4,7 @@ from .views import (
     withdraw_funds,
     instructor_dashboard,
     bank_account_edit_form,
+    become_instructor,
     OrderListView,
 )
 
@@ -25,12 +26,12 @@ urlpatterns = [
         "dashboard/bank-account-form/",
         bank_account_edit_form,
         name="bank-account-edit-form",
-    )
-    # path(
-    #     "register/instructor",
-    #     InstructorRegisterView.as_view(),
-    #     name="instructor-register",
-    # ),
+    ),
+    path(
+        "become_instructor/",
+        become_instructor,
+        name="become-instructor",
+    ),
 ]
 
 

@@ -12,7 +12,6 @@ from courses.models import Course
 from ..models import Order, Cart, Transaction
 from ..views import enroll, checkout
 from ..payments import initiate_paystack_url
-from common.utils import convert_currency_to_local
 
 User = get_user_model()
 
