@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 {% block content %}
 
 
@@ -46,10 +47,10 @@
                             <span>Total (USD)</span>
                             <strong>${{ cart.total_amount }}</strong>
                         </li>
-                        <small>
-                            <strong>Equvalent in local currency
-                                {{user.currency}} {{ local_price|floatformat:2 }}</strong>
-                        </small>
+                        <p class="pt-2 text-bold">
+                            Equvalent in local currency
+                            <span class="fw-bold">{{user.currency}} {{ local_price|floatformat:2|intcomma }}</span>
+                        </p>
                     </ul>
                 </div>
                 <div class="col-md-7 col-lg-8">

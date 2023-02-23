@@ -60,6 +60,11 @@ class Cart(BaseModel):
     user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
     # country = fields.CountryField()
 
+    @property
+    def get_first_course(self):
+        print("tjjkjrjtkrjtkrjtktr", self.orders)
+        return self.orders.first().course
+
 
 class Transaction(BaseModel):
     transaction_ref = models.CharField(max_length=100, null=False, blank=False)

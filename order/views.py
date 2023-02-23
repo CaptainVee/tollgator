@@ -56,6 +56,7 @@ def enroll(request, course_id):
         return render(request, "order/checkout.html", context)
 
 
+@login_required
 def checkout(request, cart_id):
     ref = my_random_string()
     cart = get_object_or_404(Cart, id=cart_id)
@@ -74,11 +75,12 @@ def checkout(request, cart_id):
         product_currency="USD",
         product_amount=cart.total_amount,
     )
-    currency = cart.user.currency
+    currency = cart.user.currency.code
     callback_url = f"{server_url}/order/verify/transaction/{transaction.id}"
+    print(cart)
     response = initiate_paystack_url(
         email=email,
-        amount=amount,
+        amount=int(amount * 100),  # convert to lowest unit and integer
         transaction_ref=ref,
         currency=currency,
         callback_url=callback_url,
@@ -87,10 +89,12 @@ def checkout(request, cart_id):
     try:
         paystack_url = response["data"]["authorization_url"]
     except:
-        return HttpResponse(response["message"])
+        messages.warning(request, f"Your transaction {response['message']}")
+        return redirect("enroll", cart.get_first_course.id)
     return redirect(paystack_url)
 
 
+@login_required
 def verify(request, transaction_id):
     transaction_ref = request.GET.get("trxref")
     transaction = get_object_or_404(
@@ -220,29 +224,3 @@ def verify(request, transaction_id):
 #     else:
 #         messages.info(request, "You do not have an active order")
 #         return redirect("post-detail", pk=pk)
-
-
-# class VerifyView(View):
-#     def get(self, request, id, *args, **kwargs):
-#         order = Order.objects.get(user=self.request.user, ordered=False)
-#         paystack = Paystack(secret_key=settings.PAYSTACK_SECRET_KEY)
-
-#         # transaction = Transaction(authorization_key= settings.PAYSTACK_SECRET_KEY )
-#         # response = transaction.verify(id)
-#         transaction = paystack.transaction.initialize(
-#             reference=id, amount="amount", email="email"
-#         )
-#         response = paystack.transaction.verify(reference=id)
-#         data = JsonResponse(response, safe=False)
-#         # assign the payment to the order
-
-#         order_items = order.items.all()
-#         order_items.update(ordered=True)
-#         for item in order_items:
-#             item.save()
-
-#         order.ordered = True
-#         order.ref_code = create_ref_code()
-#         order.save()
-
-#         return render(request, "courses/verify.html", {"title": "verify"})
