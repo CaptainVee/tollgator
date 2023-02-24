@@ -68,19 +68,6 @@ class Home(View):
         return render(request, template, context)
 
 
-class UserCourseListView(LoginRequiredMixin, ListView):
-    """
-    List all the courses created by an instructor
-    """
-
-    model = Course
-    template_name = "courses/user_course_list.html"
-    context_object_name = "courses"
-
-    def get_queryset(self):
-        return Course.objects.select_related("author").filter(author=self.request.user)
-
-
 class CourseDetailView(View):
     """
     The course detail view where user can see details about a course
@@ -99,6 +86,7 @@ class CourseDetailView(View):
             "course": course,
             "lesson_qs": lesson_qs,
             "order": order,
+            "pp": {"result": 1, "object": 2},
         }
         return render(request, "courses/course_detail.html", context)
 
@@ -152,10 +140,10 @@ def course_create_playlist_view(request):
 
 class CourseUpdateView(LoginRequiredMixin, UpdateView):
     model = Course
-    fields = ["title", "content", "thumbnail", "price"]
+    fields = ["title", "content", "thumbnail", "price", "is_private"]
 
     def form_valid(self, form):
-        form.instance.author = get_object_or_404(User, username=self.request.user)
+        form.instance.author = get_object_or_404(User, email=self.request.user.email)
         form.save()
         return super().form_valid(form)
 
@@ -398,7 +386,7 @@ def get_spinner(request):
     """
     returns spinner
     """
-    return render(request, "courses/partials/spinner.html", {})
+    return render(request, "courses/partials/progress_bar.html", {})
 
 
 @login_required
@@ -415,7 +403,7 @@ def get_video_sidebar(request, course_id):
 
 
 @csrf_exempt
-def get_status(request, task_id, width):
+def get_task_status(request, task_id, width):
     task_result = AsyncResult(task_id)
 
     if width >= 90:
@@ -428,7 +416,7 @@ def get_status(request, task_id, width):
         "width": width + 10,
     }
 
-    return render(request, "courses/partials/spinner.html", context)
+    return render(request, "courses/partials/progress_bar.html", context)
 
 
 @login_required

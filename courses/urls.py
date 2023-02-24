@@ -2,7 +2,6 @@ from django.urls import path
 from .views import (
     Home,
     # CourseListView,
-    UserCourseListView,
     CourseDetailView,
     CourseCreateView,
     CourseUpdateView,
@@ -19,20 +18,17 @@ from .views import (
     watchtime_create,
     toggle_finished_video,
     get_video_sidebar,
-    get_status,
+    get_task_status,
     lesson_delete_view,
     video_delete_view,
     about,
 )
-
-# from .views import  add_to_cart, remove_from_cart, remove_single_item_from_cart, OrderSummaryView, , StartDetailView
 
 # app_name = "courses"
 
 urlpatterns = [
     path("", Home.as_view(), name="course-home"),
     # path("courses/", CourseListView.as_view(), name="course-list"),
-    # path("instructor/dashboard", UserCourseListView.as_view(), name="user-course-list"),
     path("course/new/", CourseCreateView.as_view(), name="course-create"),
     path(
         "course/new/playlist",
@@ -110,7 +106,7 @@ htmx_urlpatterns = [
     ),
     path(
         "task/get-status/<slug:task_id>/<int:width>",
-        get_status,
+        get_task_status,
         name="get-task-status",
     ),
     path("spinner/", get_spinner, name="get-spinner"),

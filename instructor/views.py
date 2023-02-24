@@ -38,7 +38,7 @@ def become_instructor(request):
             request.user.profile_pic = request.POST["profile_pic"]
             request.user.is_instructor = True
             request.user.save()
-            return redirect("course-home")
+            return redirect("instructor-dashboard")
     else:
         form = BecomeInstructorForm()
     return render(request, "instructor/become_instructor_form.html", {"form": form})

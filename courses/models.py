@@ -43,7 +43,9 @@ class Course(BaseModel):
     currency = models.ForeignKey(
         Currency, on_delete=models.PROTECT, default=get_default_currency
     )
-    is_private = models.BooleanField(default=True)
+    is_private = models.BooleanField(
+        default=True, help_text="uncheck this box for your course to go public"
+    )
 
     def clean(self):
         if self.price < 0:

@@ -1,3 +1,4 @@
+import json
 from celery import shared_task
 from django.shortcuts import render, redirect
 from django.db import transaction
@@ -67,7 +68,8 @@ def yt_playlist_create_course(self, user_id, playlist_id):
                     course.total_watch_time = total_lesson_time
                     lesson.save()
                     course.save()
-                    return "SUCCESS"
+                    result = {"status": "SUCCESS", "course_pk": str(course.pk)}
+                    return result
                 except Exception as e:
                     return f"Task failed at trying to create video object because of: {str(e)}"
 

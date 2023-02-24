@@ -9,11 +9,11 @@
 			<fieldset class='form-group'>
 				<legend class='mb-4'>Course Overview</legend>
 
-				{{ form|crispy }}
+				{{ form.as_p }}
 
 			</fieldset>
 			<div class=''>
-				<button class='btn- btn-outline-info' type="submit">Edit Course</button>
+				<button class='btn btn-outline-secondary' type="submit">Submit</button>
 			</div>
 		</form>
 		<div class='form-group'>

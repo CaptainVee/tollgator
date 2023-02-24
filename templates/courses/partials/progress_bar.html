@@ -7,9 +7,14 @@
     </div>
 </div>
 {% elif task_status == "SUCCESS" %}
-{% if task_result == "SUCCESS" %}
+{% if task_result.status == "SUCCESS" %}
 <div hx-target="#status" hx-swap="outerHTML">
-    <h3>Your Course was successfully created </h3>
+
+    <div hx-get="{% url 'course-update' task_result.course_pk %}" hx-trigger="load delay:2s" hx-target="#cow"
+        hx-push-url="true">
+        <h3>Your Course was successfully created!!</h3>
+        <p>please wait...</p>
+    </div>
 </div>
 {% else %}
 <div hx-target="#status" hx-swap="outerHTML">
