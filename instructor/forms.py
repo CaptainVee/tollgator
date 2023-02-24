@@ -1,6 +1,5 @@
 from django import forms
-from .models import User, Withdraw, BankAccount, Instructor
-from django.db import transaction
+from .models import Withdraw, BankAccount, Instructor
 
 
 class WithdrawalForm(forms.ModelForm):

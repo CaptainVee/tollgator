@@ -1,19 +1,16 @@
-import black
 from autoslug import AutoSlugField
 from django.db import models
 from django.urls import reverse
 from django.db.models import Avg, Sum
-from django.shortcuts import reverse
-from django_countries.fields import CountryField
-from django.contrib.postgres.fields import ArrayField
+
+# from django_countries.fields import CountryField
+# from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from common.utils import convert_currency_to_local
 from common.models import BaseModel, Currency
-from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES, COURSE_TYPE
-from order.models import Transaction, Order
-from datetime import time
+from common.constants import RATING
 
 
 User = settings.AUTH_USER_MODEL
@@ -66,7 +63,7 @@ class Course(BaseModel):
 
     def last_video_watched(self, user):
         enrollment = self.enrollment_set.get(user_dashboard__user=user)
-        if enrollment.last_video_watched == None:
+        if enrollment.last_video_watched is None:
             enrollment.last_video_watched = self.video_set.last()
             enrollment.save()
         return enrollment.last_video_watched

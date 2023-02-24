@@ -11,7 +11,6 @@ from decimal import Decimal
 from courses.models import Course
 from ..models import Order, Cart, Transaction
 from ..views import enroll, checkout
-from ..payments import initiate_paystack_url
 
 User = get_user_model()
 
@@ -26,7 +25,7 @@ class TestOrder:
         user = User.objects.create(username="testuser")
         author = User.objects.create(username="author", email="testuser@example.com")
         course = Course.objects.create(title="Test Course", price=0, author=author)
-        cart = Cart.objects.create(user=user)
+        Cart.objects.create(user=user)
 
         # Set up the request
         request_factory = RequestFactory()

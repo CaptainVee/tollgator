@@ -45,4 +45,5 @@ class Withdraw(BaseModel):
     def __str__(self) -> str:
         return f"{self.instructor}-{self.amount}"
 
-    # define a save methos or use signal to ensure no withdrwal is made when a user has less than that in hi account
+    # TODO define a save methos or use signal to ensure no withdrwal is made when a user has
+    # less than that in hi account

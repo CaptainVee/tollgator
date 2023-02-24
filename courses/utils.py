@@ -1,11 +1,8 @@
-import os
-import requests
-import json
 from googleapiclient.discovery import build
 from django.core.mail import EmailMessage
 import cv2
 import re
-from datetime import timedelta, time
+from datetime import time
 
 youtube_api_key = (
     "AIzaSyDIbZsXlp1Z0XNFVwG7k6D2AO1NreQgHJs"  # os.environ.get("YOUTUBE_API_KEY")
@@ -34,7 +31,8 @@ def yt_playlist_details(playlist_id):
 def yt_playlist_videos(playlist_id):
     """
     returns the list of youtube videos in a playlist as a list with the video title,
-    position and video id respectively. example [{'title', 0, 'CkIrizsP64c'}, {'title', 1, 'CkIrizsP64c'},]
+    position and video id respectively.
+    example [{'title', 0, 'CkIrizsP64c'}, {'title', 1, 'CkIrizsP64c'},]
     """
     next_page_token = None
     video_details = []
@@ -96,20 +94,21 @@ def youtube_duration_convertion(duration):
 
 
 def get_transcript(video_id, course_id):
-    request = youtube.captions().list(part="snippet", videoId=video_id)
-    response = request.execute()
+    pass
+    # request = youtube.captions().list(part="snippet", videoId=video_id)
+    # response = request.execute()
 
-    # Get the transcript of the video in English
-    for item in response["items"]:
-        if item["snippet"]["language"] == "en":
-            caption_id = item["id"]
-            break
-    else:
-        # No English transcript found
-        return None
+    # # Get the transcript of the video in English
+    # for item in response["items"]:
+    #     if item["snippet"]["language"] == "en":
+    #         caption_id = item["id"]
+    #         break
+    # else:
+    #     # No English transcript found
+    #     return None
 
-    request = youtube.captions().download(id=caption_id, tfmt="srv3")
-    transcript = request.execute()
+    # request = youtube.captions().download(id=caption_id, tfmt="srv3")
+    # transcript = request.execute()
 
     # Save the transcript text to the Course model
     # course = Course.objects.get(id=course_id)
@@ -135,7 +134,8 @@ def generate_certificates(name):
 
 
 def email_sending(to_mail, firstname, lastname, location, time, ref):
-    body = f"""Hello {firstname}, {lastname}This is a confirmation of your ticket for Hilltop Encounters 2022
+    body = f"""Hello {firstname}, {lastname}This is a confirmation of your ticket for 
+    Hilltop Encounters 2022
     Ticket Summary
     IN-PERSON CONFERENCE
     Time: {time}
@@ -143,7 +143,8 @@ def email_sending(to_mail, firstname, lastname, location, time, ref):
 
     The Printable PDF ticket has been attached to this mail.
 
-    Note: Remember to either have a printed copy or a downloaded copy of the ticket when going for the event as you might need to present it for Confirmation and or Check-in.
+    Note: Remember to either have a printed copy or a downloaded copy of the ticket when going for 
+    the event as you might need to present it for Confirmation and or Check-in.
     Going with Friends is fun
 
     Let your friends know you are going
@@ -160,6 +161,6 @@ def email_sending(to_mail, firstname, lastname, location, time, ref):
         )
         message.attach_file(f"media/{firstname}-{ref}.jpg")
         message.send(fail_silently=False)
-    except:
+    except Exception:
         return False
     return True

@@ -1,17 +1,12 @@
 import random
-from django.conf import settings
-from django.contrib import messages
-from django.db import transaction
-from django.http import HttpResponse, Http404, QueryDict, JsonResponse
+from django.http import HttpResponse, Http404
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic import (
-    ListView,
-    DetailView,
     CreateView,
     UpdateView,
     DeleteView,
@@ -22,13 +17,6 @@ from .models import Course, Lesson, Video, WatchTime
 from order.models import Order
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
-from .utils import (
-    yt_playlist_details,
-    generate_certificates,
-    yt_playlist_videos,
-    yt_video_duration,
-    youtube_duration_convertion,
-)
 from .tasks import yt_playlist_create_course
 
 
@@ -58,7 +46,7 @@ class Home(View):
             courses = list(Course.objects.filter(is_private=False))
             try:
                 courses = random.sample(courses, 4)
-            except:
+            except Exception:
                 courses = Course.objects.filter(is_private=False)[:4]
             template = "courses/home.html"
 
@@ -187,16 +175,16 @@ def lesson_create_update(request, course_id=None, lesson_id=None):
     if request.htmx:
         try:
             course = Course.objects.get(id=course_id)
-        except:
+        except Exception:
             course = None
-        if course_id == None:
+        if course_id is None:
             return HttpResponse("NOT FOUND")
 
         lesson = None
         if lesson_id is not None:
             try:
                 lesson = Lesson.objects.get(course=course, id=lesson_id)
-            except:
+            except Exception:
                 lesson = None
 
         form = LessonForm(request.POST or None, instance=lesson)
@@ -252,7 +240,7 @@ def lesson_video_view(request, course_id, video_id, *args, **kwargs):
 
     try:
         start = last_video_watched.watchtime.start
-    except:
+    except Exception:
         start = 0
     completed_count = Video.objects.filter(
         course=course, watchtime__finished_video=True
@@ -295,16 +283,16 @@ def video_create_update(request, lesson_id=None, video_id=None):
     if request.htmx:
         try:
             lesson = Lesson.objects.get(id=lesson_id)
-        except:
+        except Exception:
             lesson = None
-        if lesson_id == None:
+        if lesson_id is None:
             return HttpResponse("NOT FOUND")
 
         video = None
         if video_id is not None:
             try:
                 video = Video.objects.get(lesson=lesson, id=video_id)
-            except:
+            except Exception:
                 video = None
 
         form = VideoForm(
@@ -355,24 +343,24 @@ def video_delete_view(request, lesson_id, video_id):
 def generate_certificate_view(request, course_id):
 
     return render(request, "courses/test.html", {})
-    return None
-    user = request.user
-    course = Course.objects.get(id=course_id)
-    completed_count = Video.objects.filter(
-        course=course, watchtime__finished_video=True
-    ).count()
-    if completed_count != course.video_count:
-        return HttpResponse("You haven't Completed this course yet")
+    # return None
+    # user = request.user
+    # course = Course.objects.get(id=course_id)
+    # completed_count = Video.objects.filter(
+    #     course=course, watchtime__finished_video=True
+    # ).count()
+    # if completed_count != course.video_count:
+    #     return HttpResponse("You haven't Completed this course yet")
 
-    certificate = Certificate.objects.get_or_create(user=user, course=course)
+    # certificate = Certificate.objects.get_or_create(user=user, course=course)
 
-    fullname = certificate.user.get_full_name
+    # fullname = certificate.user.get_full_name
 
-    certificate_url = generate_certificates(name=fullname, course=course.title)
+    # certificate_url = generate_certificates(name=fullname, course=course.title)
 
-    context = {"certificate_url": "http://127.0.0.1:8000/" + certificate_url}
+    # context = {"certificate_url": "http://127.0.0.1:8000/" + certificate_url}
 
-    return render(request, "courses/certificate.html", context)
+    # return render(request, "courses/certificate.html", context)
 
 
 def clear_messages(request):
@@ -411,7 +399,7 @@ def get_task_status(request, task_id, width):
 
     context = {
         "task_id": task_id,
-        "task_status": task_result.status,  # e.g 'PENDING', 'STARTED', 'SUCCESS', 'FAILURE', and 'RETRY'
+        "task_status": task_result.status,  # 'PENDING', 'STARTED', 'SUCCESS', 'FAILURE', 'RETRY'
         "task_result": task_result.result,  # the return value of the function
         "width": width + 10,
     }
@@ -423,13 +411,14 @@ def get_task_status(request, task_id, width):
 def toggle_finished_video(request, video_id):
     video = Video.objects.get(id=video_id)
     obj, _ = WatchTime.objects.get_or_create(user=request.user, video=video)
-    if obj.finished_video == False:
+    if obj.finished_video is False:
         obj.finished_video = True
         obj.save()
         return HttpResponse(
-            '<input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>'
+            """<input class="form-check-input" type="checkbox" value="" 
+            id="flexCheckChecked" checked>"""
         )
-    elif obj.finished_video == True:
+    elif obj.finished_video is True:
         obj.finished_video = False
         obj.save()
         return HttpResponse(
@@ -449,8 +438,8 @@ def watchtime_create(request):
 
     try:
         video = Video.objects.get(id=video_id)
-    except:
-        return HttpResponse("Video not found")
+    except Exception as e:
+        return HttpResponse("Video not found", e)
     if event == player_state_paused:
         WatchTime.objects.update_or_create(
             user=request.user, video=video, defaults={"stopped_at": current_time}

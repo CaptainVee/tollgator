@@ -1,9 +1,6 @@
-import black
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel, Currency
@@ -45,9 +42,6 @@ class User(AbstractUser):
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
-
-
-User = get_user_model()
 
 
 class UserDashboard(BaseModel):
