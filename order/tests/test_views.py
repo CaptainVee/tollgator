@@ -77,7 +77,6 @@ class TestOrder:
         cart = Cart.objects.create(user=user, total_amount=Decimal("10.00"))
         cart.orders.add(order)
         cart_id = cart.id
-        server_url = "http://localhost:8000"
 
         # Set up request
         request_factory = RequestFactory()
