@@ -141,7 +141,5 @@ cython_debug/
 
 .DS_Store
 
-migrations/*
-migrations/
 dump.rdb
 celerybeat-schedule.db
