@@ -7,7 +7,8 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel, Currency
-from common.utils import get_default_currency
+
+# from common.utils import get_default_currency
 
 from courses.models import Course, Video
 
@@ -22,9 +23,7 @@ class User(AbstractUser):
     )
     date_joined = models.DateTimeField(auto_now_add=True)
     is_instructor = models.BooleanField(default=False)
-    currency = models.ForeignKey(
-        Currency, on_delete=models.PROTECT, default=get_default_currency
-    )
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, default=1)
 
     def get_absolute_url(self):
         return reverse("profile")

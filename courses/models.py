@@ -9,7 +9,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
-from common.utils import get_default_currency, convert_currency_to_local
+from common.utils import convert_currency_to_local
 from common.models import BaseModel, Currency
 from common.constants import ADDRESS_CHOICES, RATING, CATEGORY_CHOICES, COURSE_TYPE
 from order.models import Transaction, Order
@@ -40,9 +40,7 @@ class Course(BaseModel):
     # )
     translation = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=10)
-    currency = models.ForeignKey(
-        Currency, on_delete=models.PROTECT, default=get_default_currency
-    )
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, default=1)
     is_private = models.BooleanField(
         default=True, help_text="uncheck this box for your course to go public"
     )
