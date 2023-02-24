@@ -30,7 +30,10 @@ def test_yt_playlist_create_course(mock_duration, mock_videos, mock_details):
     result = yt_playlist_create_course.apply(args=[user.id, "testplaylist"])
 
     # Check that the task returned "SUCCESS"
-    assert result.get() == "SUCCESS"
+    assert result.get() == {
+        "course_pk": str(user.courses.first().pk),
+        "status": "SUCCESS",
+    }
 
     # Check that a course, lesson, and two videos were created
     assert user.courses.count() == 1
