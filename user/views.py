@@ -2,9 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView
-from order.models import Order
-from .models import UserDashboard, Enrollment
+
+from .models import Enrollment
 from .forms import ProfileUpdateForm
 
 
@@ -45,7 +44,7 @@ def profile(request):
 
         if form.is_valid():
             form.save()
-            messages.success(request, f"Your Account has been updated!")
+            messages.success(request, "Your Account has been updated!")
             return redirect("profile")
     else:
         form = ProfileUpdateForm(instance=request.user)

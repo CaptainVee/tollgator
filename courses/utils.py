@@ -133,25 +133,26 @@ def generate_certificates(name):
     return saved_url
 
 
-def email_sending(to_mail, firstname, lastname, location, time, ref):
-    body = f"""Hello {firstname}, {lastname}This is a confirmation of your ticket for 
-    Hilltop Encounters 2022
-    Ticket Summary
-    IN-PERSON CONFERENCE
-    Time: {time}
-    Location: {location}
+def email_sending(to_mail, name):
+    body = f""" Dear {name},
+    We're excited to inform you that your course has been successfully
+    created on our platform! Your course is now live and available for students to enroll.
 
-    The Printable PDF ticket has been attached to this mail.
+    To access your course, simply log in to your account and navigate to your dashboard.
+    From there, you can manage your course content, pricing, and enrollment options.
 
-    Note: Remember to either have a printed copy or a downloaded copy of the ticket when going for 
-    the event as you might need to present it for Confirmation and or Check-in.
-    Going with Friends is fun
+    We're thrilled to have you as an instructor on our platform and look forward to seeing
+    the impact your course will have on our students.
 
-    Let your friends know you are going
+    If you have any questions or concerns, please don't hesitate to reach out to our support
+    team. We're always here to help.
+    Best regards,
+
+    Tollgator
     """
     try:
         message = EmailMessage(
-            subject="Here is your ticket for Hilltop Encounters 2022",
+            subject="Congratulations, your course has been successfully created!",
             body=body,
             from_email="captainvee7@gmail.com",
             to=[
@@ -159,7 +160,6 @@ def email_sending(to_mail, firstname, lastname, location, time, ref):
                 "captainvee3@gmail.com",
             ],
         )
-        message.attach_file(f"media/{firstname}-{ref}.jpg")
         message.send(fail_silently=False)
     except Exception:
         return False

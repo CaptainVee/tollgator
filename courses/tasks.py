@@ -1,8 +1,5 @@
-import json
 from celery import shared_task
-from django.shortcuts import render, redirect
 from django.db import transaction
-from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 from .models import Course, Lesson, Video
 from .utils import (
