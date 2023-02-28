@@ -15,7 +15,7 @@ click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.2.0
 coverage==7.1.0
-cryptography==38.0.3
+cryptography==39.0.1
 defusedxml==0.7.1
 Django==4.1.2
 django-allauth==0.51.0
