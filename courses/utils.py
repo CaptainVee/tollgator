@@ -3,6 +3,7 @@ from django.core.mail import EmailMessage
 import cv2
 import re
 from datetime import time
+import os
 
 youtube_api_key = os.environ.get("YOUTUBE_API_KEY")
 youtube = build("youtube", "v3", developerKey=youtube_api_key)
