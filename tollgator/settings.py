@@ -25,7 +25,15 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "mysecretkey")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS")]
+# ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS")]
+ALLOWED_HOSTS = [
+    "16.171.43.235",
+    "http://127.0.0.1:8000/",
+    "localhost",
+    "tollgator.com",
+    "https://tollgator.com",
+    "https://www.tollgator.com",
+]
 
 
 # Application definition
