@@ -27,7 +27,7 @@ DEBUG = True
 
 # ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS")]
 ALLOWED_HOSTS = [
-    "16.171.43.235",
+    "13.48.192.22",
     "http://127.0.0.1:8000/",
     "localhost",
     "tollgator.com",
