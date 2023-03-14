@@ -1,0 +1,91 @@
+.errorlist
+    {
+        color: #ba0000;
+    }
+
+body{
+    background-color: #fff;
+}
+
+.center {
+    margin: auto;
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+
+form h2{
+    font-family: 'Mulish', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+}
+
+.inner-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.group1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.small {
+    font-size: 15px;
+    font-weight: 400;
+    color: #757575;
+}
+
+.wrap1 {
+    padding-bottom: 22px;
+}
+
+.wrap2 {
+    width: 100%;
+    font-size: 18px;
+}
+
+.form-group {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.placehold {
+    display: flex;
+    position: relative;
+}
+
+.placehold input {
+    border: 1px solid #cbcbcb;
+    border-radius: 10px;
+    padding: 16px 20px;
+    width: 100%;
+}
+
+.form-group label {
+    cursor: text;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 0 3px;
+    /* border-radius: 3px; */
+    /* position: absolute; */
+}
+
+
+.wrap3 {
+    align-items: center;
+    margin: auto;
+}
+
+
+.forgot-password {
+    margin-top: 2em;
+}
