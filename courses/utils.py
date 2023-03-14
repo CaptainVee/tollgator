@@ -3,12 +3,15 @@ from django.core.mail import EmailMessage
 import cv2
 import re
 from datetime import time
-import os
-import dotenv
 
-dotenv.read_dotenv(".env")
+# import os
+# import dotenv
 
-youtube_api_key = os.environ.get("YOUTUBE_API_KEY")
+# dotenv.read_dotenv(".env")
+
+youtube_api_key = (
+    "AIzaSyDIbZsXlp1Z0XNFVwG7k6D2AO1NreQgHJs"  # os.environ.get("YOUTUBE_API_KEY")
+)
 
 youtube = build("youtube", "v3", developerKey=youtube_api_key)
 
