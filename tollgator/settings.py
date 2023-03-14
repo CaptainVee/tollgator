@@ -12,9 +12,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,11 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG = os.environ.get("DEBUG")
 
-# ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS")]
+# ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS")]
 ALLOWED_HOSTS = [
     "13.48.192.22",
     "http://127.0.0.1:8000/",
@@ -127,22 +124,22 @@ WSGI_APPLICATION = "tollgator.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("DATABASE_NAME"),
-        "USER": os.getenv("DATABASE_USER"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD"),
-        "HOST": os.getenv("DATABASE_HOST"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": os.environ.get("DATABASE_NAME"),
+#         "USER": os.environ.get("DATABASE_USER"),
+#         "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
+#         "HOST": os.environ.get("DATABASE_HOST"),
+#     }
+# }
 
 
 # Password validation
@@ -208,11 +205,11 @@ SITE_ID = 1
 # EMAIL_HOST = "smtp.gmail.com"
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.getenv("EMAIL_USER")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASS")
+# EMAIL_HOST_USER = os.environ.get("EMAIL_USER")
+# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASS")
 
-# AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID2")
-# AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY2")
+# AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID2")
+# AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY2")
 # AWS_STORAGE_BUCKET_NAME = "tollgator"
 
 AWS_S3_FILE_OVERWRITE = False
@@ -223,8 +220,8 @@ AWS_DEFAULT_ACL = None
 
 #
 
-PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
-PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_SECRET_KEY = os.environ.get("PAYSTACK_SECRET_KEY")
+PAYSTACK_PUBLIC_KEY = os.environ.get("PAYSTACK_PUBLIC_KEY")
 
 # Celery
 # ------------------------------------------------------------------------------
