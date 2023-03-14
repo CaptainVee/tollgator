@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import environ
 
-
+env = environ.Env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
+DEBUG = env("DEBUG")
 
-# ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS")]
+# ALLOWED_HOSTS = [env("ALLOWED_HOSTS")]
 ALLOWED_HOSTS = [
     "13.48.192.22",
     "http://127.0.0.1:8000/",
@@ -134,10 +135,10 @@ WSGI_APPLICATION = "tollgator.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.environ.get("DATABASE_NAME"),
-        "USER": os.environ.get("DATABASE_USER"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
-        "HOST": os.environ.get("DATABASE_HOST"),
+        "NAME": env("DATABASE_NAME"),
+        "USER": env("DATABASE_USER"),
+        "PASSWORD": env("DATABASE_PASSWORD"),
+        "HOST": env("DATABASE_HOST"),
         "PORT": "",
     }
 }
@@ -205,11 +206,11 @@ SITE_ID = 1
 # EMAIL_HOST = "smtp.gmail.com"
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.environ.get("EMAIL_USER")
-# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASS")
+# EMAIL_HOST_USER = env("EMAIL_USER")
+# EMAIL_HOST_PASSWORD = env("EMAIL_PASS")
 
-# AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID2")
-# AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY2")
+# AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID2")
+# AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY2")
 # AWS_STORAGE_BUCKET_NAME = "tollgator"
 
 AWS_S3_FILE_OVERWRITE = False
@@ -220,8 +221,8 @@ AWS_DEFAULT_ACL = None
 
 #
 
-PAYSTACK_SECRET_KEY = os.environ.get("PAYSTACK_SECRET_KEY")
-PAYSTACK_PUBLIC_KEY = os.environ.get("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_SECRET_KEY = env("PAYSTACK_SECRET_KEY")
+PAYSTACK_PUBLIC_KEY = env("PAYSTACK_PUBLIC_KEY")
 
 # Celery
 # ------------------------------------------------------------------------------
