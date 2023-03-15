@@ -8,10 +8,9 @@ from datetime import time
 # import dotenv
 
 # dotenv.read_dotenv(".env")
+from get_env import get_secret
 
-youtube_api_key = (
-    "AIzaSyDIbZsXlp1Z0XNFVwG7k6D2AO1NreQgHJs"  # os.environ.get("YOUTUBE_API_KEY")
-)
+youtube_api_key = get_secret("YOUTUBE_API_KEY")
 
 youtube = build("youtube", "v3", developerKey=youtube_api_key)
 

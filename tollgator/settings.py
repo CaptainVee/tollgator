@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-import environ
+from get_env import get_secret
 
-env = environ.Env()
+print(get_secret("SECRET_KEY"))
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,11 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = get_secret("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = get_secret("DEBUG")
 
-# ALLOWED_HOSTS = [env("ALLOWED_HOSTS")]
+# ALLOWED_HOSTS = [get_secret("ALLOWED_HOSTS")]
 ALLOWED_HOSTS = [
     "13.48.192.22",
     "http://127.0.0.1:8000/",
@@ -135,10 +137,10 @@ WSGI_APPLICATION = "tollgator.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": env("DATABASE_NAME"),
-        "USER": env("DATABASE_USER"),
-        "PASSWORD": env("DATABASE_PASSWORD"),
-        "HOST": env("DATABASE_HOST"),
+        "NAME": get_secret("DATABASE_NAME"),
+        "USER": get_secret("DATABASE_USER"),
+        "PASSWORD": get_secret("DATABASE_PASSWORD"),
+        "HOST": get_secret("DATABASE_HOST"),
         "PORT": "",
     }
 }
@@ -206,11 +208,11 @@ SITE_ID = 1
 # EMAIL_HOST = "smtp.gmail.com"
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = env("EMAIL_USER")
-# EMAIL_HOST_PASSWORD = env("EMAIL_PASS")
+# EMAIL_HOST_USER = get_secret("EMAIL_USER")
+# EMAIL_HOST_PASSWORD = get_secret("EMAIL_PASS")
 
-# AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID2")
-# AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY2")
+# AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID2")
+# AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY2")
 # AWS_STORAGE_BUCKET_NAME = "tollgator"
 
 AWS_S3_FILE_OVERWRITE = False
@@ -221,8 +223,8 @@ AWS_DEFAULT_ACL = None
 
 #
 
-PAYSTACK_SECRET_KEY = env("PAYSTACK_SECRET_KEY")
-PAYSTACK_PUBLIC_KEY = env("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_SECRET_KEY = get_secret("PAYSTACK_SECRET_KEY")
+PAYSTACK_PUBLIC_KEY = get_secret("PAYSTACK_PUBLIC_KEY")
 
 # Celery
 # ------------------------------------------------------------------------------
