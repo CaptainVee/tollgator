@@ -78,6 +78,9 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+secrets.json
+tollgatorkey.pem
+
 # IPython
 profile_default/
 ipython_config.py
@@ -143,4 +146,3 @@ cython_debug/
 
 dump.rdb
 celerybeat-schedule.db
-secrets.json

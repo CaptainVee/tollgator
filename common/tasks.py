@@ -7,7 +7,8 @@ from celery import shared_task
 @shared_task()
 def update_exchange_rates():
     """
-    This Celery task updates the exchange rate for each currency in the database using the get_conversion_rate utility function.
+    This Celery task updates the exchange rate for each currency in the database using the
+    get_conversion_rate utility function.
     """
     try:
         currencies = Currency.objects.all()

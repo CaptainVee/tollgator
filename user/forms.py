@@ -11,7 +11,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["name", "username"]
+        fields = ["name", "username", "currency"]
 
 
 # class StudentRegistrationForm(UserCreationForm):

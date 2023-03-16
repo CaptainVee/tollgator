@@ -1,17 +1,11 @@
 import os
-from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponse, Http404
-from django.urls import reverse
 from django.db import transaction
-from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from .models import Order, Cart, Transaction
 from courses.models import Course
-from common.utils import get_or_none, my_random_string, convert_currency_to_local
-from django.contrib.auth.decorators import login_required
+from common.utils import my_random_string, convert_currency_to_local
 from .payments import verify_transaction, initiate_paystack_url
 
 

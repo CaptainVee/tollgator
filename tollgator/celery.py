@@ -21,7 +21,7 @@ app.conf.beat_schedule = {
         # a periodic task to update exchange rates for all currencies
         "task": "common.tasks.update_exchange_rates",
         "schedule": crontab(hour="0, 8, 16", minute=0),
-        #'args': (2,)
+        # 'args': (2,)
     }
 }
 
