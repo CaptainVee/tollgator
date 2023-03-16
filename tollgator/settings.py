@@ -14,8 +14,6 @@ from pathlib import Path
 import os
 from get_env import get_secret
 
-print(get_secret("SECRET_KEY"))
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,15 +27,7 @@ SECRET_KEY = get_secret("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = get_secret("DEBUG")
 
-# ALLOWED_HOSTS = [get_secret("ALLOWED_HOSTS")]
-ALLOWED_HOSTS = [
-    "13.48.192.22",
-    "http://127.0.0.1:8000/",
-    "localhost",
-    "tollgator.com",
-    "tollgator.com",
-    "www.tollgator.com",
-]
+ALLOWED_HOSTS = [get_secret("ALLOWED_HOSTS")]
 
 
 # Application definition
