@@ -10,7 +10,7 @@
 					<div class="card bg-info">
 						<div class="card-body">
 							<h5 class="card-title">Total Revenue</h5>
-							<p class="card-text">${{ total_revenue }}</p>
+							<p class="card-text">${{ total_revenue|floatformat:"-2g" }}</p>
 							<!-- <strong><small class="text-success">$300</small> this month</strong> -->
 						</div>
 					</div>
@@ -64,7 +64,8 @@
 						</div>
 						<ul>
 							<li>enrolled students - <span>{{course.get_enrollment_count}}</span></li>
-							<li>Total revenue - <span class="badge bg-success"> ${{ course.get_total_revenue }}</span>
+							<li>Total revenue - <span class="badge bg-success">
+									${{ course.get_total_revenue|floatformat:"-2g" }}</span>
 							</li>
 							<li>last updated - <span>{{ course.updated_at | date:'F d, Y' }}</span></li>
 						</ul>

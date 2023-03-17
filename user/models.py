@@ -30,7 +30,9 @@ class User(AbstractUser):
 
     @property
     def get_full_name(self):
-        return self.name
+        if self.name:
+            return self.name
+        return self.username
 
     @property
     def courses(self):

@@ -46,7 +46,7 @@
 										<h3 class="title">{{ course.title }}</h3>
 										<div class="instructor">
 											<img src="{% static 'img/instructor/1.png' %}" alt="instructor img">
-											<span class="instuctor-name">{{ course.author.name }}</span>
+											<span class="instuctor-name">{{ course.author.get_full_name }}</span>
 										</div>
 										<div class="rating">
 											<span class="average-rating">({{ course.get_average_rating }})</span>

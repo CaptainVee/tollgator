@@ -47,30 +47,17 @@
             </button>
             <ul class="menu">
               <li class="menu-item">
-                <a href="{% url 'course-home' %}">Home</a>
-              </li>
-              <li class="menu-item">
                 <a href="{% url 'course-home' %}">Courses</a>
               </li>
+
+
+
+              {% if user.is_authenticated %}
+              {% if not user.is_instructor %}
               <li class="menu-item">
                 <a href="{% url 'become-instructor' %}">become an Instructor</a>
               </li>
-              <li class="menu-item">
-                <div class="dropdown">
-                  <a class="btn border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    Create
-                  </a>
-
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'course-create-playlist' %}">Playlist</a></li>
-                    <li><a class="dropdown-item" href="#">Video Link</a></li>
-                  </ul>
-                </div>
-
-              </li>
-
-              {% if user.is_authenticated %}
+              {% endif %}
               <li class="menu-item">
                 <a href="{% url 'dashboard' %}">My Courses</a>
               </li>

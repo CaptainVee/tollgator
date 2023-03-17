@@ -161,9 +161,10 @@ def withdraw_funds(request):
     context = {
         "instructor": instructor,
         "withdrawals": withdrawals,
+        "bank_account": bank_account,
         "form": form,
     }
-    return render(request, "user/withdraw.html", context)
+    return render(request, "instructor/withdraw.html", context)
 
 
 # class InstructorRegisterView(CreateView):

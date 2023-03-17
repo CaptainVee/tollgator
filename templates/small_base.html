@@ -49,7 +49,18 @@
                     <ul class="menu">
                         {% if user.is_authenticated %}
                         <li class="menu-item">
-                            <a href="{% url 'dashboard' %}">My Courses</a>
+                            <div class="dropdown">
+                                <a class="btn border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Create
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'course-create-playlist' %}">Playlist</a>
+                                    </li>
+                                    <!-- <li><a class="dropdown-item" href="#">Video Link</a></li> -->
+                                </ul>
+                            </div>
                         </li>
                         <li class="menu-item menu-item-has-children">
                             <a class="js-toggle-sub-menu" href="#">
