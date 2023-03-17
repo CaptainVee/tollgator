@@ -104,7 +104,7 @@ def verify(request, transaction_id):
             for order in transaction.cart.orders.all().select_related("course__author"):
                 order.ordered = True
                 order.save()
-                instructor = order.course.author
+                instructor = order.course.author.instructor
                 instructor.account_balance += order.course.price
                 instructor.save()
                 request.user.user_dashboard.courses.add(order.course)
