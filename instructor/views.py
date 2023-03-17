@@ -131,11 +131,12 @@ def bank_account_edit_form(request):
 
 @login_required
 def withdraw_funds(request):
+    instructor = request.user.instructor
     try:
-        bank_account = BankAccount.objects.get(instructor=request.user.instructor)
+        bank_account = BankAccount.objects.get(instructor=instructor)
     except BankAccount.DoesNotExist:
         bank_account = {}
-    withdrawals = Withdraw.objects.filter(instructor=request.user.instructor)
+    withdrawals = Withdraw.objects.filter(instructor=instructor)
 
     if request.method == "POST":
         form = WithdrawalForm(request.POST)
@@ -143,11 +144,10 @@ def withdraw_funds(request):
             withdrawal_amount = int(form.cleaned_data["amount"])
             if withdrawal_amount < 50:
                 messages.warning(request, "Please enter a value greater than 49 USD")
-            elif withdrawal_amount > bank_account.account_balance:
+            elif withdrawal_amount > instructor.account_balance:
                 messages.warning(request, "Insuficient Funds")
             else:
-                bank_account.account_balance -= withdrawal_amount
-                bank_account.save()
+                instructor.account_balance -= withdrawal_amount
                 withdrawal = form.save(commit=False)
                 withdrawal.instructor = request.user.instructor
                 withdrawal.save()
@@ -159,7 +159,7 @@ def withdraw_funds(request):
     else:
         form = WithdrawalForm()
     context = {
-        "bank_account": bank_account,
+        "instructor": instructor,
         "withdrawals": withdrawals,
         "form": form,
     }

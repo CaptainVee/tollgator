@@ -15,6 +15,7 @@ class Instructor(BaseModel):
     skills = models.CharField(max_length=100)
     experience = models.CharField(max_length=100)
     accept_terms_and_conditions = models.BooleanField(default=False)
+    account_balance = models.PositiveIntegerField(default=0, blank=False, null=False)
 
     def __str__(self):
         return self.user.username
@@ -28,7 +29,6 @@ class BankAccount(BaseModel):
     bank_name = models.CharField(max_length=150, blank=True, null=True)
     account_number = models.CharField(max_length=50, blank=True, null=True)
     account_name = models.CharField(max_length=50, blank=True, null=True)
-    account_balance = models.PositiveIntegerField(default=0, blank=False, null=False)
 
     def __str__(self):
         return f"{self.bank_name}-{self.account_number}"

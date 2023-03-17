@@ -104,10 +104,9 @@ def verify(request, transaction_id):
             for order in transaction.cart.orders.all().select_related("course__author"):
                 order.ordered = True
                 order.save()
-                user = order.course.author
-                account = user.instructor.account
-                account.account_balance += order.course.price
-                account.save()
+                instructor = order.course.author
+                instructor.account_balance += order.course.price
+                instructor.save()
                 request.user.user_dashboard.courses.add(order.course)
 
             messages.success(request, f"Your transaction was a {message}")
