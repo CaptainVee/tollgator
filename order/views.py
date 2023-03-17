@@ -105,7 +105,6 @@ def verify(request, transaction_id):
                 order.ordered = True
                 order.save()
                 user = order.course.author
-                breakpoint()
                 account = user.instructor.account
                 account.account_balance += order.course.price
                 account.save()
