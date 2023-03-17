@@ -32,7 +32,7 @@ def yt_playlist_create_course(self, user_id, playlist_id):
                 author=user,
                 title=playlist_details["title"],
                 playlist=playlist_id,
-                brief_description=playlist_details["description"],
+                content=playlist_details["description"],
                 thumbnail_url=playlist_details["thumbnails"]["standard"]["url"],
                 # youtube_channel=playlist_details["channelTitle"],
             )
