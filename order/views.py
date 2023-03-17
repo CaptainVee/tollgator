@@ -1,4 +1,3 @@
-import os
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import render, get_object_or_404, redirect
@@ -7,7 +6,7 @@ from .models import Order, Cart, Transaction
 from courses.models import Course
 from common.utils import my_random_string, convert_currency_to_local
 from .payments import verify_transaction, initiate_paystack_url
-
+from get_env import get_secret
 
 # Create your views here.
 
@@ -62,7 +61,7 @@ def checkout(request, cart_id):
             "total_price": cart.total_amount,
         },
     )
-    server_url = os.environ.get("SERVER_URL")  # eg localhost:8000
+    server_url = get_secret("SERVER_URL")  # eg localhost:8000
     email = cart.user.email
     amount = convert_currency_to_local(
         user_currency=cart.user.currency,
@@ -71,7 +70,6 @@ def checkout(request, cart_id):
     )
     currency = cart.user.currency.code
     callback_url = f"{server_url}/order/verify/transaction/{transaction.id}"
-    print(cart)
     response = initiate_paystack_url(
         email=email,
         amount=int(amount * 100),  # convert to lowest unit and integer
@@ -79,10 +77,9 @@ def checkout(request, cart_id):
         currency=currency,
         callback_url=callback_url,
     )
-    print(response)
     try:
         paystack_url = response["data"]["authorization_url"]
-    except:
+    except Exception:
         messages.warning(request, f"Your transaction {response['message']}")
         return redirect("enroll", cart.get_first_course.id)
     return redirect(paystack_url)
@@ -96,7 +93,7 @@ def verify(request, transaction_id):
     )
     response = verify_transaction(transaction_ref=transaction_ref)
 
-    if response["status"] == True:
+    if response["status"] is True:
         status = response["data"]["status"]
         message = response["data"]["gateway_response"]
         if status == "success":
@@ -119,7 +116,7 @@ def verify(request, transaction_id):
             transaction.transaction_description = message
             transaction.save()
             messages.error(request, f"Your transaction {message}")
-    elif response["status"] == False:
+    elif response["status"] is False:
         transaction.transaction_status = "Payment Error"
         transaction.transaction_description = (
             "something went wrong with the payment, contact custumer support"
