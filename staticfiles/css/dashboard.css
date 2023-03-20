@@ -12,7 +12,7 @@ body {
    */
   
   .sidebar {
-    position: fixed;
+    /* position: fixed; */
     top: 30px;
     bottom: 0;
     left: 0;
@@ -86,4 +86,29 @@ body {
     border-color: transparent;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
   }
+
+  #cover-top {
+    background-image: url("../img/04.png") ; 
+    background-color:#932929ab ;
+    background-size:cover;
+    height: 9rem;
+
+  }
   
+.avatar {
+    height: 5rem;
+    width: 5rem;
+    position: relative;
+    display: inline-block !important;
+}
+
+.col-12 .card {
+  border: none;
+}
+
+@media (min-width: 768px) {
+  .avatar-xxl {
+      width: 8rem;
+      height: 8rem;
+  }
+}

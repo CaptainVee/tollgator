@@ -29,9 +29,11 @@
 </head>
 
 <body>
+
     <!-- header start -->
     <header class="header sticky-top" style="background-color: #fdf3f3;">
         <div class="container">
+
             <div class="header-main d-flex justify-content-between align-items-center">
                 <div class="header-logo">
                     <a href="{% url 'course-home' %}"><span>Toll</span>gator</a>
@@ -48,7 +50,7 @@
                     </button>
                     <ul class="menu">
                         {% if user.is_authenticated %}
-                        <li class="menu-item">
+                        <!-- <li class="menu-item">
                             <div class="dropdown">
                                 <a class="btn border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="false">
@@ -58,10 +60,10 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="{% url 'course-create-playlist' %}">Playlist</a>
                                     </li>
-                                    <!-- <li><a class="dropdown-item" href="#">Video Link</a></li> -->
+                                    <li><a class="dropdown-item" href="#">Video Link</a></li>
                                 </ul>
                             </div>
-                        </li>
+                        </li> -->
                         <li class="menu-item menu-item-has-children">
                             <a class="js-toggle-sub-menu" href="#">
                                 Profile <i class="fas fa-chevron-down"></i>
@@ -97,78 +99,144 @@
         </div>
     </header>
     <!-- header end -->
-
-    <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                <div class="position-sticky pt-3 sidebar-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'instructor-dashboard' %}">
-                                <span data-feather="home" class="align-text-bottom"></span>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'order-list' %}">
-                                <span data-feather="file" class="align-text-bottom"></span>
-                                Orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="users" class="align-text-bottom"></span>
-                                Customers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="layers" class="align-text-bottom"></span>
-                                Chat
-                            </a>
-                        </li>
-                    </ul>
-
-                    <h6
-                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
-                        <span>Withdrawals</span>
-                        <a class="link-secondary" href="#" aria-label="Add a new report">
-                            <span data-feather="plus-circle" class="align-text-bottom"></span>
-                        </a>
-                    </h6>
-                    <ul class="nav flex-column mb-2">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'bank-account-details' %}">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Bank Details
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'withdraw-funds' %}">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Withdraw Funds
-                            </a>
-                        </li>
-                    </ul>
+    <div class="container" style="max-width: 1320px;">
+        <section>
+            <div class="mb-4">
+                <div id="cover-top" class="card-header">
+                    <!-- <img src="{% static 'img/picker.png' %}" alt="" height="100rem"> -->
                 </div>
-            </nav>
-
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                {% if messages %}
-                <div class="messages" hx-trigger="load delay:3s" hx-get="{% url 'clear' %}">
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
+                <div class="row d-flex justify-content-between">
+                    <div class="col-auto mt-4 mt-md-0">
+                        <div class="avatar avatar-xxl mt-n3">
+                            <img src="{% static 'img/instructor/1.png' %}" alt=""
+                                class="avatar-img rounded-circle border border-white border-3 shadow">
+                        </div>
+                    </div>
+                    <div class="col d-md-flex justify-content-between align-items-center mt-4">
+                        <div class="">
+                            <h1 class="my-1 fs-4">{{ user.get_full_name }}</h1>
+                            <i class="bi bi-patch-check-fill text-info small"></i>
+                            <p>{{user}}</p>
+                        </div>
+                        <div class="d-flex align-items-center mt-2 mt-md-0">
+                            <a href="{% url 'course-create-playlist' %}" class="btn btn-theme mb-0">Create
+                                Course</a>
+                        </div>
                     </div>
                 </div>
+                <hr class="d-xl-none">
+            </div>
+            <!-- <div class="container mb-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card bg-transparent card-body p-0">
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-auto mt-4 mt-md-0">
+                                <div class="avatar avatar-xxl mt-n3">
+                                    <img src="{% static 'img/01.jpg' %}" alt=""
+                                        class="avatar-img rounded-circle border border-white border-3 shadow">
+                                </div>
+                            </div>
+                            <div class="col d-md-flex justify-content-between align-items-center mt-4">
+                                <div class="">
+                                    <h1 class="my-1 fs-4">{{ user.get_full_name }}</h1>
+                                    <i class="bi bi-patch-check-fill text-info small"></i>
+                                    <ul class="list-inline mb-0">
+                                        <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0">
+                                            <i class="fas fa-star text-warning me-2"></i> 4.5/5
+                                        </li>
+                                        <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0">
+                                            <i class="fas fa-user-graduate text-orange me-2"></i> 12k Enrolled
+                                            Students
+                                        </li>
+                                        <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0"><i
+                                                class="fas fa-book text-purple me-2"></i> {{ user.courses.count }}
+                                            Courses</li>
+                                    </ul>
+                                </div>
 
-                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="d-xl-none">
+                    <div class="col-12 col-xl-3 d-flex justify-content-between align-items-center"></div>
+                </div>
+            </div>
+        </div> -->
+        </section>
 
-                {% endif %}
-                <br />
+        <div class="container-fluid">
+            <div class="row">
+                <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block bg-light sidebar collapse">
+                    <div class="position-sticky pt-3 sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="{% url 'instructor-dashboard' %}">
+                                    <span data-feather="home" class="align-text-bottom"></span>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'order-list' %}">
+                                    <span data-feather="file" class="align-text-bottom"></span>
+                                    Orders
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <span data-feather="users" class="align-text-bottom"></span>
+                                    Customers
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <span data-feather="layers" class="align-text-bottom"></span>
+                                    Chat
+                                </a>
+                            </li>
+                        </ul>
 
-                {% block content %}{% endblock %}
-            </main>
+                        <h6
+                            class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                            <span>Withdrawals</span>
+                            <a class="link-secondary" href="#" aria-label="Add a new report">
+                                <span data-feather="plus-circle" class="align-text-bottom"></span>
+                            </a>
+                        </h6>
+                        <ul class="nav flex-column mb-2">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'bank-account-details' %}">
+                                    <span data-feather="file-text" class="align-text-bottom"></span>
+                                    Bank Details
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'withdraw-funds' %}">
+                                    <span data-feather="file-text" class="align-text-bottom"></span>
+                                    Withdraw Funds
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <main class="col-md-9 ms-sm-auto col-lg-9 px-md-4">
+                    {% if messages %}
+                    <div class="messages" hx-trigger="load delay:3s" hx-get="{% url 'clear' %}">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+                    {% endif %}
+                    <br />
+
+                    {% block content %}{% endblock %}
+                </main>
+            </div>
         </div>
     </div>
 
