@@ -38,9 +38,7 @@
                 <div class="header-logo">
                     <a href="{% url 'course-home' %}"><span>Toll</span>gator</a>
                 </div>
-                <button type="button" class="header-hamburger-btn" data-bs-toggle="collapse"
-                    data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                <button type="button" class="header-hamburger-btn js-header-menu-toggler">
                     <span></span>
                 </button>
                 <div class="header-backdrop js-header-backdrop"></div>
@@ -125,44 +123,15 @@
                     </div>
                 </div>
                 <hr class="d-xl-none">
-            </div>
-            <!-- <div class="container mb-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card bg-transparent card-body p-0">
-                        <div class="row d-flex justify-content-between">
-                            <div class="col-auto mt-4 mt-md-0">
-                                <div class="avatar avatar-xxl mt-n3">
-                                    <img src="{% static 'img/01.jpg' %}" alt=""
-                                        class="avatar-img rounded-circle border border-white border-3 shadow">
-                                </div>
-                            </div>
-                            <div class="col d-md-flex justify-content-between align-items-center mt-4">
-                                <div class="">
-                                    <h1 class="my-1 fs-4">{{ user.get_full_name }}</h1>
-                                    <i class="bi bi-patch-check-fill text-info small"></i>
-                                    <ul class="list-inline mb-0">
-                                        <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0">
-                                            <i class="fas fa-star text-warning me-2"></i> 4.5/5
-                                        </li>
-                                        <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0">
-                                            <i class="fas fa-user-graduate text-orange me-2"></i> 12k Enrolled
-                                            Students
-                                        </li>
-                                        <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0"><i
-                                                class="fas fa-book text-purple me-2"></i> {{ user.courses.count }}
-                                            Courses</li>
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="d-xl-none">
-                    <div class="col-12 col-xl-3 d-flex justify-content-between align-items-center"></div>
+                <div class="col-12 col-xl-3 d-flex justify-content-between align-items-center">
+                    <a href="#" class="h6 mb-0 fw-bold d-xl-none">Menu</a>
+                    <button type="button" class="d-xl-none header-hamburger-btn" data-bs-toggle="collapse"
+                        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span></span>
+                    </button>
                 </div>
             </div>
-        </div> -->
         </section>
 
         <div class="container-fluid">

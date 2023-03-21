@@ -397,7 +397,7 @@ h3 {
 }
 
 .courses-item .img-box img {
-    width: 250px;
+    /* width: 250px; */
     /* width: 100%; */
     border-radius: 5px;
 }
@@ -906,7 +906,6 @@ h3 {
 
 .playlist-form-box {
     height: 70vh;
-    padding: 30px;
 }
 
 .playlist-form p {
@@ -916,7 +915,6 @@ h3 {
 }
 
 .playlist-form input {
-    width: 70%;
     height: 68px;
     border-top: 0;
     border-left: 0;
