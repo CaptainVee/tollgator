@@ -18,6 +18,7 @@ from order.models import Order
 from common.utils import get_or_none
 from .forms import LessonForm, VideoForm
 from .tasks import yt_playlist_create_course
+from .utils import extract_playlist_link
 
 
 # from pypaystack import Transaction, Customer, Plan
@@ -101,7 +102,8 @@ def course_create_playlist_view(request):
     context = {}
     if request.method == "POST":
         # TODO ensure users does not sumbit empty forms
-        playlist_id = request.POST.get("playlist_id")
+        playlist_link = request.POST.get("playlist_id")
+        playlist_id = extract_playlist_link(playlist_link)
         result = yt_playlist_create_course.delay(
             user_id=request.user.id, playlist_id=playlist_id
         )

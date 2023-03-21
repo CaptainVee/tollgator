@@ -3,11 +3,6 @@ from django.core.mail import EmailMessage
 import cv2
 import re
 from datetime import time
-
-# import os
-# import dotenv
-
-# dotenv.read_dotenv(".env")
 from get_env import get_secret
 
 youtube_api_key = get_secret("YOUTUBE_API_KEY")
@@ -17,6 +12,17 @@ youtube = build("youtube", "v3", developerKey=youtube_api_key)
 hours_pattern = re.compile(r"(\d+)H")
 minutes_pattern = re.compile(r"(\d+)M")
 seconds_pattern = re.compile(r"(\d+)S")
+
+
+def extract_playlist_link(link):
+    """Extracts the playlist ID from a YouTube playlist link."""
+    # Use a regular expression to find the playlist ID
+    pattern = r"(?<=list=)[^&]+"
+    match = re.search(pattern, link)
+    if match:
+        return match.group(0)
+    else:
+        return None
 
 
 def yt_playlist_details(playlist_id):

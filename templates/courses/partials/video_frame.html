@@ -1,13 +1,12 @@
-{% load static %}
 <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
 <div class="video-container" style="height: inherit;">
 
     <iframe hx-get="{% url 'get-video-sidebar' last_video_watched.course.id %}" hx-trigger="load" hx-swap="innerHTML"
         hx-target="#course-curriculum" id="player" width="870" height="500"
-        src="https://www.youtube-nocookie.com/embed/{{ last_video_watched.video_id }}?enablejsapi=1&start={{ start }}&controls=0&modestbranding=1"
+        src="https://www.youtube-nocookie.com/embed/{{ last_video_watched.video_id }}?enablejsapi=1&start={{ start }}&controls=1&modestbranding=0"
         frameborder="0" allowfullscreen>
     </iframe>
-    <div class="controls">
+    <!-- <div class="controls">
 
         <div id="progress-bar-containers">
             <div id="progress-bars"></div>
@@ -18,7 +17,7 @@
             <button id="pause"><i class="fas fa-pause"></i></button>
             <button id="next"><i class="fas fa-step-forward"></i></button>
         </div>
-    </div>
+    </div> -->
 
 </div>
 <script>
