@@ -6,13 +6,32 @@ from django.views.generic import ListView
 from django.contrib import messages
 from django.http import QueryDict
 from django.db.models import Prefetch
-from .models import Withdraw, Instructor, BankAccount
+from .models import Withdraw, BankAccount
 from .forms import BankAcountForm, WithdrawalForm, BecomeInstructorForm
 from courses.models import Course, CourseRating
 from order.models import Order
+from django.http import Http404
+from functools import wraps
 
 
-# Create your views here.
+def instructor_required(view_func):
+    # Define a function to check if the user is an instructor
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if (
+            request.user.is_authenticated
+            and hasattr(request.user, "instructor")
+            and request.user.instructor is not None
+        ):
+            # User is an instructor, proceed to the view
+            return view_func(request, *args, **kwargs)
+        else:
+            # User is not an instructor, redirect to a different view or show an error message
+            raise Http404("The resource you requested does not exist")
+            # return redirect("course-home")
+            # You can change this to a different view or a custom error page
+
+    return wrapper
 
 
 @login_required
@@ -44,7 +63,9 @@ def become_instructor(request):
     return render(request, "instructor/become_instructor_form.html", {"form": form})
 
 
+# Use the user_passes_test decorator to restrict access to the view
 @login_required
+@instructor_required
 def instructor_dashboard(request):
 
     courses = (
@@ -106,6 +127,7 @@ class OrderListView(LoginRequiredMixin, ListView):
 
 
 @login_required
+@instructor_required
 def bank_account_details(request):
     bank_account = BankAccount.objects.get(instructor=request.user.instructor)
     context = {"bank_account": bank_account}
@@ -122,6 +144,7 @@ def bank_account_details(request):
 
 
 @login_required
+@instructor_required
 def bank_account_edit_form(request):
     bank_account = BankAccount.objects.get(instructor=request.user.instructor)
     form = BankAcountForm(instance=bank_account)
@@ -130,6 +153,7 @@ def bank_account_edit_form(request):
 
 
 @login_required
+@instructor_required
 def withdraw_funds(request):
     instructor = request.user.instructor
     try:
@@ -153,7 +177,8 @@ def withdraw_funds(request):
                 withdrawal.save()
                 messages.success(
                     request,
-                    "Your request has been initiated, please note it may take up to 24hrs for the transaction to be fufilled.",
+                    """Your request has been initiated, please note it may take up to 24hrs for the
+                    transaction to be fufilled.""",
                 )
             return redirect("withdraw-funds")
     else:
@@ -165,18 +190,3 @@ def withdraw_funds(request):
         "form": form,
     }
     return render(request, "instructor/withdraw.html", context)
-
-
-# class InstructorRegisterView(CreateView):
-#     model = User
-#     form_class = InstuctorRegistrationForm
-#     template_name = "user/register.html"
-
-#     def get_context_data(self, **kwargs):
-#         kwargs["user_type"] = "instructor"
-#         return super().get_context_data(**kwargs)
-
-#     def form_valid(self, form):
-#         form.instance.author = self.request.user
-#         form.save()
-#         return redirect("login")
