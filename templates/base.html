@@ -11,6 +11,7 @@
 
 
   <!-- bootstrap css and font awesome  -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}" />
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
   <link rel="icon" type="image/x-icon" href="{% static 'favicon.png' %}">
@@ -55,11 +56,11 @@
               {% if user.is_authenticated %}
               {% if not user.is_instructor %}
               <li class="menu-item">
-                <a href="{% url 'become-instructor' %}">become an Instructor</a>
+                <a href="{% url 'instructor-page' %}">become an Instructor</a>
               </li>
               {% endif %}
               <li class="menu-item">
-                <a href="{% url 'dashboard' %}">My Courses</a>
+                <a href="{% url 'dashboard' %}">My Learnings</a>
               </li>
               <li class="menu-item menu-item-has-children">
                 <a class="js-toggle-sub-menu" href="#">
@@ -147,7 +148,7 @@
               <h3>More</h3>
               <ul>
                 <li><a href="#">affiliates</a></li>
-                <li><a href="{% url 'become-instructor' %}">become a course creator</a></li>
+                <li><a href="{% url 'instructor-page' %}">become a course creator</a></li>
                 <li><a href="#">training webnairs</a></li>
                 <li><a href="#">free personality test</a></li>
                 <li><a href="#">help and support</a></li>
@@ -197,6 +198,7 @@
     });
   </script>
   <!-- javascript -->
+
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>

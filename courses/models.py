@@ -2,9 +2,10 @@ from autoslug import AutoSlugField
 from django.db import models
 from django.urls import reverse
 from django.db.models import Avg, Sum
+from django_quill.fields import QuillField
 
 # from django_countries.fields import CountryField
-# from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
@@ -21,13 +22,13 @@ class Course(BaseModel):
     playlist = models.CharField(max_length=100, blank=True, null=True)
     title = models.CharField(max_length=150, unique=True)
     brief_description = models.CharField(max_length=500, blank=True, null=True)
-    content = models.TextField(blank=True, null=True)
+    content = QuillField(blank=True, null=True)
     slug = AutoSlugField(populate_from="title", always_update=False, unique=True)
-    # tags = ArrayField(
-    #     models.CharField(max_length=200, default="", blank=True),
-    #     blank=True,
-    #     default=list,
-    # ) #Can be used only on postgress database
+    tags = ArrayField(
+        models.CharField(max_length=200, default="", blank=True),
+        blank=True,
+        default=list,
+    )
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True)
     thumbnail_url = models.URLField(blank=True, null=True)
     total_watch_time = models.PositiveIntegerField(null=True, default=0)

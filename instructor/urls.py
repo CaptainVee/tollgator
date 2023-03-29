@@ -6,6 +6,7 @@ from .views import (
     bank_account_edit_form,
     become_instructor,
     OrderListView,
+    instructor_page,
 )
 
 
@@ -31,6 +32,11 @@ urlpatterns = [
         "become_instructor/",
         become_instructor,
         name="become-instructor",
+    ),
+    path(
+        "teach/",
+        instructor_page,
+        name="instructor-page",
     ),
 ]
 

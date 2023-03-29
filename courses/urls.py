@@ -40,7 +40,7 @@ urlpatterns = [
         CourseDetailView.as_view(),
         name="course-detail",
     ),
-    path("course/<int:pk>/update/", CourseUpdateView.as_view(), name="course-update"),
+    path("course/<int:pk>/update/", CourseUpdateView, name="course-update"),
     path("course/<int:pk>/delete", CourseDeleteView.as_view(), name="course-delete"),
     path("about/", about, name="courses-about"),
     path(

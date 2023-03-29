@@ -34,6 +34,10 @@ def instructor_required(view_func):
     return wrapper
 
 
+def instructor_page(request):
+    return render(request, "instructor/become_instructor.html", {})
+
+
 @login_required
 def become_instructor(request):
     if request.method == "POST":

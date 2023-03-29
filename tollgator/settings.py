@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
     "debug_toolbar",
     "bootstrap5",
     "pytest_django",
+    "django_quill",
 ]
 
 LOCAL_APPS = [
@@ -176,6 +177,32 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 # CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+QUILL_CONFIGS = {
+    "default": {
+        "theme": "snow",
+        "placeholder": "Compose an epic...co",
+        "modules": {
+            "syntax": True,
+            "toolbar": [
+                [
+                    {"font": []},
+                    {"header": []},
+                    {"align": []},
+                    "bold",
+                    "italic",
+                    "underline",
+                    "strike",
+                    "blockquote",
+                    {"color": []},
+                    {"background": []},
+                ],
+                ["code-block", "link"],
+                ["clean"],
+            ],
+        },
+    }
+}
 
 LOGIN_REDIRECT_URL = "course-home"
 LOGIN_URL = "account_login"

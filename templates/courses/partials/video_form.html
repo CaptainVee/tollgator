@@ -1,11 +1,10 @@
 {% load crispy_forms_tags %}
-	<div class= ''>
-		<form action="" enctype="multipart/form-data" hx-post="{{ form_url }}" hx-swap="outerHTML">
-			{% csrf_token %}
-				
-				{{ form|crispy }}
+<div class=''>
+	<form action="" enctype="multipart/form-data" hx-post="{{ form_url }}" hx-swap="outerHTML">
+		{% csrf_token %}
 
-			<button class= 'btn- btn-outline-info' type="submit">Add</button>
-		</form>	
-	</div>
+		{{ form|crispy }}
 
+		<button class='btn btn-outline-info' type="submit">submit</button>
+	</form>
+</div>

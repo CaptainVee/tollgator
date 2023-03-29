@@ -3,31 +3,61 @@
 
 {% block content %}
 <div class="container">
-	<h1>lesson detail for {{ lesson_qs.first.course }}</h1>
-	{% for lesson in lesson_qs %}
-	<div id="lesson-list-{{ lesson.id }}" class="card mb-4 p-3">
 
-		<div id="lesson-details-{{ lesson.pk }}">
-			{% include 'courses/partials/lesson_list.html' %}
+	<!-- course curriculum start -->
+	<div class="tab-pane fade show active" id="course-curriculum" role="tabpanel"
+		aria-labelledby="course-curriculum-tab">
+		<div class="course-curriculum box">
+			<h3 class="text-capitalize mb-4">course curriculum</h3>
+			<!-- accordion start -->
+			<div class="accordion" id="accordion">
+				<!-- accordion item start -->
+				{% for lesson in lesson_qs %}
+				<div class="mb-4">
+					<div id="lesson-list-{{ lesson.id }}" class="card p-3">
+
+						<div id="lesson-details-{{ lesson.pk }}">
+							{% include 'courses/partials/lesson_list.html' %}
+						</div>
+					</div>
+					<div class="accordion-item" id="lesson-list-{{ lesson.id }}">
+						<h2 class="accordion-header" id="heading-1">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse"
+								data-bs-target="#collapse-{{ lesson.pk }}" aria-expanded="true"
+								aria-controls="collapse-{{ lesson.pk }}">
+								{{ lesson.title }}
+								<span>
+									{{ lesson.videos.count }} videos | {{ lesson.total_video_seconds }}
+								</span>
+							</button>
+						</h2>
+						<div id="collapse-{{ lesson.pk }}" class="accordion-collapse collapse"
+							aria-labelledby="heading-1" data-bs-parent="#accordionExample">
+							<div class="accordion-body">
+
+								{% for video in lesson.videos %}
+								{% include 'courses/partials/video_list.html' %}
+								{% endfor %}
+								<div>
+									<button class="btn btn-theme" hx-get="{% url 'video-create' lesson_id=lesson.id %}"
+										hx-swap="beforebegin" hx-trigger="click">
+										Add Video</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+				<!-- accordion item end -->
+
+			</div>
+			<!-- accordion end -->
+			<button class="btn btn-theme mt-5" hx-get="{% url 'lesson-new' course_id=lesson_qs.first.course.id %}"
+				hx-swap="beforebegin" hx-trigger="click">
+				New lesson
+			</button>
 		</div>
-
-		<ol>
-			{% for video in lesson.videos %}
-			{% include 'courses/partials/video_list.html' %}
-			{% endfor %}
-		</ol>
-		<div>
-			<button class="btn btn-theme" hx-get="{% url 'video-create' lesson_id=lesson.id %}" hx-swap="beforebegin"
-				hx-trigger="click">
-				New Video</button>
-		</div>
-
 	</div>
-	{% endfor %}
-
-	<button class="btn btn-theme btn-block" hx-get="{% url 'lesson-new' course_id=lesson_qs.first.course.id %}"
-		hx-swap="beforebegin" hx-trigger="click">
-		New lesson
-	</button>
+	<!-- courskjskjd end -->
 </div>
 {% endblock content %}

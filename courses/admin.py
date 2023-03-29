@@ -12,7 +12,12 @@ from .models import (
 
 # Register your models here.
 
-admin.site.register(Course)
+
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(CourseRating)
 admin.site.register(Lesson)
 admin.site.register(Video)

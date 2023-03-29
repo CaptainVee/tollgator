@@ -3,20 +3,20 @@ from django.http import HttpResponse, Http404
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic import (
     CreateView,
-    UpdateView,
     DeleteView,
     View,
 )
+from django.contrib import messages
 from celery.result import AsyncResult
 from .models import Course, Lesson, Video, WatchTime
 from order.models import Order
 from common.utils import get_or_none
-from .forms import LessonForm, VideoForm
+from .forms import CourseForm, LessonForm, VideoForm
 from .tasks import yt_playlist_create_course
 from .utils import extract_playlist_link
 
@@ -128,20 +128,17 @@ def course_create_playlist_view(request):
 #     Video.objects.bulk_create(bulk_list, batch_size=999)
 
 
-class CourseUpdateView(LoginRequiredMixin, UpdateView):
-    model = Course
-    fields = ["title", "content", "thumbnail", "price", "is_private"]
+def CourseUpdateView(request, pk):
+    course = Course.objects.get(pk=pk)
+    form = CourseForm(request.POST or None, instance=course)
 
-    def form_valid(self, form):
-        form.instance.author = get_object_or_404(User, email=self.request.user.email)
-        form.save()
-        return super().form_valid(form)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Course updated successfully.")
+            return redirect("course-update", pk=course.pk)
 
-    def test_func(self):
-        course = self.get_object()
-        if self.request.user == course.author:
-            return True
-        return False
+    return render(request, "courses/course_form.html", {"form": form})
 
 
 class CourseDeleteView(LoginRequiredMixin, DeleteView):
@@ -317,7 +314,7 @@ def video_create_update(request, lesson_id=None, video_id=None):
             new_video = form.save(commit=False)
             if video is None:
                 new_video.lesson = lesson
-                new_video.coursev = lesson.course
+                new_video.course = lesson.course
             new_video.save()
             context["video"] = new_video
 
