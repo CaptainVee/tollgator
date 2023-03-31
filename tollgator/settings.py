@@ -28,7 +28,7 @@ SECRET_KEY = get_secret("SECRET_KEY")
 DEBUG = get_secret("DEBUG")
 
 ALLOWED_HOSTS = str(get_secret("ALLOWED_HOSTS")).split()
-
+print(ALLOWED_HOSTS)
 
 # Application definition
 DJANGO_APPS = [
@@ -215,6 +215,10 @@ AUTH_USER_MODEL = "user.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SITE_ID = 1
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_HOST = "smtp.gmail.com"
