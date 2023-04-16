@@ -179,19 +179,19 @@ MEDIA_URL = "/media/"
 
 QUILL_CONFIGS = {
     "default": {
-        "theme": "bubble",
+        "theme": "snow",
         "placeholder": "Compose an epic...co",
-        "image"
+        # "image"
         "modules": {
             "syntax": True,
             "toolbar": [
                 [
-                    {"font": [False]},
+                    {"font": []},
                     {"header": []},
                     {"align": []},
                     "bold",
-                    # "italic",
-                    # "underline",
+                    "italic",
+                    "underline",
                     "strike",
                     "blockquote",
                     {"color": []},
@@ -235,8 +235,6 @@ AWS_DEFAULT_ACL = None
 
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-
-#
 
 PAYSTACK_SECRET_KEY = get_secret("PAYSTACK_SECRET_KEY")
 PAYSTACK_PUBLIC_KEY = get_secret("PAYSTACK_PUBLIC_KEY")
