@@ -75,3 +75,18 @@ def yt_playlist_create_course(self, user_id, playlist_id):
 
         except Exception as e:
             return f"Task failed at trying to create course object because of: {str(e)}"
+
+
+# def bulk_created(big_list, lesson, video):
+#     bulk_list = []
+
+#     for a in big_list:
+#         bulk_list.append(
+#             Video(
+#                 lesson=lesson,
+#                 title=video["title"],
+#                 position=video["position"],
+#                 video_url=video["video_id"],
+#             )
+#         )
+#     Video.objects.bulk_create(bulk_list, batch_size=999)

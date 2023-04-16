@@ -21,10 +21,6 @@ from .tasks import yt_playlist_create_course
 from .utils import extract_playlist_link
 
 
-# from pypaystack import Transaction, Customer, Plan
-# from paystackapi.transaction import Transaction
-# from paystackapi.paystack import Paystack
-
 User = get_user_model()
 
 
@@ -111,21 +107,6 @@ def course_create_playlist_view(request):
         context = {"task_id": task_id}
 
     return render(request, "courses/playlist_form.html", context)
-
-
-# def bulk_created(big_list, lesson, video):
-#     bulk_list = []
-
-#     for a in big_list:
-#         bulk_list.append(
-#             Video(
-#                 lesson=lesson,
-#                 title=video["title"],
-#                 position=video["position"],
-#                 video_url=video["video_id"],
-#             )
-#         )
-#     Video.objects.bulk_create(bulk_list, batch_size=999)
 
 
 def CourseUpdateView(request, pk):
@@ -414,7 +395,7 @@ def toggle_finished_video(request, video_id):
         obj.finished_video = True
         obj.save()
         return HttpResponse(
-            """<input class="form-check-input" type="checkbox" value="" 
+            """<input class="form-check-input" type="checkbox" value=""
             id="flexCheckChecked" checked>"""
         )
     elif obj.finished_video is True:

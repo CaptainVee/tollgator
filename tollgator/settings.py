@@ -28,7 +28,6 @@ SECRET_KEY = get_secret("SECRET_KEY")
 DEBUG = get_secret("DEBUG")
 
 ALLOWED_HOSTS = str(get_secret("ALLOWED_HOSTS")).split()
-print(ALLOWED_HOSTS)
 
 # Application definition
 DJANGO_APPS = [
@@ -180,24 +179,24 @@ MEDIA_URL = "/media/"
 
 QUILL_CONFIGS = {
     "default": {
-        "theme": "snow",
+        "theme": "bubble",
         "placeholder": "Compose an epic...co",
+        "image"
         "modules": {
             "syntax": True,
             "toolbar": [
                 [
-                    {"font": []},
+                    {"font": [False]},
                     {"header": []},
                     {"align": []},
                     "bold",
-                    "italic",
-                    "underline",
+                    # "italic",
+                    # "underline",
                     "strike",
                     "blockquote",
                     {"color": []},
                     {"background": []},
                 ],
-                ["code-block", "link"],
                 ["clean"],
             ],
         },
