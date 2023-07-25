@@ -315,9 +315,9 @@
 					</div>
 					<div class="price d-flex align-items-center mb-3">
 						{% if course.get_discounted_price %}
-						<span class="price-old text-decoration-line-through">{{ course.price }}</span>
+						<span class="price-old text-decoration-line-through">${{ course.price }}</span>
 						{% endif %}
-						<span class="price-new">{{ course.get_price }}</span>
+						<span class="price-new">${{ course.get_price }}</span>
 						{% if course.get_discounted_price %}
 						<span class="price-discount">{{ course.get_percentage_off}}</span>
 						{% endif %}

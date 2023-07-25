@@ -1,3 +1,4 @@
+import json
 from celery import shared_task
 from django.db import transaction
 from django.contrib.auth import get_user_model
@@ -32,7 +33,9 @@ def yt_playlist_create_course(self, user_id, playlist_id):
                 author=user,
                 title=playlist_details["title"],
                 playlist=playlist_id,
-                content=playlist_details["description"],
+                content=json.dumps(
+                    {"delta": "", "html": playlist_details["description"]}
+                ),  # This is how to post data to a quillfield else it won't work
                 thumbnail_url=playlist_details["thumbnails"]["standard"]["url"],
                 # youtube_channel=playlist_details["channelTitle"],
             )

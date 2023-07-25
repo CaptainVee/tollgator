@@ -124,27 +124,6 @@ def verify(request, transaction_id):
 
     return redirect("dashboard")
 
-
-# class OrderSummaryView(LoginRequiredMixin, View):
-#     def get(self, *args, **kwargs):
-#         try:
-#             order = Order.objects.get(user=self.request.user, ordered=False)
-#             context = {"object": order}
-#             return render(self.request, "courses/order_summary.html", context)
-#         except ObjectDoesNotExist:
-#             messages.warning(self.request, "You do not have an active order")
-#             return redirect("/")
-
-
-# def PaymentView(request):
-#     if request.user.is_authenticated:
-#         # items = order.orderitem_set.all()
-#         # cartItems = order.get_cart_items
-#         order = Order.objects.get(user=request.user, ordered=False)
-#         context = {"order": order, "pk_public": settings.PAYSTACK_PUBLIC_KEY}
-#     return render(request, "courses/checkout.html", context)
-
-
 # @login_required
 # def add_to_cart(request, pk):
 #     item = get_object_or_404(Course, pk=pk)
